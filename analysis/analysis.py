@@ -12,7 +12,7 @@ def run_analysis():
 
     :return: None
     """
-    pass
+    print('Ran the analysis!')
 
 
 class TestAnalysisMethods(unittest.TestCase):
