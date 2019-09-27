@@ -16,3 +16,5 @@ SECRET_KEY = 'qqucn931x78rx054n(6g(s_3vxppjw$f24e(9&v6rsbd0&0$2e'
 DEBUG = True
 
 ALLOWED_HOSTS = []  # wildcard
+
+CORS_ORIGIN_ALLOW_ALL = True
