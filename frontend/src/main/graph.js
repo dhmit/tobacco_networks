@@ -5,17 +5,22 @@ import * as d3 from 'd3';
 
 
 export function create_graph(el, data, config, handle_viz_events) {
+    const docs = []
+    for (const person of data) {
+        docs.push(person.docs);
+    }
+
     d3.select(el)
         .append("svg")
         .attr("width", config.width)
         .attr("height", config.height)
         .selectAll("rect")
-        .data(data.values)
+        .data(docs)
         .enter()
         .append("rect")
-        .attr("x", (d, i) => i * 70)
-        .attr("y", (d, _i) => config.height - 10 * d)
-        .attr("width", 65)
+        .attr("x", (d, i) => i * 4)
+        .attr("y", (d, _i) => config.height - .03 * d)
+        .attr("width", 100)
         .attr("height", (d, _i) => d * 10)
         .attr("fill", config.color)
         .attr("fill", config.color)

@@ -77,7 +77,7 @@ class Viz extends React.Component {
     }
 }
 Viz.propTypes = {
-    data: PropTypes.object.isRequired,
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
     config: PropTypes.object.isRequired,
     handle_viz_events: PropTypes.func,
 };
@@ -112,7 +112,11 @@ class MainView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            config: null,  // configuration for the viz
+            config: {
+                width: 500,
+                height: 500,
+                color: 'blue',
+            },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
         };
@@ -120,19 +124,18 @@ class MainView extends React.Component {
     }
 
     componentDidMount() {
-        // TODO(ra): ask the server for some data
-        const config = {
-            width: 500,
-            height: 500,
-            color: 'blue',
-        };
-        const data = {
-            values: [4,5,6,7],
-        };
-        this.setState({
-            config: config,
-            data: data,
-        });
+        fetch("api/people/")
+            .then((response) => {
+                // console.log(response);
+                response
+                    .json()
+                    .then((data) => {
+                        this.setState({data});
+                        // console.log(data);
+                    })
+            }).catch(() => {
+                console.log("error");
+            });
     }
 
     handle_checkbox() {
