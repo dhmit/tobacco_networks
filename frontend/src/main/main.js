@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph } from './graph.js'
+import { create_graph, update_graph_color } from './graph.js'
 import './main.css';
 
 
@@ -29,12 +29,14 @@ class Controls extends React.Component {
                 <label>Color is blue</label>
             </div>
         );
+
     }
 }
 Controls.propTypes = {
-    config: PropTypes.object,
+    config: PropTypes.object.isRequired,
     handle_checkbox: PropTypes.func.isRequired,
 };
+
 
 /***************************************************************************************************
  * Wrapper for the Visualization
@@ -48,7 +50,7 @@ class Viz extends React.Component {
     componentDidMount() {
         // D3 Code to create the chart
         this._graph = create_graph(
-            this._graphRoot.current,
+            this._graphRoot.current,  // current gives the DOM object (as opposed to the React ref)
             this.props.data,
             this.props.config,
             this.props.handle_viz_events,
@@ -57,16 +59,13 @@ class Viz extends React.Component {
 
     componentDidUpdate() {
         // D3 Code to update the chart
-        update_graph(
-            this._graphRoot.current,
-            this.props.data,
-            this.props.config,
-            this._graph,
-        );
-    }
-
-    componentWillUnmount() {
-        // TobaccoNetworkGraph.destroy(this._graphRoot);
+        if (this.props.config.viz_update_func === 'update_graph_color') {
+            update_graph_color(
+                this._graphRoot.current,
+                this.props.data,
+                this.props.config,
+            );
+        }
     }
 
     render() {
@@ -89,21 +88,22 @@ Viz.propTypes = {
 class Info extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
     }
 
     render() {
         return (
             <div className="col-3">
-                Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!
+                <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
+                <p>The current viz color is {this.props.currentColor}</p>
             </div>
         );
     }
 }
 Info.propTypes ={
     mouseover: PropTypes.bool,
+    currentColor: PropTypes.string,
 };
+
 
 /***************************************************************************************************
  * Main component for the main view.
@@ -112,9 +112,9 @@ class MainView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            config: null,
-            data: null,
-            mouseover: false,
+            config: null,  // configuration for the viz
+            data: null,  // data for the viz
+            mouseover: false,  // info panel state (based on callbacks from viz)
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -136,12 +136,13 @@ class MainView extends React.Component {
     }
 
     handle_checkbox() {
-        const config = {...this.state.config};
+        const config = {...this.state.config};  // ... is the 'spread' operator - this is a copy
         if (config.color === 'blue') {
             config.color = 'red';
         } else {
             config.color = 'blue'
         }
+        config.viz_update_func = 'update_graph_color';
         this.setState({
             config: config,
         })
@@ -171,6 +172,7 @@ class MainView extends React.Component {
                         />
                         <Info
                             mouseover={this.state.mouseover}
+                            currentColor={this.state.config.color}
                         />
                     </div>
                 </div>
