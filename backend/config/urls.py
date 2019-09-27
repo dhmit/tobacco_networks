@@ -19,7 +19,7 @@ from django.urls import path
 from django.conf.urls import url
 
 from apps.common import render_react_view
-# from apps.main import views as main_views  # uncomment me once we have some API views
+from apps.main import views as main_views
 
 
 urlpatterns = [
@@ -27,6 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # API endpoints
+    url('api/people/', main_views.ListPeople.as_view()),
 
     # React views
     url('', render_react_view, {'component_name': 'MainView'}),
