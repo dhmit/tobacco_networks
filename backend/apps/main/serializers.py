@@ -10,7 +10,7 @@ class PersonSerializer(serializers.Serializer):
     """
     Serializer for the Person model
     """
-    pk = serializers.IntegerField(read_only=True)  # pylint: disable=W0223
+    pk = serializers.IntegerField(read_only=True)  # pylint: disable=C0103
     name = serializers.CharField(read_only=True)
     docs = serializers.IntegerField(read_only=True)
     words = serializers.IntegerField(read_only=True)
