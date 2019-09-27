@@ -14,7 +14,7 @@ class Person:
     probably to be eventually replaced with a Django model
     """
     def __init__(self, pk: int, name: str, docs: int, words: int):
-        self.pk = pk  # pylint: disable=W0223 - Django will use this name, so want to keep it
+        self.pk = pk  # pylint: disable=W0223
         self.name = name
         self.docs = docs
         self.words = words

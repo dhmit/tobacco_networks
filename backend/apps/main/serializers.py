@@ -17,8 +17,6 @@ class PersonSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         """ We will not create new objects using this serializer """
-        pass
 
     def update(self, instance, validated_data):
         """ We will not update data using this serializer """
-        pass
