@@ -29,6 +29,9 @@ urlpatterns = [
     # API endpoints
     url('api/people/', main_views.list_people),
 
+    # might want to change name later
+    url('api/edges/', main_views.list_edges),
+
     # React views
     url('', render_react_view, {'component_name': 'MainView'}),
 ]
