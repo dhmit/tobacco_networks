@@ -163,3 +163,6 @@ webpack-stats-dev.json
 webpack-stats.json
 package-lock.json
 *.swp
+
+
+data/name_disambiguation/tobacco_names_raw\.json

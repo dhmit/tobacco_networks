@@ -5,24 +5,19 @@ import * as d3 from 'd3';
 
 
 export function create_graph(el, data, config, handle_viz_events) {
-    const docs = []
-    for (const person of data) {
-        docs.push(person.docs);
-    }
 
     d3.select(el)
         .append("svg")
         .attr("width", config.width)
         .attr("height", config.height)
         .selectAll("rect")
-        .data(docs)
+        .data(data)
         .enter()
         .append("rect")
-        .attr("x", (d, i) => i * 4)
-        .attr("y", (d, _i) => config.height - .03 * d)
-        .attr("width", 100)
-        .attr("height", (d, _i) => d * 10)
-        .attr("fill", config.color)
+        .attr("x", (d, _i) => _i * 10)
+        .attr("y", (d) => config.height - d.docs / 25)
+        .attr("width", 9)
+        .attr("height", (d) => d.docs / 25)
         .attr("fill", config.color)
         .on("mouseover", (_d,_i) => handle_viz_events("mouseover"))
         .on("mouseout",  (_d,_i) => handle_viz_events("mouseout"))
