@@ -10,7 +10,15 @@ class PersonSerializer(serializers.Serializer):
     """
     Serializer for the Person model
     """
-    pk = serializers.IntegerField(read_only=True)
+    pk = serializers.IntegerField(read_only=True)  # pylint: disable=W0223
     name = serializers.CharField(read_only=True)
     docs = serializers.IntegerField(read_only=True)
     words = serializers.IntegerField(read_only=True)
+
+    def create(self, validated_data):
+        """ We will not create new objects using this serializer """
+        pass
+
+    def update(self, instance, validated_data):
+        """ We will not update data using this serializer """
+        pass
