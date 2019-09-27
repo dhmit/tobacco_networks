@@ -27,7 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # API endpoints
-    url('api/people/', main_views.ListPeople.as_view()),
+    url('api/people/', main_views.list_people),
 
     # React views
     url('', render_react_view, {'component_name': 'MainView'}),
