@@ -10,7 +10,7 @@ class PersonSerializer(serializers.Serializer):
     """
     Serializer for the Person model
     """
-    id = serializers.IntegerField(read_only=True)
+    pk = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
     docs = serializers.IntegerField(read_only=True)
     words = serializers.IntegerField(read_only=True)
