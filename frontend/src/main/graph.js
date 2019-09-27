@@ -4,35 +4,49 @@
 import * as d3 from 'd3';
 
 
+/**
+ * Create a graph for d3
+ *
+ * @param el: Node
+ * @param data: object[]
+ * @param config: object
+ * @param handle_viz_events: Function
+ */
 export function create_graph(el, data, config, handle_viz_events) {
-
     d3.select(el)
-        .append("svg")
-        .attr("width", config.width)
-        .attr("height", config.height)
-        .selectAll("rect")
+        .append('svg')
+        .attr('width', config.width)
+        .attr('height', config.height)
+        .selectAll('rect')
         .data(data)
         .enter()
-        .append("rect")
-        .attr("x", (d, _i) => _i * 10)
-        .attr("y", (d) => config.height - d.docs / 25)
-        .attr("width", 9)
-        .attr("height", (d) => d.docs / 25)
-        .attr("fill", config.color)
-        .on("mouseover", (_d,_i) => handle_viz_events("mouseover"))
-        .on("mouseout",  (_d,_i) => handle_viz_events("mouseout"))
-        .on("click", () => handle_viz_events("click"))
+        .append('rect')
+        .attr('x', (d, _i) => _i * 10)
+        .attr('y', (d) => config.height - d.docs / 25)
+        .attr('width', 9)
+        .attr('height', (d) => d.docs / 25)
+        .attr('fill', config.color)
+        .on('mouseover', (_d,_i) => handle_viz_events('mouseover'))
+        .on('mouseout',  (_d,_i) => handle_viz_events('mouseout'))
+        .on('click', () => handle_viz_events('click'))
     ;
 }
 
 
+/**
+ * Change the color of each of the rectangles in the graph, slowly.
+ *
+ * @param el: Node
+ * @param data: object[]
+ * @param config: object
+ */
 export function update_graph_color(el, data, config) {
     // D3 Code to update the chart
     // Re-compute the scales, and render the data points
-    d3.select(el).selectAll("rect")
+    d3.select(el).selectAll('rect')
         .transition()
         .duration(1000)
-        .style("fill", config.color)
+        .style('fill', config.color)
 }
 
 /*
