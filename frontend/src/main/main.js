@@ -124,7 +124,7 @@ class MainView extends React.Component {
     }
 
     componentDidMount() {
-        Promise.all([fetch("api/people/"), fetch("api/edges/")]) // TODO: Promise.all() is not defines
+        fetch("api/people/")
             .then((response) => {
                 // console.log(response);
                 response
