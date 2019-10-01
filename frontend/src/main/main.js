@@ -49,7 +49,7 @@ class Viz extends React.Component {
 
     componentDidMount() {
         // D3 Code to create the chart
-        this._graph = create_graph(
+        create_graph(
             this._graphRoot.current,  // current gives the DOM object (as opposed to the React ref)
             this.props.data,
             this.props.config,
@@ -123,6 +123,9 @@ class MainView extends React.Component {
         this.csrftoken = getCookie('csrftoken');
     }
 
+    /**
+     * Runs when the MainView item is connected to the server.
+     */
     componentDidMount() {
         fetch("api/people/")
             .then((response) => {
@@ -138,8 +141,12 @@ class MainView extends React.Component {
             });
     }
 
+    /**
+     * Calls when checkbox is changed.  Changes the color from blue to red or vice versa.
+     */
     handle_checkbox() {
-        const config = {...this.state.config};  // ... is the 'spread' operator - this is a copy
+        // "..." is the 'spread' operator - this is a copy
+        const config = {...this.state.config};
         if (config.color === 'blue') {
             config.color = 'red';
         } else {
@@ -151,6 +158,11 @@ class MainView extends React.Component {
         })
     }
 
+    /**
+     * Handles a visualization event
+     *
+     * @param event_name: String
+     */
     handle_viz_events(event_name) {
         if (event_name === "mouseover") {
             this.setState({mouseover: true});
@@ -159,6 +171,11 @@ class MainView extends React.Component {
         }
     }
 
+    /**
+     * Render the app on the page
+     *
+     * @returns {Node}
+     */
     render() {
         if (this.state.data) {
             return (
@@ -188,4 +205,5 @@ class MainView extends React.Component {
     }
 }
 
+// when importing Main what do we get?
 export default MainView;
