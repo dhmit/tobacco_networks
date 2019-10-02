@@ -76,8 +76,10 @@ class Viz extends React.Component {
         )
     }
 }
+// data: PropTypes.arrayOf(PropTypes.object).isRequired,
+
 Viz.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    data: PropTypes.objectOf(PropTypes.array).isRequired,
     config: PropTypes.object.isRequired,
     handle_viz_events: PropTypes.func,
 };
@@ -127,7 +129,7 @@ class MainView extends React.Component {
      * Runs when the MainView item is connected to the server.
      */
     componentDidMount() {
-        fetch("api/people/")
+        fetch("get_network_data")
             .then((response) => {
                 // console.log(response);
                 response
@@ -162,13 +164,17 @@ class MainView extends React.Component {
      * Handles a visualization event
      *
      * @param event_name: String
+     * @param data: Object
      */
-    handle_viz_events(event_name) {
+    handle_viz_events(event_name, data) {
         if (event_name === "mouseover") {
             this.setState({mouseover: true});
         } else if (event_name === "mouseout") {
             this.setState({mouseover: false});
+        } else if (event_name === "click") {
+            {/* TODO (Sirena): Implement a click handler that shows name of person clicked*/}
         }
+
     }
 
     /**
