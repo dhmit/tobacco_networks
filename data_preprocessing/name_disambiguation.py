@@ -8,6 +8,8 @@ from IPython import embed
 from nameparser import HumanName
 from nameparser.config import CONSTANTS
 
+import unittest
+
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
 
@@ -31,10 +33,13 @@ class Person:
             else:
                 aliases = [name_raw]
 
-        self.last = last
-        self.first = first
-        self.middle = middle
-        self.positions = positions
+        self.last = last.upper()
+        self.first = first.upper()
+        self.middle = middle.upper()
+        self.positions = set()
+        for i in positions:
+            cleaned = re.sub('\.', '', i)
+            self.positions.add(cleaned.upper())
         self.aliases = aliases
         self.count = count
 
@@ -43,6 +48,14 @@ class Person:
         if self.positions:
             s += "(" + ", ".join(self.positions) + ")"
         return s
+
+    def __eq__(self, other):
+        return (
+            self.last == other.last and
+            self.first == other.first and
+            self.middle == other.middle and
+            sorted(self.positions) == sorted(other.positions)
+        )
 
     def copy(self):
         return Person(last=self.last, first=self.first, middle=self.middle,
@@ -145,6 +158,7 @@ class Person:
 
         # remove privlog info, e.g. 'Temko, Stanley L [Privlog:] TEMKO,SL'. It confuses
         # the name parser
+        # TODO: figure out if Privlog contains position information
         privlog_id = name_raw.find('[Privlog:]')
         if privlog_id == 0:
             name_raw = name_raw[privlog_id:]
@@ -215,8 +229,12 @@ class Person:
         # remove #
         name_raw = name_raw.strip("#").strip()
 
+        # DUNN-W -> Dunn W
+        # TODO this does not seem correct. maybe return last, first?
         if name_raw[-2] == '-':
             name_raw = name_raw[:-2] + " " + name_raw[-1:]
+
+        # DUNN-WL -> DUNN WL
         if len(name_raw) > 2 and name_raw[-3] == '-':
             name_raw = name_raw[:-3] + " " + name_raw[-2:]
 
@@ -406,6 +424,7 @@ class PeopleDatabase:
         return positions
 
 
+
 def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_names_raw_test.json')):
 
     with open(name_file, 'r') as infile:
@@ -422,8 +441,30 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
     people_db.merge_duplicates()
 
 
+class TestNameParser(unittest.TestCase):
+    def setUp(self):
+        self.test_raw_names = {
+            "TEAGUE CE JR": Person(last = "Teague", first = "C", middle = "E", positions = {"JR"}),
+            "teague ce jr": Person(last="Teague", first="C", middle="E", positions={"JR"}),
+            "Teague, Claude Edward, Jr., Ph.D.": Person(
+                last="Teague", first="Claude", middle="Edward", positions={"JR, PHD"}
+            ),
+
+
+                               }
+        self.default_raw_names = []
+
+    def test_all_names(self):
+        for name in self.test_raw_names:
+            self.assertEqual(Person(name_raw = name), self.test_raw_names[name])
+
+
 
 
 if __name__ == '__main__':
-
+    a = Person(name_raw="TEAGUE CE J.R.")
+    print("last", a.last, "first", a.first, "middle", a.middle)
     merge_names()
+    unittest.main()
+
+
