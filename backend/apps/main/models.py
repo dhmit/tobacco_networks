@@ -45,10 +45,10 @@ class Edge:
     """
     Python object to store edges, should be replaces if the Person class is replaced
     """
-    def __init__(self, start: str, end: str, id: int, docs: int, words: int):
-        self.node1 = start # could be replaced with Person
-        self.node2 = end
-        self.id = id
+    def __init__(self, pk: int, node1: str, node2: str, docs: int, words: int):
+        self.pk = pk
+        self.node1 = node1 # could be replaced with Person
+        self.node2 = node2
         self.docs = docs
         self.words = words
 
@@ -64,11 +64,11 @@ def load_json_data_edge():
     edges_dicts = data['links']
     edges = []
     for edges_dict in edges_dicts:
-        start = edges_dict.get('node1')
-        end = edges_dict.get('node2')
-        id = int(edges_dict.get('id'))
+        pk = int(edges_dict.get('id'))
+        node1 = edges_dict.get('node1')
+        node2 = edges_dict.get('node2')
         docs = int(edges_dict.get('docs'))
         words = int(edges_dict.get('words'))
-        edge_obj = Edge(start, end, id, docs, words)
+        edge_obj = Edge(pk, node1, node2, docs, words)
         edges.append(edge_obj)
     return edges
