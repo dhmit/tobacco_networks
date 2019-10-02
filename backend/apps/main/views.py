@@ -3,15 +3,14 @@ Views that define API endpoints for the site
 """
 import json
 from pathlib import Path
-from config.settings.base import BACKEND_DIR
-
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 
 from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-from .serializers import PersonSerializer
+from config.settings.base import BACKEND_DIR
 from .models import load_json_data
+from .serializers import PersonSerializer
 
 
 @api_view(['GET'])
@@ -32,4 +31,3 @@ def get_network_data(request):
         data = json.load(json_file)
 
     return JsonResponse(data)
-

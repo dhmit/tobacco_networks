@@ -26,9 +26,9 @@ export function create_graph(el, data, config, handle_viz_events) {
         .attr('width', 9)
         .attr('height', (d) => d.docs / 25)
         .attr('fill', config.color)
-        .on('mouseover', (node_data,_i) => handle_viz_events('mouseover', node_data))
-        .on('mouseout',  (node_data,_i) => handle_viz_events('mouseout', node_data))
-        .on('click', (node_data, _i)    => handle_viz_events('click'))
+        .on('mouseover', (node_data,_i) => handle_viz_events('mouseover'))
+        .on('mouseout',  (node_data,_i) => handle_viz_events('mouseout'))
+        .on('click', (node_data, _i)    => handle_viz_events('click', node_data))
     ;
 }
 
