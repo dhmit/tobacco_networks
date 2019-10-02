@@ -139,6 +139,18 @@ class MainView extends React.Component {
             }).catch(() => {
                 console.log("error");
             });
+        fetch("api/people/")
+            .then((response) => {
+                // console.log(response);
+                response
+                    .json()
+                    .then((data) => {
+                        this.setState({data});
+                        // console.log(data);
+                    })
+            }).catch(() => {
+                console.log("error");
+            });
     }
 
     /**
