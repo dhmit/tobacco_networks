@@ -127,7 +127,7 @@ class MainView extends React.Component {
      * Runs when the MainView item is connected to the server.
      */
     componentDidMount() {
-        fetch("api/people/")
+        fetch("api/edges/")
             .then((response) => {
                 // console.log(response);
                 response

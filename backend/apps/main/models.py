@@ -40,6 +40,7 @@ def load_json_data():
         people.append(person_obj)
     return people
 
+
 class Edge:
     """
     Python object to store edges, should be replaces if the Person class is replaced
@@ -50,6 +51,7 @@ class Edge:
         self.id = id
         self.docs = docs
         self.words = words
+
 
 def load_json_data_edge():
     """
