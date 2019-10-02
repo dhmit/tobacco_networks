@@ -166,7 +166,7 @@ class MainView extends React.Component {
      * @param event_name: String
      * @param data: Object
      */
-    handle_viz_events(event_name, data) {
+    handle_viz_events(event_name, data) { // eslint-disable-line no-unused-vars
         if (event_name === "mouseover") {
             this.setState({mouseover: true});
         } else if (event_name === "mouseout") {
