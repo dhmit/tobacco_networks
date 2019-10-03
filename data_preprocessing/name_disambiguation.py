@@ -1,6 +1,7 @@
 import copy
 import json
 import re
+import csv
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -290,6 +291,29 @@ class PeopleDatabase:
         new_p = Person(name_raw=name_raw, count=count)
         self.people.add(new_p)
 
+    def create_positions_csv(self):
+        """
+        Makes a Counter of all positions appearing in db,
+        Translates this info into a CSV,
+        1st Col = raw name
+        2nd Col = count in Counter
+        3rd Col = authoritative name– for now, just '' because we will fill in later
+        :returns: None
+        """
+        positions_counter = Counter()
+        for person in self.people:
+            for position_name in person.positions:
+                positions_counter[position_name] += 1
+        # TODO make the csv with the specified format
+        with open('all_organizations.csv', mode='w') as csv_file:
+            fieldnames = ['Raw Name', 'Count', 'Authoritative Name']
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+            for organization in positions_counter:
+                writer.writerow({'Raw Name': organization, 'Count': positions_counter[
+                    organization], 'Authoritative Name': ''})
+
+
     def merge_duplicates(self, print_merge_results_for_name='Dunn'):
         """
         Tries to merge all duplicates and only retain authoritative names.
@@ -439,7 +463,8 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
             people_db.add_person_raw(name_raw=name, count=name_dict[name])
 
     # then merge the duplicate / similar names
-    people_db.merge_duplicates()
+    people_db.create_positions_csv()
+    # people_db.merge_duplicates()
 
 
 class TestNameParser(unittest.TestCase):
@@ -465,67 +490,5 @@ if __name__ == '__main__':
     a = Person(name_raw="TEAGUE CE J.R.")
     print("last", a.last, "first", a.first, "middle", a.middle)
     merge_names()
-    unittest.main()
-
-    """
-
-        >>> n = Person('BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Baker', 'T', 'E', 'NATIONAL ASSOCIATION OF ATTORNEYS GENERAL')
-
-        >>> n = Person('BAKER-cj')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Baker', 'C', 'J', '')
-
-        JR and SR are by default recognized as titles -> turn off through CONSTANTS.
-        >>> n = Person('Baker, JR')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Baker', 'J', 'R', '')
-
-        >>> n = Person('DUNN WL #')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Dunn', 'W', 'L', '')
-
-        >>> n = Person('Dunn, W. L.')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Dunn', 'W', 'L', '')
-
-        >>> n = Person('TEMKO SL, COVINGTON AND BURLING')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Temko', 'S', 'L', 'COVINGTON AND BURLING')
-
-        >>> n = Person('Temko, Stanley L [Privlog:] TEMKO,SL')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Temko', 'Stanley', 'L', '')
-
-        >>> n = Person('Temko-SL, Covington & Burling')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Temko', 'S', 'L', 'COVINGTON & BURLING')
-
-        >>> n = Person('HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL)')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Henson', 'A', '', 'AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL')
-
-        >>> n = Person('HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Henson', 'A', '', 'CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE COUNSEL HANDWRITTEN NOTES')
-
-        >>> n = Person('Holtzman, A.,  Murray, J. ,  Henson, A. ,  Pepples, E. ,  Stevens, A. ,  Witt, S.')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Holtzman', 'A', '', '')
-
-        >>> n = Person('Holtz, Jacob, Jacob & Medinger')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Holtz', 'Jacob', '', 'JACOB & MEDINGER')
-
-        # This one breaks. But I don't think it can be avoided.
-        >>> n = Person('Holtz, Jacob Alexander, Jacob & Medinger')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Holtz', '', '', 'JACOB ALEXANDER, JACOB & MEDINGER')
-
-        >>> n = Person('PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Proctor', 'D', 'F', 'JOHNS HOPKINS SCHOOL OF HYGIENE')
-    """
-
+    # unittest.main()
 
