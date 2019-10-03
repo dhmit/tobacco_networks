@@ -25,7 +25,7 @@ def load_json_data():
     Loads test json data for initial prototyping
     :return list, each person in the data as a Person object
     """
-    #TODO: change this function name to be more descriptive
+    # TODO: change this function name to be more descriptive
     json_path = Path(BACKEND_DIR, 'data', 'network_test_data.json')
     with open(json_path) as json_file:
         data = json.load(json_file)
@@ -43,11 +43,11 @@ def load_json_data():
 
 class Edge:
     """
-    Python object to store edges, should be replaces if the Person class is replaced
+    Python object to store edges, should be replaced if the Person class is replaced
     """
     def __init__(self, pk: int, node1: str, node2: str, docs: int, words: int):
         self.pk = pk
-        self.node1 = node1 # could be replaced with Person
+        self.node1 = node1  # could be replaced with Person
         self.node2 = node2
         self.docs = docs
         self.words = words
@@ -55,8 +55,8 @@ class Edge:
 
 def load_json_data_edge():
     """
-    Loads test json data for intial prototyping
-    :return: list, each edge in the data s a
+    Loads test json data for initial prototyping
+    :return: list, each edge in the data as an Edge object
     """
     json_path = Path(BACKEND_DIR, 'data', 'network_test_data.json')
     with open(json_path) as json_file:

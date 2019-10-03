@@ -26,7 +26,7 @@ class EdgeSerializer(serializers.Serializer):
     """
     Serializer for the Edge model
     """
-    pk = serializers.IntegerField(read_only=True)
+    pk = serializers.IntegerField(read_only=True)  # pylint: disable=C0103
     node1 = serializers.CharField(read_only=True)
     node2 = serializers.CharField(read_only=True)
     docs = serializers.IntegerField(read_only=True)

@@ -11,8 +11,6 @@ from rest_framework.response import Response
 from .serializers import PersonSerializer, EdgeSerializer
 from .models import load_json_data, load_json_data_edge
 from config.settings.base import BACKEND_DIR
-from .models import load_json_data
-from .serializers import PersonSerializer
 
 
 @api_view(['GET'])
@@ -31,6 +29,7 @@ def list_edges(request):
     """
     serializer = EdgeSerializer(instance=load_json_data_edge(), many=True)
     return Response(serializer.data)
+
 
 def get_network_data(request):
     """
