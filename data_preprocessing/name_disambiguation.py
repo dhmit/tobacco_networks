@@ -83,6 +83,7 @@ class Person:
         >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
         ('Teague', 'C', 'E', 'JR')
 
+
         >>> n = Person('teague, ce jr')
         >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
         ('Teague', 'C', 'E', 'JR')
@@ -167,7 +168,8 @@ class Person:
         else:
             pass
 
-        # position is often attached with a dash, e.g. 'BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS'
+        # position is often attached with a dash,
+        # e.g. 'BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS'
         if name_raw.find(" - ") > -1 and len(name_raw.split(' - ')) == 2:
             name_raw, extracted_position = name_raw.split(" - ")
             extracted_positions = {extracted_position.strip()}
@@ -241,7 +243,7 @@ class Person:
         name = HumanName(name_raw)
 
         # e.g. Dunn W -> parsed as last name W. -> switch first/last
-        if len(name.last) <= 2 and len(name.first) > 2:
+        if len(name.last) <= 2 < len(name.first):
             name.first, name.last = name.last, name.first
 
         # remove periods from initials
@@ -424,7 +426,6 @@ class PeopleDatabase:
         return positions
 
 
-
 def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_names_raw_test.json')):
 
     with open(name_file, 'r') as infile:
@@ -446,6 +447,7 @@ class TestNameParser(unittest.TestCase):
         self.test_raw_names = {
             "TEAGUE CE JR": Person(last = "Teague", first = "C", middle = "E", positions = {"JR"}),
             "teague ce jr": Person(last="Teague", first="C", middle="E", positions={"JR"}),
+            'Teague, J - BAT': Person(last='Teague', first='J', middle='', positions={'BAT'}),
             "Teague, Claude Edward, Jr., Ph.D.": Person(
                 last="Teague", first="Claude", middle="Edward", positions={"JR, PHD"}
             ),
@@ -459,12 +461,71 @@ class TestNameParser(unittest.TestCase):
             self.assertEqual(Person(name_raw = name), self.test_raw_names[name])
 
 
-
-
 if __name__ == '__main__':
     a = Person(name_raw="TEAGUE CE J.R.")
     print("last", a.last, "first", a.first, "middle", a.middle)
     merge_names()
     unittest.main()
+
+    """
+
+        >>> n = Person('BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Baker', 'T', 'E', 'NATIONAL ASSOCIATION OF ATTORNEYS GENERAL')
+
+        >>> n = Person('BAKER-cj')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Baker', 'C', 'J', '')
+
+        JR and SR are by default recognized as titles -> turn off through CONSTANTS.
+        >>> n = Person('Baker, JR')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Baker', 'J', 'R', '')
+
+        >>> n = Person('DUNN WL #')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Dunn', 'W', 'L', '')
+
+        >>> n = Person('Dunn, W. L.')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Dunn', 'W', 'L', '')
+
+        >>> n = Person('TEMKO SL, COVINGTON AND BURLING')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Temko', 'S', 'L', 'COVINGTON AND BURLING')
+
+        >>> n = Person('Temko, Stanley L [Privlog:] TEMKO,SL')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Temko', 'Stanley', 'L', '')
+
+        >>> n = Person('Temko-SL, Covington & Burling')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Temko', 'S', 'L', 'COVINGTON & BURLING')
+
+        >>> n = Person('HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL)')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Henson', 'A', '', 'AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL')
+
+        >>> n = Person('HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Henson', 'A', '', 'CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE COUNSEL HANDWRITTEN NOTES')
+
+        >>> n = Person('Holtzman, A.,  Murray, J. ,  Henson, A. ,  Pepples, E. ,  Stevens, A. ,  Witt, S.')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Holtzman', 'A', '', '')
+
+        >>> n = Person('Holtz, Jacob, Jacob & Medinger')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Holtz', 'Jacob', '', 'JACOB & MEDINGER')
+
+        # This one breaks. But I don't think it can be avoided.
+        >>> n = Person('Holtz, Jacob Alexander, Jacob & Medinger')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Holtz', '', '', 'JACOB ALEXANDER, JACOB & MEDINGER')
+
+        >>> n = Person('PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE')
+        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
+        ('Proctor', 'D', 'F', 'JOHNS HOPKINS SCHOOL OF HYGIENE')
+    """
 
 
