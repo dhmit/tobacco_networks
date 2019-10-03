@@ -1,11 +1,18 @@
 """
 Views that define API endpoints for the site
 """
-from rest_framework.response import Response
+import json
+from pathlib import Path
+
+from django.http import JsonResponse
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from .serializers import PersonSerializer, EdgeSerializer
 from .models import load_json_data, load_json_data_edge
+from config.settings.base import BACKEND_DIR
+from .models import load_json_data
+from .serializers import PersonSerializer
 
 
 @api_view(['GET'])
@@ -24,3 +31,13 @@ def list_edges(request):
     """
     serializer = EdgeSerializer(instance=load_json_data_edge(), many=True)
     return Response(serializer.data)
+
+def get_network_data(request):
+    """
+    Temporary view to get network test data json
+    """
+    json_path = Path(BACKEND_DIR, 'data', 'network_test_data.json')
+    with open(json_path) as json_file:
+        data = json.load(json_file)
+
+    return JsonResponse(data)
