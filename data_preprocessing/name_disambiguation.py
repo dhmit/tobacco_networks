@@ -13,6 +13,20 @@ import unittest
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
+def get_clean_org_names():
+    # read clean_org_names
+    file_name = Path('..', 'data', 'name_disambiguation', 'clean_org_names_to_raw_org_names.json')
+    with open(file_name, 'r') as infile:
+        name_dict = json.load(infile)
+
+    # invert dict
+    inv_name_dict = {}
+    for official in name_dict:
+        for j in name_dict[official]:
+            inv_name_dict[j] = official
+    return inv_name_dict
+
+inv_name_dict = get_clean_org_names()
 
 class Person:
 
@@ -37,17 +51,18 @@ class Person:
         self.last = last.upper()
         self.first = first.upper()
         self.middle = middle.upper()
-        self.positions = set()
+        self.positions = Counter()
         for i in positions:
             cleaned = re.sub('\.', '', i)
-            self.positions.add(cleaned.upper())
+            self.positions[cleaned.upper()] = positions[i]
         self.aliases = aliases
         self.count = count
 
+
+
     def __repr__(self):
         s = f'{self.first} {self.middle} {self.last}'
-        if self.positions:
-            s += "(" + ", ".join(self.positions) + ")"
+        s += str(self.positions.most_common(10))
         return s
 
     def __eq__(self, other):
@@ -173,14 +188,14 @@ class Person:
         # e.g. 'BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS'
         if name_raw.find(" - ") > -1 and len(name_raw.split(' - ')) == 2:
             name_raw, extracted_position = name_raw.split(" - ")
-            extracted_positions = {extracted_position.strip()}
+            extracted_positions = [extracted_position.strip()]
         else:
-            extracted_positions = set()
+            extracted_positions = []
 
         # extract positions in parens e.g. Henson, A (Chadbourne & Park)
         paren_positions = re.findall(r'\([^(]+\)', name_raw)
         for position in paren_positions:
-            extracted_positions.add(position.strip(',#() '))
+            extracted_positions.append(position.strip(',#() '))
             name_raw = name_raw.replace(position, '')
 
         institution_regexes = [
@@ -226,7 +241,7 @@ class Person:
         for institution in institution_regexes:
             extracted_institution = re.search(institution, name_raw, re.IGNORECASE)
             if extracted_institution:
-                extracted_positions.add(extracted_institution.group().strip(',#() '))
+                extracted_positions.append(extracted_institution.group().strip(',#() '))
                 name_raw = name_raw[:name_raw.find(extracted_institution.group())]
 
         # remove #
@@ -276,7 +291,15 @@ class Person:
             name.suffix = ''
 
         if name.suffix:
-            extracted_positions.add(name.suffix)
+            extracted_positions.append(name.suffix)
+
+        # map organization names to clean official names
+        for i in range(len(extracted_positions)):
+            if extracted_positions[i] in inv_name_dict:
+                extracted_positions[i] = inv_name_dict[extracted_positions[i]]
+
+        # make it into a counter
+        extracted_positions = Counter(extracted_positions)
 
         return name.first, name.middle, name.last, extracted_positions
 
@@ -290,6 +313,9 @@ class PeopleDatabase:
     def add_person_raw(self, name_raw: str, count=0):
         new_p = Person(name_raw=name_raw, count=count)
         self.people.add(new_p)
+
+    def __len__(self):
+        return len(self.people)
 
     def create_positions_csv(self):
         """
@@ -424,7 +450,7 @@ class PeopleDatabase:
             if len(getattr(person2, attr)) > len(getattr(person1, attr)):
                 setattr(new_p, attr, getattr(person2, attr))
         try:
-            new_p.positions = person1.positions.union(person2.positions)
+            new_p.positions = person1.positions + person2.positions
         except:
             embed()
         new_p.aliases = person1.aliases + person2.aliases
@@ -441,14 +467,6 @@ class PeopleDatabase:
     def find_related_person(self, person: Person):
         pass
 
-    def get_positions(self):
-        positions = Counter()
-        for person in self.people:
-            for affiliation in person.positions:
-                positions[affiliation] += 1
-
-        return positions
-
 
 def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_names_raw_test.json')):
 
@@ -462,9 +480,11 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
         if name.lower().find('dunn') > -1:
             people_db.add_person_raw(name_raw=name, count=name_dict[name])
 
+    print("Length: ", len(people_db))
+
     # then merge the duplicate / similar names
     people_db.create_positions_csv()
-    # people_db.merge_duplicates()
+    people_db.merge_duplicates()
 
 
 class TestNameParser(unittest.TestCase):
@@ -487,8 +507,10 @@ class TestNameParser(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    a = Person(name_raw="TEAGUE CE J.R.")
-    print("last", a.last, "first", a.first, "middle", a.middle)
+
     merge_names()
     # unittest.main()
+
+
+
 
