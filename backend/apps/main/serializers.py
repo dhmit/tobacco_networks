@@ -20,3 +20,21 @@ class PersonSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         """ We will not update data using this serializer """
+
+
+class EdgeSerializer(serializers.Serializer):
+    """
+    Serializer for the Edge model
+    """
+    pk = serializers.IntegerField(read_only=True)  # pylint: disable=C0103
+    node1 = serializers.CharField(read_only=True)
+    node2 = serializers.CharField(read_only=True)
+    docs = serializers.IntegerField(read_only=True)
+    words = serializers.IntegerField(read_only=True)
+
+
+    def create(self, validated_data):
+        """ We will not create new objects using this serializer """
+
+    def update(self, instance, validated_data):
+        """ We will not update data using this serializer """
