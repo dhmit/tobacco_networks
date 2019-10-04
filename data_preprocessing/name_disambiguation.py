@@ -62,7 +62,7 @@ class Person:
 
     def __repr__(self):
         s = f'{self.first} {self.middle} {self.last}'
-        s += str(self.positions.most_common(10))
+        s = s + ", Position: " + str(self.positions.most_common(10)) + ". Aliases: "
         return s
 
     def __eq__(self, other):
