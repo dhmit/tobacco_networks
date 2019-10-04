@@ -20,27 +20,6 @@ class Person:
         self.words = words
 
 
-def load_json_data():
-    """
-    Loads test json data for initial prototyping
-    :return list, each person in the data as a Person object
-    """
-    # TODO: change this function name to be more descriptive
-    json_path = Path(BACKEND_DIR, 'data', 'network_test_data.json')
-    with open(json_path) as json_file:
-        data = json.load(json_file)
-    person_dicts = data['nodes']
-    people = []
-    for person_dict in person_dicts:
-        pk = int(person_dict.get('id'))  # pylint: disable=C0103
-        name = person_dict.get('name')
-        docs = person_dict.get('docs')
-        words = int(person_dict.get('words'))
-        person_obj = Person(pk, name, docs, words)
-        people.append(person_obj)
-    return people
-
-
 class Edge:
     """
     Python object to store edges, should be replaced if the Person class is replaced
@@ -54,22 +33,40 @@ class Edge:
         self.words = words
 
 
-def load_json_data_edge():
+def load_network_json_data(return_type: str):
     """
     Loads test json data for initial prototyping
-    :return: list, each edge in the data as an Edge object
+    :param return_type: string, determines which list needs to be determined, has the
+    precondition that it either must be 'nodes' or 'edges'
+    :return: list, contains all of the edges or all of the nodes (people at this point in time)
+    from network_test_data.json
     """
+    if return_type not in ['nodes', 'edges']:
+        raise ValueError("Specified return type needs to be nodes or edges")
+    
     json_path = Path(BACKEND_DIR, 'data', 'network_test_data.json')
     with open(json_path) as json_file:
         data = json.load(json_file)
-    edges_dicts = data['links']
-    edges = []
-    for edges_dict in edges_dicts:
-        pk = int(edges_dict.get('id'))  # pylint: disable=C0103
-        node1 = edges_dict.get('node1')
-        node2 = edges_dict.get('node2')
-        docs = edges_dict.get('docs')
-        words = int(edges_dict.get('words'))
-        edge_obj = Edge(pk, node1, node2, docs, words)
-        edges.append(edge_obj)
-    return edges
+    if return_type == "edges":
+        edges_dicts = data['links']
+        edges = []
+        for edges_dict in edges_dicts:
+            pk = int(edges_dict.get('id'))  # pylint: disable=C0103
+            node1 = edges_dict.get('node1')
+            node2 = edges_dict.get('node2')
+            docs = edges_dict.get('docs')
+            words = int(edges_dict.get('words'))
+            edge_obj = Edge(pk, node1, node2, docs, words)
+            edges.append(edge_obj)
+        return edges
+    else:
+        person_dicts = data['nodes']
+        people = []
+        for person_dict in person_dicts:
+            pk = int(person_dict.get('id'))  # pylint: disable=C0103
+            name = person_dict.get('name')
+            docs = person_dict.get('docs')
+            words = int(person_dict.get('words'))
+            person_obj = Person(pk, name, docs, words)
+            people.append(person_obj)
+        return people

@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from config.settings.base import BACKEND_DIR
 from .serializers import PersonSerializer, EdgeSerializer
-from .models import load_json_data, load_json_data_edge
+from .models import load_network_json_data
 
 
 @api_view(['GET'])
@@ -17,7 +17,7 @@ def list_people(request):
     """
     Return a list of all Person objects, serialized.
     """
-    serializer = PersonSerializer(instance=load_json_data(), many=True)
+    serializer = PersonSerializer(instance=load_network_json_data("nodes"), many=True)
     return Response(serializer.data)
 
 
@@ -26,7 +26,7 @@ def list_edges(request):
     """
     Return a list of all Edge objects, serialized.
     """
-    serializer = EdgeSerializer(instance=load_json_data_edge(), many=True)
+    serializer = EdgeSerializer(instance=load_network_json_data("edges"), many=True)
     return Response(serializer.data)
 
 
