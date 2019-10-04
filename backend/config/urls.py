@@ -29,6 +29,8 @@ urlpatterns = [
     # API endpoints
     url('api/people/', main_views.list_people),
 
+    # might want to change name later
+    url('api/edges/', main_views.list_edges),
     # temporary json endpoint for network data
     url('get_network_data', main_views.get_network_data),
 
