@@ -206,7 +206,7 @@ class MainView extends React.Component {
                         <Viz
                             data={this.state.data}
                             config={this.state.config}
-                            handle_viz_events={(event_name) => this.handle_viz_events(event_name)}
+                            handle_viz_events={(event_name, data) => this.handle_viz_events(event_name, data )}
                         />
                         <Info
                             mouseover={this.state.mouseover}
