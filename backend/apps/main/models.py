@@ -64,10 +64,10 @@ def load_json_data_edge():
     edges_dicts = data['links']
     edges = []
     for edges_dict in edges_dicts:
-        pk = int(edges_dict.get('id'))
+        pk = int(edges_dict.get('id'))  # pylint: disable=C0103
         node1 = edges_dict.get('node1')
         node2 = edges_dict.get('node2')
-        docs = int(edges_dict.get('docs'))
+        docs = edges_dict.get('docs')
         words = int(edges_dict.get('words'))
         edge_obj = Edge(pk, node1, node2, docs, words)
         edges.append(edge_obj)
