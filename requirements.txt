@@ -8,3 +8,4 @@ sqlparse==0.3.0
 
 IPython
 nameparser
+pandas
