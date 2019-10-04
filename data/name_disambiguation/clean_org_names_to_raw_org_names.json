@@ -1,0 +1,430 @@
+{
+    "@internal_organization@": [
+        "MARKETING DEVELOPMENT DEPT",
+        "MARKETING RESEARCH DEPT",
+        "R&D"
+    ],
+    "@skip@": [
+        "UNK",
+        "X",
+        "INFERRED",
+        "E-MAIL",
+        "MEMORANDUM",
+        "2",
+        "INC",
+        "HANDWRITTEN NOTES",
+        "HANDWRITTEN NOTE",
+        "LETTER",
+        "HANDWRITTEN NOTES OF COUNSEL",
+        "CONTRACTOR",
+        "I",
+        "DRAFT LETTER"
+    ],
+    "Affinity Management Group": [
+        "AFFINITY MANAGEMENT GROUP"
+    ],
+    "American Cancer Society": [
+        "AMERICAN CANCER SOCIETY"
+    ],
+    "American Tobacco": [
+        "ATCO",
+        "ATCo",
+        "American Tobacco Company",
+        "AMERICAN TOBACCO COMPANY",
+        "AMERICAN TOBACCO CO",
+        "AMERICAN BRANDS INC",
+        "AMERICAN TOBACCO",
+        "AMERICAN BRANDS"
+    ],
+    "Arnold & Porter": [
+        "APO, ARNOLD & PORTER"
+    ],
+    "Associated Press": [
+        "ASSOCIATED PRESS"
+    ],
+    "Boston University": [
+        "BOSTON UNIV SCHOOL MEDICINE",
+        "BOSTON UNIV SCHOOL OF MEDICINE",
+        "BOSTON UNIV",
+        "BOSTON UNIV MEDICAL CENTER"
+    ],
+    "British American Tobacco": [
+        "British-American Tobacco Company Limited",
+        "BATCo",
+        "BAT (UK and Export) Limited",
+        "BAT Group Research and Development Centre",
+        "BAT",
+        "BAT Industries",
+        "BATCO",
+        "BAT MANAGEMENT",
+        "BRITISH AMERICAN TOBACCO CO LTD",
+        "BRITISH AMERICAN TOBACCO"
+    ],
+    "Brown & Williamson": [
+        "B&W",
+        "BW",
+        "Brown & Williamson Tobacco Corporation",
+        "B>W",
+        "BW, BROWN & WILLIAMSON",
+        "BROWN & WILLIAMSON TOBACCO CORPORATION",
+        "BROWN & WILLIAMSON",
+        "BROWN & WILLIAMSON TOBACCO",
+        "BROWN > WILLIAMSON TOBACCO CORPORATION",
+        "BROWN > WILLIAMSON",
+        "BROWN > WILLIAMSON TOBACCO",
+        "BROWN & WILLIAMSON TOBACCO CORP",
+        "BROWN > WILLIAMSON TOBACCO CORP",
+        "B&W MANAGEMENT",
+        "B&W ASSISTANT BRAND MANAGER"
+    ],
+    "Brown & Williamson, Counsel": [
+        "B&W OUTSIDE COUNSEL",
+        "B&W IN-HOUSE COUNSEL"
+    ],
+    "Brown University": [
+        "BROWN UNIV"
+    ],
+    "Case Western Reserve University": [
+        "CASE W RESERVE UNIV",
+        "CASE W RESERVE UNIV SCHOOL MEDICINE"
+    ],
+    "Chadbourne, Park, Whiteside & Wolff": [
+        "CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE COUNSEL",
+        "CHADBOURNE & PARKE, AMERICAN OUTSIDE COUNSEL",
+        "CHADBOURNE & PARKE",
+        "CHADBOURNE PARKE"
+    ],
+    "Colorado State University": [
+        "CO ST UNIV"
+    ],
+    "Columbia University": [
+        "COLUMBIA UNIV",
+        "COLUMBIA UNIV COLLEGE PHYSICIANS & SURGEONS",
+        "COLUMBIA UNIV COLLEGE OF PHYSICIANS AND SURGEONS"
+    ],
+    "Congress of the United States": [
+        "CONGRESS OF THE UNITED STATES"
+    ],
+    "Cornell University": [
+        "CORNELL UNIV MEDICAL COLLEGE",
+        "CORNELL UNIV"
+    ],
+    "Council for Tobacco Research": [
+        "CTR"
+    ],
+    "Covington & Burling": [
+        "COVINGTON BURLING",
+        "COVINGTON & BURLING, TOBACCO INSTITUTE OUTSIDE COUNSEL",
+        "COVINGTON & BURLING"
+    ],
+    "Creighton University": [
+        "CREIGHTON UNIV",
+        "CREIGHTON UNIV SCHOOL OF MEDICINE"
+    ],
+    "Dartmouth University": [
+        "DARTMOUTH MEDICAL SCHOOL"
+    ],
+    "Doral & Co": [
+        "DORAL & CO"
+    ],
+    "Duke University": [
+        "DUKE UNIV MEDICAL CENTER",
+        "DUKE UNIV"
+    ],
+    "Emory University": [
+        "EMORY UNIV"
+    ],
+    "Fabriques de Tabac Reunies": [
+        "FTR, FABRIQUES DE TABAC REUNIES S.A."
+    ],
+    "George Washington University": [
+        "GEORGE WASHINGTON UNIV"
+    ],
+    "Georgetown University": [
+        "GEORGETOWN UNIV",
+        "GEORGETOWN UNIV MEDICAL CENTER"
+    ],
+    "Harvard University": [
+        "HARVARD MEDICAL SCHOOL",
+        "HARVARD UNIV",
+        "HARVARD MEDICAL SCHOOL BRIGHAM & WOMENS HOSPITAL",
+        "HARVARD SCHOOL OF PUBLIC HEALTH",
+        "HARVARD MEDICAL SCHOOL DANA FARBER CANCER INST",
+        "HARVARD SCHOOL PUBLIC HEALTH",
+        "HARVARD UNIV SCHOOL PUBLIC HEALTH",
+        "HARVARD MEDICAL SCHOOL BETH ISRAEL HOSPITAL"
+    ],
+    "Hebrew University": [
+        "HEBREW UNIV HADASSAH MEDICAL SCHOOL",
+        "HEBREW UNIV",
+        "HEBREW UNIV JERUSALEM"
+    ],
+    "Inbifo": [
+        "INBIFO, INSTITUT FUR BIOLOGISCHE FORSCHUNG"
+    ],
+    "Johns Hopkins University": [
+        "JOHNS HOPKINS UNIV",
+        "JOHNS HOPKINS UNIV SCHOOL MEDICINE",
+        "JOHNS HOPKINS UNIV SCHOOL OF MEDICINE"
+    ],
+    "Jones, Day, Reavis & Pogue": [
+        "JONES DAY",
+        "JONES, DAY, REAVIS & POGUE, RJ REYNOLDS OUTSIDE COUNSEL"
+    ],
+    "Kevin Berg & Associates": [
+        "KEVIN BERG & ASSOC"
+    ],
+    "Keyes & Gardner": [
+        "KEYES & GARDNER",
+        "KEYES > GARDNER"
+    ],
+    "King & Spalding": [
+        "KING & SPALDING, B&W OUTSIDE COUNSEL"
+    ],
+    "Kirkland & Ellis": [
+        "KIRKLAND & ELLIS, B&W OUTSIDE COUNSEL"
+    ],
+    "LCF & L Advertising": [
+        "LCF&L",
+        "LCF>L"
+    ],
+    "LS Inc": [
+        "LS INC"
+    ],
+    "Leber Katz Partners": [
+        "LEBER KATZ"
+    ],
+    "Leo Burnett Agency": [
+        "LEO, LEO BURNETT AGENCY"
+    ],
+    "Long Haymes Carr Advertising": [
+        "LONG HAYMES"
+    ],
+    "Lorillard": [
+        "LOR, LORILLARD",
+        "LORILLARD"
+    ],
+    "Louisiana State University": [
+        "LA ST UNIV MEDICAL CENTER",
+        "LA ST UNIV"
+    ],
+    "McGill University": [
+        "MCGILL UNIV"
+    ],
+    "McMaster University": [
+        "MCMASTER UNIV"
+    ],
+    "Medical University of South Carolina": [
+        "MEDICAL UNIV SC"
+    ],
+    "Michigan State University": [
+        "MI ST UNIV"
+    ],
+    "Mount Sinai School of Medicine": [
+        "MT SINAI SCHOOL MEDICINE",
+        "MT SINAI SCHOOL OF MEDICINE",
+        "MOUNT SINAI SCHOOL MEDICINE"
+    ],
+    "New York University": [
+        "NY UNIV MEDICAL CENTER",
+        "NY UNIV",
+        "NY UNIV SCHOOL OF MEDICINE"
+    ],
+    "Northwestern University": [
+        "NORTHWESTERN UNIV",
+        "NORTHWESTERN UNIV MEDICAL SCHOOL",
+        "NW UNIV MEDICAL SCHOOL"
+    ],
+    "Ohio State University": [
+        "OH ST UNIV"
+    ],
+    "Oregon Health Sciences University": [
+        "OR HEALTH SCIENCES UNIV"
+    ],
+    "Pennsylvania State University": [
+        "PA ST UNIV"
+    ],
+    "Philip Morris": [
+        "PM, PHILIP MORRIS",
+        "PMUSA, PHILIP MORRIS USA",
+        "PHILIP MORRIS",
+        "PMMC, PHILIP MORRIS MANAGEMENT CORP",
+        "PHILIP MORRIS INC",
+        "PARK 500",
+        "PHILIP MORRIS COMPANIES INC",
+        "PHILIP MORRIS INCORPORATED",
+        "PME, PHILIP MORRIS, EUROPE",
+        "PM",
+        "PHILIP MORRIS USA",
+        "PMI, PHILIP MORRIS INTERNATIONAL",
+        "PM INC"
+    ],
+    "Princeton University": [
+        "PRINCETON UNIV"
+    ],
+    "Purdue University": [
+        "PURDUE UNIV"
+    ],
+    "R.J. Reynolds": [
+        "RJR",
+        "RJR INTL",
+        "RJR NABISCO",
+        "RJR, R.J.REYNOLDS",
+        "RJR TOB",
+        "RJ REYNOLDS TOBACCO COMPANY"
+    ],
+    "Rockefeller University": [
+        "ROCKEFELLER UNIV",
+        "ROCKEFELLER UNIV NY NY"
+    ],
+    "Rosalind Franklin University": [
+        "CHICAGO MEDICAL SCHOOL"
+    ],
+    "Royal Postgraduate Medical School": [
+        "ROYAL POSTGRADUATE MEDICAL SCHOOL"
+    ],
+    "Rutgers University": [
+        "RUTGERS UNIV"
+    ],
+    "SUNY Buffalo": [
+        "ST UNIV NY BUFFALO"
+    ],
+    "SUNY Stony Brook": [
+        "ST UNIV NY STONY BROOK"
+    ],
+    "Shook, Hardy & Bacon": [
+        "SHB, SHOOK,HARDY & BACON",
+        "SHOOK, HARDY & BACON, INDUSTRY OUTSIDE COUNSEL",
+        "SHOOK, HARDY & BACON, B&W OUTSIDE COUNSEL"
+    ],
+    "Stanford University": [
+        "STANFORD UNIV",
+        "STANFORD UNIV SCHOOL MEDICINE",
+        "STANFORD UNIV MEDICAL CENTER",
+        "STANFORD UNIV SCHOOL OF MEDICINE"
+    ],
+    "State University of New York": [
+        "ST UNIV NY",
+        "ST UNIV NY HEALTH SCIENCE CENTER"
+    ],
+    "Tel Aviv University": [
+        "TEL AVIV UNIV"
+    ],
+    "Temple University": [
+        "TEMPLE UNIV SCHOOL MEDICINE",
+        "TEMPLE UNIV",
+        "TEMPLE UNIV SCHOOL OF MEDICINE",
+        "TEMPLE UNIV HEALTH SCIENCES CENTER"
+    ],
+    "Thomas Jefferson University": [
+        "THOMAS JEFFERSON UNIV",
+        "THOMAS JEFFERSON UNIV JEFFERSON MEDICAL COLLEGE",
+        "THOMAS JEFFERSON UNIV JEFFERSON CANCER INST"
+    ],
+    "Tobacco Institute": [
+        "TI",
+        "TI, TOBACCO INST",
+        "TOBACCO INSTITUTE",
+        "TOBACCO INSTITUTE INC"
+    ],
+    "Tobacco Merchants Association of the U.S.": [
+        "TMA"
+    ],
+    "Tufts University": [
+        "TUFTS UNIV",
+        "TUFTS UNIV SCHOOL MEDICINE",
+        "TUFTS UNIV SCHOOL OF MEDICINE"
+    ],
+    "Tulane University": [
+        "TULANE UNIV SCHOOL MEDICINE"
+    ],
+    "UC Berkeley": [
+        "UNIVERSITY OF CALIFORNIA"
+    ],
+    "UC San Francisco": [
+        "UNIV MA MEDICAL SCHOOL",
+        "UNIV CA SCHOOL OF MEDICINE",
+        "UNIV CA SCHOOL MEDICINE"
+    ],
+    "UCLA": [
+        "UNIV CA LOS ANGELES SCHOOL MEDICINE",
+        "UNIV CA LOS ANGELES SCHOOL OF MEDICINE"
+    ],
+    "University of Indiana": [
+        "IN UNIV"
+    ],
+    "University of Maryland": [
+        "UNIV MD SCHOOL MEDICINE"
+    ],
+    "University of Miami ": [
+        "UNIV MIAMI SCHOOL OF MEDICINE",
+        "UNIV MIAMI SCHOOL MEDICINE"
+    ],
+    "University of Michigan": [
+        "UNIV MI MEDICAL SCHOOL"
+    ],
+    "University of Minnesota": [
+        "UNIV MN MEDICAL SCHOOL"
+    ],
+    "University of North Carolina": [
+        "UNIV NC SCHOOL OF MEDICINE"
+    ],
+    "University of Pennsylvania": [
+        "UNIV PA SCHOOL MEDICINE",
+        "UNIV PA SCHOOL OF MEDICINE"
+    ],
+    "University of Rochester": [
+        "UNIV ROCHESTER SCHOOL MEDICINE & DENTISTRY"
+    ],
+    "University of San Diego": [
+        "UNIV CA SAN DIEGO SCHOOL MEDICINE",
+        "UNIV CA SAN DIEGO SCHOOL OF MEDICINE"
+    ],
+    "University of Southern California": [
+        "UNIV S CA SCHOOL OF MEDICINE",
+        "UNIV S CA SCHOOL MEDICINE"
+    ],
+    "University of Texas": [
+        "UNIV TX MEDICAL SCHOOL",
+        "UNIV TX SW MEDICAL SCHOOL"
+    ],
+    "University of Virginia": [
+        "UNIV VA SCHOOL MEDICINE",
+        "UNIV VA SCHOOL OF MEDICINE"
+    ],
+    "University of Washington": [
+        "UNIV WA SCHOOL OF MEDICINE"
+    ],
+    "Vanderbilt University": [
+        "VANDERBILT UNIV",
+        "VANDERBILT UNIV SCHOOL MEDICINE",
+        "VANDERBILT UNIV SCHOOL OF MEDICINE",
+        "VANDERBILT UNIV MEDICAL CENTER"
+    ],
+    "Virginia Commonwealth University": [
+        "VA COMMONWEALTH UNIV"
+    ],
+    "Wake Forest University": [
+        "WAKE FOREST UNIV BOWMAN GRAY SCHOOL MEDICINE"
+    ],
+    "Walt Klein Advertising": [
+        "WALT KLEIN & ASSOC"
+    ],
+    "Washington University in St. Louis": [
+        "WA UNIV SCHOOL MEDICINE",
+        "WA UNIV SCHOOL OF MEDICINE",
+        "WA UNIV",
+        "WASHINGTON UNIV SCHOOL MEDICINE"
+    ],
+    "Wayne State University": [
+        "WAYNE ST UNIV"
+    ],
+    "Womble Carlyle Sandridge & Rice": [
+        "WOMBLE CARLYLE"
+    ],
+    "Yale University": [
+        "YALE UNIV",
+        "YALE UNIV SCHOOL MEDICINE",
+        "YALE UNIV SCHOOL OF MEDICINE"
+    ]
+}
