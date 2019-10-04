@@ -46,7 +46,7 @@ class Edge:
     Python object to store edges, should be replaced if the Person class is replaced
     """
     def __init__(self, pk: int, node1: str, node2: str, docs: int, words: int):
-        self.pk = pk
+        self.pk = pk  # pylint: disable=C0103
         self.node1 = node1  # could be replaced with Person
         self.node2 = node2
         self.docs = docs
