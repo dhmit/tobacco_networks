@@ -7,10 +7,9 @@ from pathlib import Path
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from config.settings.base import BACKEND_DIR
 from .serializers import PersonSerializer, EdgeSerializer
 from .models import load_json_data, load_json_data_edge
-from config.settings.base import BACKEND_DIR
 
 
 @api_view(['GET'])
