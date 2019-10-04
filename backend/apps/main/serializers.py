@@ -27,9 +27,11 @@ class EdgeSerializer(serializers.Serializer):
     Serializer for the Edge model
     """
     pk = serializers.IntegerField(read_only=True)  # pylint: disable=C0103
-    nodes = serializers.CharField(read_only=True)
+    node1 = serializers.CharField(read_only=True)
+    node2 = serializers.CharField(read_only=True)
     docs = serializers.IntegerField(read_only=True)
     words = serializers.IntegerField(read_only=True)
+
 
     def create(self, validated_data):
         """ We will not create new objects using this serializer """
