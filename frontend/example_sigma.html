@@ -29,9 +29,9 @@
         // Create a graph object
         var graph = {
           nodes: [
-            { id: "n0", label: "A node", x: 0, y: 0, size: 3, color: '#008cc2' },
-            { id: "n1", label: "Another node", x: 3, y: 1, size: 2, color: '#008cc2' },
-            { id: "n2", label: "And a last one", x: 1, y: 3, size: 1, color: '#E57821' }
+            { id: "n0", label: "A node", x: Math.random()*5, y: Math.random()*5, size: 3, color: '#008cc2' },
+            { id: "n1", label: "Another node", x: Math.random()*5, y: Math.random()*5, size: 2, color: '#008cc2' },
+            { id: "n2", label: "And a last one", x: Math.random()*5, y: Math.random()*5, size: 1, color: '#E57821' }
           ],
           edges: [
             { id: "e0", source: "n0", target: "n1", color: '#282c34', type:'line', size:0.5 },
