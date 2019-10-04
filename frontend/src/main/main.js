@@ -97,6 +97,7 @@ class Info extends React.Component {
             <div className="col-3">
                 <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                 <p>The current viz color is {this.props.currentColor}</p>
+                {this.props.mouseover ? "The person's name is " + this.props.person + "\n": ''}
             </div>
         );
     }
@@ -104,6 +105,7 @@ class Info extends React.Component {
 Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
+    person: PropTypes.string,
 };
 
 
@@ -121,6 +123,7 @@ class MainView extends React.Component {
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
+            person: null,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -181,6 +184,8 @@ class MainView extends React.Component {
     handle_viz_events(event_name, data) { // eslint-disable-line no-unused-vars
         if (event_name === "mouseover") {
             this.setState({mouseover: true});
+            this.setState({person: data.name});
+            console.log(this.state.person);
         } else if (event_name === "mouseout") {
             this.setState({mouseover: false});
         } else if (event_name === "click") {
@@ -211,6 +216,7 @@ class MainView extends React.Component {
                         <Info
                             mouseover={this.state.mouseover}
                             currentColor={this.state.config.color}
+                            person={this.state.person}
                         />
                     </div>
                 </div>
