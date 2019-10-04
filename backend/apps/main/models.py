@@ -43,30 +43,26 @@ def load_network_json_data(return_type: str):
     """
     if return_type not in ['nodes', 'edges']:
         raise ValueError("Specified return type needs to be nodes or edges")
-    
+
     json_path = Path(BACKEND_DIR, 'data', 'network_test_data.json')
     with open(json_path) as json_file:
         data = json.load(json_file)
     if return_type == "edges":
-        edges_dicts = data['links']
         edges = []
-        for edges_dict in edges_dicts:
+        for edges_dict in data['links']:
             pk = int(edges_dict.get('id'))  # pylint: disable=C0103
             node1 = edges_dict.get('node1')
             node2 = edges_dict.get('node2')
             docs = edges_dict.get('docs')
             words = int(edges_dict.get('words'))
-            edge_obj = Edge(pk, node1, node2, docs, words)
-            edges.append(edge_obj)
+            edges.append(Edge(pk, node1, node2, docs, words))
         return edges
     else:
-        person_dicts = data['nodes']
         people = []
-        for person_dict in person_dicts:
+        for person_dict in data['nodes']:
             pk = int(person_dict.get('id'))  # pylint: disable=C0103
             name = person_dict.get('name')
             docs = person_dict.get('docs')
             words = int(person_dict.get('words'))
-            person_obj = Person(pk, name, docs, words)
-            people.append(person_obj)
+            people.append(Person(pk, name, docs, words))
         return people
