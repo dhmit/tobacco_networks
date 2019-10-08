@@ -56,12 +56,32 @@ def get_authors_by_document() -> list:
     authors_by_docs = []
     for _, row in df.iterrows():
         authors_by_docs.append({
-            'au': row['au'],
+            'au': parse_au_person(row['au']),
             'au_org': row['au_org'],
-            'au_person': row['au_person']
+            'au_person': parse_au_person(row['au_person'])
         })
     return authors_by_docs
 
+def parse_au_person(au_person):
+    names = []
+    for name_split_semicolon in [n.strip() for n in au_person.split(';')]:
+        for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
+            if 0 < len(name_split_bar) < 100:
+                names.append(name_split_bar)
+    return names
+
+def get_clean_org_names():
+    # read clean_org_names
+    file_name = Path('..', 'data', 'name_disambiguation', 'clean_org_names_to_raw_org_names.json')
+    with open(file_name, 'r') as infile:
+        name_dict = json.load(infile)
+
+    # invert dict
+    inv_name_dict = {}
+    for official in name_dict:
+        for j in name_dict[official]:
+            inv_name_dict[j] = official
+    return inv_name_dict
 
 if __name__ == '__main__':
     get_author_counter()

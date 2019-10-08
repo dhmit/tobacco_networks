@@ -9,24 +9,14 @@ from IPython import embed
 from nameparser import HumanName
 from nameparser.config import CONSTANTS
 
+from name_preprocessing import get_authors_by_document, get_clean_org_names
+
 import unittest
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
-def get_clean_org_names():
-    # read clean_org_names
-    file_name = Path('..', 'data', 'name_disambiguation', 'clean_org_names_to_raw_org_names.json')
-    with open(file_name, 'r') as infile:
-        name_dict = json.load(infile)
-
-    # invert dict
-    inv_name_dict = {}
-    for official in name_dict:
-        for j in name_dict[official]:
-            inv_name_dict[j] = official
-    return inv_name_dict
-
-inv_name_dict = get_clean_org_names()
+# GLOBAL VARIABLE: UPPER CASE
+RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
 
 class Person:
 
@@ -34,10 +24,10 @@ class Person:
                  count=0):
 
         if name_raw:
-            first, middle, last, positions = self.parse_raw_name(name_raw)
+            first, middle, last, positions = self.parse_raw_name(name_raw, count)
 
         if positions is None:
-            positions = {}
+            positions = Counter()
 
         # by default, the raw name is an alias of the person
         # (we're changing the first/middle names based on new information, so keeping the original
@@ -54,6 +44,9 @@ class Person:
         self.positions = Counter()
         for i in positions:
             cleaned = re.sub('\.', '', i)
+            print(cleaned)
+            print(positions)
+            print(positions[i])
             self.positions[cleaned.upper()] = positions[i]
         self.aliases = aliases
         self.count = count
@@ -85,7 +78,7 @@ class Person:
         return f'{self.last} {self.first} {self.middle}'
 
     @staticmethod
-    def parse_raw_name(name_raw: str) -> (str, str, str, set):
+    def parse_raw_name(name_raw: str, count: int) -> (str, str, str, Counter):
         """
         Parses a (usually messy) raw name and returns
         first, middle, last names and a set of extracted positions
@@ -299,16 +292,17 @@ class Person:
                 extracted_positions[i] = inv_name_dict[extracted_positions[i]]
 
         # make it into a counter
-        extracted_positions = Counter(extracted_positions)
+        result_positions = Counter()
+        for position in extracted_positions:
+            result_positions[position] = count
 
-        return name.first, name.middle, name.last, extracted_positions
+        return name.first, name.middle, name.last, result_positions
 
 
 class PeopleDatabase:
 
     def __init__(self):
         self.people = set()
-        self.aliases = {}
 
     def add_person_raw(self, name_raw: str, count=0):
         new_p = Person(name_raw=name_raw, count=count)
@@ -464,9 +458,21 @@ class PeopleDatabase:
             print('k')
             embed()
 
-    def find_related_person(self, person: Person):
-        pass
+    def get_alias_to_name(self):
+        result_dict = {}
+        for person in self.people:
+            for alias in person.aliases:
+                result_dict[alias] = f'{person.first} {person.middle} {person.last}'
+            # print(f'Official name: {person.first} {person.middle} {person.last}')
+            # print("Aliases", person.aliases)
+        return result_dict
 
+    def get_name_to_person(self):
+        result_dict = {}
+        for person in self.people:
+            name = f'{person.first} {person.middle} {person.last}'
+            result_dict[name] = person
+        return result_dict
 
 def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_names_raw_test.json')):
 
@@ -476,7 +482,6 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
     # add everyone to a PeopleDatabase
     people_db = PeopleDatabase()
     for name in name_dict:
-        count_documents = name_dict[name]
         if name.lower().find('dunn') > -1:
             people_db.add_person_raw(name_raw=name, count=name_dict[name])
 
@@ -485,6 +490,9 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
     # then merge the duplicate / similar names
     people_db.create_positions_csv()
     people_db.merge_duplicates()
+
+    with open('alias_to_name.json', 'w') as outfile:
+        json.dump(people_db.get_alias_to_name(), outfile)
 
 
 class TestNameParser(unittest.TestCase):
@@ -506,9 +514,28 @@ class TestNameParser(unittest.TestCase):
             self.assertEqual(Person(name_raw = name), self.test_raw_names[name])
 
 
-if __name__ == '__main__':
+def add_au_org():
+    au_dict = get_authors_by_document()
 
-    merge_names()
+
+
+    for doc in au_dict:
+        for alias in doc['au_person']:
+            name = alias_to_name[alias]
+            person = name_to_person[name]
+            org = doc['au_org']
+            if org in inv_name_dict:
+                person.positions = person.positions + Counter(doc['au_org'])
+    # match alias to name to person object
+    # take au_org, check if it is in clean_org dict. if so, add it to the positions counter of
+    # the person object
+    # for doc in au_dict:
+    print(au_dict)
+
+
+if __name__ == '__main__':
+    add_au_org()
+    # merge_names()
     # unittest.main()
 
 
