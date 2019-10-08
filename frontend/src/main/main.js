@@ -97,7 +97,8 @@ class Info extends React.Component {
             <div className="col-3">
                 <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                 <p>The current viz color is {this.props.currentColor}</p>
-                {this.props.mouseover ? "The person's name is " + this.props.person + "\n": ''}
+                {this.props.click ? "The name of the person you clicked is: " + this.props.person
+                    + "\n": ''}
             </div>
         );
     }
@@ -106,6 +107,7 @@ Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
     person: PropTypes.string,
+    click:PropTypes.bool,
 };
 
 
@@ -184,12 +186,11 @@ class MainView extends React.Component {
     handle_viz_events(event_name, data) { // eslint-disable-line no-unused-vars
         if (event_name === "mouseover") {
             this.setState({mouseover: true});
-            this.setState({person: data.name});
-            console.log(this.state.person);
         } else if (event_name === "mouseout") {
             this.setState({mouseover: false});
         } else if (event_name === "click") {
-            {/* TODO (Sirena): Implement a click handler that shows name of person clicked*/}
+            this.setState({click:true});
+            this.setState({person: data.name});
         }
 
     }
@@ -211,12 +212,14 @@ class MainView extends React.Component {
                         <Viz
                             data={this.state.data}
                             config={this.state.config}
-                            handle_viz_events={(event_name, data) => this.handle_viz_events(event_name, data )}
+                            handle_viz_events={(event_name, data) =>
+                                this.handle_viz_events(event_name, data )}
                         />
                         <Info
                             mouseover={this.state.mouseover}
                             currentColor={this.state.config.color}
                             person={this.state.person}
+                            click={this.state.click}
                         />
                     </div>
                 </div>
