@@ -97,8 +97,8 @@ class Info extends React.Component {
             <div className="col-3">
                 <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                 <p>The current viz color is {this.props.currentColor}</p>
-                {this.props.click ? "The name of the person you clicked is: " + this.props.person
-                    + "\n": ''}
+                <p>{this.props.person.length > 0 ? "The name of the person you clicked is: "
+                    + this.props.person + "\n": ''}</p>
             </div>
         );
     }
@@ -107,7 +107,6 @@ Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
     person: PropTypes.string,
-    click:PropTypes.bool,
 };
 
 
@@ -125,7 +124,7 @@ class MainView extends React.Component {
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
-            person: null,
+            person: "",
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -135,18 +134,6 @@ class MainView extends React.Component {
      */
     componentDidMount() {
         fetch("get_network_data")
-            .then((response) => {
-                // console.log(response);
-                response
-                    .json()
-                    .then((data) => {
-                        this.setState({data});
-                        // console.log(data);
-                    })
-            }).catch(() => {
-                console.log("error");
-            });
-        fetch("api/people/")
             .then((response) => {
                 // console.log(response);
                 response
@@ -189,7 +176,6 @@ class MainView extends React.Component {
         } else if (event_name === "mouseout") {
             this.setState({mouseover: false});
         } else if (event_name === "click") {
-            this.setState({click:true});
             this.setState({person: data.name});
         }
 
@@ -219,7 +205,6 @@ class MainView extends React.Component {
                             mouseover={this.state.mouseover}
                             currentColor={this.state.config.color}
                             person={this.state.person}
-                            click={this.state.click}
                         />
                     </div>
                 </div>
