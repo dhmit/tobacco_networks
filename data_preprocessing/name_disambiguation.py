@@ -1,9 +1,12 @@
 import copy
 import json
+import pickle
 import re
 import csv
 from collections import Counter, defaultdict
 from pathlib import Path
+
+from typing import Union
 
 from IPython import embed
 from nameparser import HumanName
@@ -288,8 +291,8 @@ class Person:
 
         # map organization names to clean official names
         for i in range(len(extracted_positions)):
-            if extracted_positions[i] in inv_name_dict:
-                extracted_positions[i] = inv_name_dict[extracted_positions[i]]
+            if extracted_positions[i] in RAW_ORG_TO_CLEAN_ORG_DICT:
+                extracted_positions[i] = RAW_ORG_TO_CLEAN_ORG_DICT[extracted_positions[i]]
 
         # make it into a counter
         result_positions = Counter()
@@ -310,6 +313,37 @@ class PeopleDatabase:
 
     def __len__(self):
         return len(self.people)
+
+    def __eq__(self, other):
+        return self.people == other.people
+
+    def __repr(self):
+        return f"<PeopleDatabase with {len(self.people)}>"
+
+    def store_to_disk(self, file_path: Path):
+        """
+        Stores a people db to disk as a pickle file
+        :param file_path: Path
+        :return:
+        """
+
+        with open(str(file_path), 'wb') as outfile:
+            pickle.dump(self, outfile)
+
+    def load_from_disk(self, file_path: Path):
+        """
+        Load a people db from a pickle file
+        :param file_path:
+        :return:
+        """
+
+        with open(str(file_path), 'rb') as infile:
+            loaded_db = pickle.load(infile)
+            self.people = loaded_db.people
+
+
+
+
 
     def create_positions_csv(self):
         """
@@ -490,6 +524,7 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
     # then merge the duplicate / similar names
     people_db.create_positions_csv()
     people_db.merge_duplicates()
+    people_db.store_to_disk(Path('d_names_db.pickle'))
 
     with open('alias_to_name.json', 'w') as outfile:
         json.dump(people_db.get_alias_to_name(), outfile)
@@ -514,6 +549,22 @@ class TestNameParser(unittest.TestCase):
             self.assertEqual(Person(name_raw = name), self.test_raw_names[name])
 
 
+class TestPeopleDB(unittest.TestCase):
+
+    def setUp(self):
+        self.people_db = PeopleDatabase()
+        for name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan']:
+            self.people_db.add_person_raw(name, 10)
+
+    def test_pickle(self):
+        """
+        Test if pickling works
+        """
+        self.people_db.store_to_disk(Path('test.pickle'))
+        loaded_db = PeopleDatabase()
+        loaded_db.load_from_disk(Path('test.pickle'))
+        self.assertEqual(self.people_db, loaded_db)
+
 
 def add_au_org():
     au_dict = get_authors_by_document()
@@ -535,8 +586,9 @@ def add_au_org():
 
 
 if __name__ == '__main__':
-    add_au_org()
-    # merge_names()
+
+    #    add_au_org()
+    merge_names()
     # unittest.main()
 
 
