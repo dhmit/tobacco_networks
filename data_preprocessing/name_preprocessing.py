@@ -4,6 +4,7 @@ from pathlib import Path
 import pandas as pd
 
 
+
 def load_documents_to_dataframe() -> pd.DataFrame:
     """
     Loads the Dunn documents into a pandas Dataframe
@@ -57,7 +58,7 @@ def get_authors_by_document() -> list:
     for _, row in df.iterrows():
         authors_by_docs.append({
             'au': parse_au_person(row['au']),
-            'au_org': row['au_org'],
+            'au_org': parse_au_org(row['au_org']),
             'au_person': parse_au_person(row['au_person'])
         })
     return authors_by_docs
@@ -68,6 +69,15 @@ def parse_au_person(au_person):
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
             if 0 < len(name_split_bar) < 100:
                 names.append(name_split_bar)
+    return names
+
+def parse_au_org(au_org):
+    names = []
+    for name_split_semicolon in [n.strip() for n in au_org.split(';')]:
+        for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
+            for name_split_comma in [m.strip() for m in name_split_bar.split(',')]:
+                if 0 < len(name_split_comma) < 100:
+                    names.append(name_split_comma)
     return names
 
 def get_clean_org_names():
@@ -82,6 +92,7 @@ def get_clean_org_names():
         for j in name_dict[official]:
             inv_name_dict[j] = official
     return inv_name_dict
+
 
 if __name__ == '__main__':
     get_author_counter()

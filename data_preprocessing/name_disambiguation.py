@@ -514,18 +514,19 @@ class TestNameParser(unittest.TestCase):
             self.assertEqual(Person(name_raw = name), self.test_raw_names[name])
 
 
+
 def add_au_org():
     au_dict = get_authors_by_document()
-
-
-
     for doc in au_dict:
-        for alias in doc['au_person']:
-            name = alias_to_name[alias]
-            person = name_to_person[name]
-            org = doc['au_org']
-            if org in inv_name_dict:
-                person.positions = person.positions + Counter(doc['au_org'])
+        if doc['au_org'] not in RAW_ORG_TO_CLEAN_ORG_DICT:
+            continue
+        else:
+            for alias in doc['au_person']:
+                name = alias_to_name[alias]
+                person = name_to_person[name]
+                org = doc['au_org']
+                if org in inv_name_dict:
+                    person.positions = person.positions + Counter(doc['au_org'])
     # match alias to name to person object
     # take au_org, check if it is in clean_org dict. if so, add it to the positions counter of
     # the person object
