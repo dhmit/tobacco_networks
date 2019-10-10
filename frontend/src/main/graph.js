@@ -44,7 +44,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         .force("link", d3.forceLink(label.links).distance(0).strength(2));
 
     const graphLayout = d3.forceSimulation(data.nodes)
-        .force("charge", d3.forceManyBody().strength(-3000))
+        .force("charge", d3.forceManyBody().strength(-5000))
         .force("center", d3.forceCenter(width / 2, height / 2))
         .force("x", d3.forceX(width / 2).strength(1))
         .force("y", d3.forceY(height / 2).strength(1))
@@ -63,8 +63,8 @@ export function create_graph(el, data, config, handle_viz_events) {
         return a === b || adjlist[a + "-" + b];
     }
 
-
-    const svg = d3.select(el).attr("width", width).attr("height", height);
+    const el_dom = d3.select(el);
+    const svg = el_dom.append('svg').attr("width", width).attr("height", height);
     const container = svg.append("g");
 
     svg.call(
@@ -125,6 +125,7 @@ export function create_graph(el, data, config, handle_viz_events) {
                 d.y = d.node.y;
             } else {
                 console.log(this);
+                console.log(typeof this);
                 const b = this.getBBox();
 
                 const diffX = d.x - d.node.x;
