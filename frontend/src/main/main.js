@@ -135,12 +135,10 @@ class MainView extends React.Component {
     componentDidMount() {
         fetch("get_network_data")
             .then((response) => {
-                // console.log(response);
                 response
                     .json()
                     .then((data) => {
                         this.setState({data});
-                        // console.log(data);
                     })
             }).catch(() => {
                 console.log("error");
@@ -178,7 +176,6 @@ class MainView extends React.Component {
         } else if (event_name === "click") {
             this.setState({person: data.name});
         }
-
     }
 
     /**
