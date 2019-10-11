@@ -6,14 +6,16 @@ import * as d3 from 'd3';
 /**
  * Create a graph for d3
  *
- * @param el: a dom element
- * @param data: object[]
+ * @param el: a DOM element
+ * @param data: Object, the data for the visualization, keys: "nodes" and "edges", each with
+ *              an array
+ * @param config: config for the visualization like width and height
+ * @param handle_viz_events: function to pass visualization events back to react.
 
  */
 export function create_graph(el, data, config, handle_viz_events) {
     let width = config.width;
     let height = config.height;
-
 
     const color = d3.scaleSequential(d3.interpolateBlues);
     let max_weight = 0;
@@ -143,8 +145,8 @@ export function create_graph(el, data, config, handle_viz_events) {
 
     }
 
-    function fixna(x) {
-        if (isFinite(x)) {return x;}
+    function fixna(val) {
+        if (isFinite(val)) {return val}
         return 0;
     }
 
