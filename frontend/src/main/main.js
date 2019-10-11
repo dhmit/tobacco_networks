@@ -97,6 +97,8 @@ class Info extends React.Component {
             <div className="col-3">
                 <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                 <p>The current viz color is {this.props.currentColor}</p>
+                <p>{this.props.person.length > 0 ? "The name of the person you clicked is: "
+                    + this.props.person + "\n": ''}</p>
             </div>
         );
     }
@@ -104,6 +106,7 @@ class Info extends React.Component {
 Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
+    person: PropTypes.string,
 };
 
 
@@ -121,6 +124,7 @@ class MainView extends React.Component {
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
+            person: "",
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -131,24 +135,10 @@ class MainView extends React.Component {
     componentDidMount() {
         fetch("get_network_data")
             .then((response) => {
-                // console.log(response);
                 response
                     .json()
                     .then((data) => {
                         this.setState({data});
-                        // console.log(data);
-                    })
-            }).catch(() => {
-                console.log("error");
-            });
-        fetch("api/people/")
-            .then((response) => {
-                // console.log(response);
-                response
-                    .json()
-                    .then((data) => {
-                        this.setState({data});
-                        // console.log(data);
                     })
             }).catch(() => {
                 console.log("error");
@@ -184,9 +174,8 @@ class MainView extends React.Component {
         } else if (event_name === "mouseout") {
             this.setState({mouseover: false});
         } else if (event_name === "click") {
-            {/* TODO (Sirena): Implement a click handler that shows name of person clicked*/}
+            this.setState({person: data.name});
         }
-
     }
 
     /**
@@ -206,11 +195,13 @@ class MainView extends React.Component {
                         <Viz
                             data={this.state.data}
                             config={this.state.config}
-                            handle_viz_events={(event_name) => this.handle_viz_events(event_name)}
+                            handle_viz_events={(event_name, data) =>
+                                this.handle_viz_events(event_name, data )}
                         />
                         <Info
                             mouseover={this.state.mouseover}
                             currentColor={this.state.config.color}
+                            person={this.state.person}
                         />
                     </div>
                 </div>
