@@ -4,6 +4,8 @@ Views that define API endpoints for the site
 import json
 from pathlib import Path
 
+import random
+
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -11,7 +13,7 @@ from config.settings.base import BACKEND_DIR
 from .serializers import PersonSerializer, EdgeSerializer
 from .models import load_network_json_data
 
-import random
+
 
 
 @api_view(['GET'])
@@ -40,12 +42,12 @@ def get_network_data(request):
     with open(json_path) as json_file:
         data = json.load(json_file)
     nodes = data['nodes']
-    for i in range(len(nodes)):
-        nodes[i]['x'] = random.random()*500
-        nodes[i]['y'] = random.random()*500
-        nodes[i]['weight'] = nodes[i]['docs']
+    for node in nodes:
+        node['x'] = random.random()*500
+        node['y'] = random.random()*500
+        node['weight'] = node['docs']
     links = data['links']
-    for i in range(len(links)):
-        links[i]['source'] = links[i]['node1']
-        links[i]['target'] = links[i]['node2']
+    for link in links:
+        link['source'] = link['node1']
+        link['target'] = link['node2']
     return JsonResponse(data)
