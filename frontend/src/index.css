@@ -17,3 +17,8 @@ code {
   padding: 4px;
   margin-bottom: 1px;
 }
+
+/* simple class to hide and display in the table for each person */
+.hidden {
+    display: none;
+}

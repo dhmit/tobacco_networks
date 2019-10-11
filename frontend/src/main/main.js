@@ -97,8 +97,21 @@ class Info extends React.Component {
             <div className="col-3">
                 <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                 <p>The current viz color is {this.props.currentColor}</p>
-                <p>{this.props.person.length > 0 ? "The name of the person you clicked is: "
-                    + this.props.person + "\n": ''}</p>
+                <table className="table">
+                    <tbody><tr>
+                        <th scope="row">Name:</th>
+                        <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Docs</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Words</th>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         );
     }
