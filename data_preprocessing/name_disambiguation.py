@@ -23,8 +23,8 @@ RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
 
 class Person:
 
-    def __init__(self, name_raw='', last='', first='', middle='', positions=None, aliases=None,
-                 count=0):
+    def __init__(self, name_raw='', last='', first='', middle='', position = 'not calculated',
+                 positions=None, aliases=None, count=0):
 
         if name_raw:
             first, middle, last, positions = self.parse_raw_name(name_raw, count)
@@ -44,6 +44,7 @@ class Person:
         self.last = last.upper()
         self.first = first.upper()
         self.middle = middle.upper()
+        self.position = position
         self.positions = Counter()
         for i in positions:
             cleaned = re.sub('\.', '', i)
@@ -53,8 +54,6 @@ class Person:
             self.positions[cleaned.upper()] = positions[i]
         self.aliases = aliases
         self.count = count
-
-
 
     def __repr__(self):
         s = f'{self.first} {self.middle} {self.last}'
@@ -79,6 +78,10 @@ class Person:
 
     def stemmed(self):
         return f'{self.last} {self.first} {self.middle}'
+
+    def set_likely_position(self):
+        likely_position = self.positions.most_common(1)[0][0]
+        self.position = likely_position
 
     @staticmethod
     def parse_raw_name(name_raw: str, count: int) -> (str, str, str, Counter):
@@ -317,8 +320,19 @@ class PeopleDatabase:
     def __eq__(self, other):
         return self.people == other.people
 
-    def __repr(self):
+    def __repr__(self):
         return f"<PeopleDatabase with {len(self.people)}>"
+
+    def get_alias_to_person_dict(self):
+        """
+        Returns a dict that corresponds aliases to person objects
+        :return:
+        """
+        alias_to_person = {}
+        for person in self.people:
+            for alias in person.aliases:
+                alias_to_person[alias] = person
+        return alias_to_person
 
     def store_to_disk(self, file_path: Path):
         """
@@ -492,21 +506,10 @@ class PeopleDatabase:
             print('k')
             embed()
 
-    def get_alias_to_name(self):
-        result_dict = {}
+    def set_people_position(self):
         for person in self.people:
-            for alias in person.aliases:
-                result_dict[alias] = f'{person.first} {person.middle} {person.last}'
-            # print(f'Official name: {person.first} {person.middle} {person.last}')
-            # print("Aliases", person.aliases)
-        return result_dict
+            person.set_likely_position()
 
-    def get_name_to_person(self):
-        result_dict = {}
-        for person in self.people:
-            name = f'{person.first} {person.middle} {person.last}'
-            result_dict[name] = person
-        return result_dict
 
 def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_names_raw_test.json')):
 
@@ -525,9 +528,6 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
     people_db.create_positions_csv()
     people_db.merge_duplicates()
     people_db.store_to_disk(Path('d_names_db.pickle'))
-
-    with open('alias_to_name.json', 'w') as outfile:
-        json.dump(people_db.get_alias_to_name(), outfile)
 
 
 class TestNameParser(unittest.TestCase):
@@ -565,30 +565,68 @@ class TestPeopleDB(unittest.TestCase):
         loaded_db.load_from_disk(Path('test.pickle'))
         self.assertEqual(self.people_db, loaded_db)
 
+    def test_add_au_org(self):
+        add_au_org(self.people_db, Path('..', 'data', 'name_disambiguation', 'test_docs.csv'))
 
-def add_au_org():
-    au_dict = get_authors_by_document()
+        expected_people_db = PeopleDatabase()
+        raquel = Person('Garcia, Raquel')
+        raquel.positions = Counter(["British American Tobacco"])
+        expected_people_db.people.add(raquel)
+
+        dunn = Person('Dunn, WL')
+        dunn.positions = Counter(["British American Tobacco"])
+        expected_people_db.people.add(dunn)
+
+        stephan = Person('Risi, Stephan')
+        stephan.positions = Counter(["Philip Morris"])
+        expected_people_db.people.add(stephan)
+
+        # TODO print the proper PeopleDB
+        print(self.people_db)
+        print(expected_people_db)
+
+        # TODO figure out why this doesn't work
+        self.assertEqual(self.people_db, expected_people_db)
+
+
+def add_au_org(db, path):
+    """
+
+    :param db: a PeopleDatabase
+    :return:
+    """
+
+    # if we have 1 known company & 1 unknown company
+    au_dict = get_authors_by_document(path)
+    alias_to_person_dict = db.get_alias_to_person_dict()
     for doc in au_dict:
-        if doc['au_org'] not in RAW_ORG_TO_CLEAN_ORG_DICT:
+        orgs = set()
+        for org in doc['au_org']:
+            if org not in RAW_ORG_TO_CLEAN_ORG_DICT:
+                continue
+            else:
+                orgs.add(RAW_ORG_TO_CLEAN_ORG_DICT[org])
+        if len(orgs) != 1:
             continue
         else:
-            for alias in doc['au_person']:
-                name = alias_to_name[alias]
-                person = name_to_person[name]
-                org = doc['au_org']
-                if org in inv_name_dict:
-                    person.positions = person.positions + Counter(doc['au_org'])
-    # match alias to name to person object
-    # take au_org, check if it is in clean_org dict. if so, add it to the positions counter of
-    # the person object
-    # for doc in au_dict:
-    print(au_dict)
+            org = list(orgs)[0]
+            aliases = doc['au_person'].extend(doc['au'])
+            if not aliases:
+                continue
+            for alias in aliases:
+                if alias not in alias_to_person_dict:
+                    continue
+                alias_to_person_dict[alias].positions[org] += 1
 
 
 if __name__ == '__main__':
 
-    #    add_au_org()
     merge_names()
+    db = PeopleDatabase()
+    db.load_from_disk("d_names_db.pickle")
+    add_au_org(db)
+
+
     # unittest.main()
 
 

@@ -6,12 +6,12 @@ import pandas as pd
 
 
 
-def load_documents_to_dataframe() -> pd.DataFrame:
+def load_documents_to_dataframe(path) -> pd.DataFrame:
     """
     Loads the Dunn documents into a pandas Dataframe
     :return: pd.DataFrame
     """
-    df = pd.read_csv(Path('..', 'data', 'name_disambiguation', 'dunn_docs.csv')).fillna('')
+    df = pd.read_csv(path).fillna('')
     return df
 
 
@@ -42,7 +42,7 @@ def get_author_counter() -> Counter:
     return name_counter
 
 
-def get_authors_by_document() -> list:
+def get_authors_by_document(path) -> list:
     """
     Creates a list of documents such that each element consists of a dict with keys
     'au', 'au_org', 'au_person'
@@ -54,7 +54,7 @@ def get_authors_by_document() -> list:
     :return: list
     """
 
-    df = load_documents_to_dataframe()
+    df = load_documents_to_dataframe(path)
     authors_by_docs = []
     for _, row in df.iterrows():
         authors_by_docs.append({
@@ -92,6 +92,7 @@ def get_clean_org_names():
     for official in name_dict:
         for j in name_dict[official]:
             inv_name_dict[j] = official
+        inv_name_dict[official] = official
     return inv_name_dict
 
 
