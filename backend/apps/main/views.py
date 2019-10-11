@@ -1,6 +1,8 @@
 """
 Views that define API endpoints for the site
 """
+import random
+
 import json
 from pathlib import Path
 
@@ -11,7 +13,6 @@ from config.settings.base import BACKEND_DIR
 from .serializers import PersonSerializer, EdgeSerializer
 from .models import load_network_json_data
 
-import random
 
 
 @api_view(['GET'])
