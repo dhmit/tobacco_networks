@@ -514,8 +514,8 @@ class TestNameParser(unittest.TestCase):
             self.assertEqual(Person(name_raw = name), self.test_raw_names[name])
 
 
-
 def add_au_org():
+    #TODO: initialize the full alias_to_name and name_to_person dicts, requires Stefan
     au_dict = get_authors_by_document()
     for doc in au_dict:
         if doc['au_org'] not in RAW_ORG_TO_CLEAN_ORG_DICT:

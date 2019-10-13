@@ -91,6 +91,7 @@ def get_clean_org_names():
     for official in name_dict:
         for j in name_dict[official]:
             inv_name_dict[j] = official
+        name_dict[official] = official
     return inv_name_dict
 
 
