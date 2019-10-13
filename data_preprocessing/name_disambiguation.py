@@ -50,8 +50,8 @@ class Person:
             cleaned = re.sub('\.', '', i)
             print(cleaned)
             print(positions)
-            print(positions[i])
-            self.positions[cleaned.upper()] = positions[i]
+            print(i)
+            self.positions[cleaned.upper()] = i
         self.aliases = aliases
         self.count = count
 
@@ -321,7 +321,8 @@ class PeopleDatabase:
         return self.people == other.people
 
     def __repr__(self):
-        return f"<PeopleDatabase with {len(self.people)}>"
+        return f"<PeopleDatabase with {len(self.people)} people:\n {[i for i in self.people]}>"
+
 
     def get_alias_to_person_dict(self):
         """
@@ -581,7 +582,6 @@ class TestPeopleDB(unittest.TestCase):
         stephan.positions = Counter(["Philip Morris"])
         expected_people_db.people.add(stephan)
 
-        # TODO print the proper PeopleDB
         print(self.people_db)
         print(expected_people_db)
 
@@ -589,11 +589,17 @@ class TestPeopleDB(unittest.TestCase):
         self.assertEqual(self.people_db, expected_people_db)
 
 
-def add_au_org(db, path):
+def add_au_org(db, path: Path):
     """
+    Input are a people database and a path to a document
+    Returns None
 
-    :param db: a PeopleDatabase
-    :return:
+    For each document belonging to a certain company,
+    finds Person that that document author alias maps to,
+    and adds that company to the position counter of that Person
+
+    :param db: a PeopleDatabase, path: path to authors/orgs document
+    :return: None
     """
 
     # if we have 1 known company & 1 unknown company
@@ -610,7 +616,8 @@ def add_au_org(db, path):
             continue
         else:
             org = list(orgs)[0]
-            aliases = doc['au_person'].extend(doc['au'])
+            doc['au_person'].extend(doc['au'])
+            aliases = doc['au_person']
             if not aliases:
                 continue
             for alias in aliases:
@@ -620,11 +627,12 @@ def add_au_org(db, path):
 
 
 if __name__ == '__main__':
-
+    unittest.main()
     merge_names()
     db = PeopleDatabase()
     db.load_from_disk("d_names_db.pickle")
-    add_au_org(db)
+    print(add_au_org(db))
 
 
-    # unittest.main()
+
+
