@@ -18,17 +18,45 @@ import unittest
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
-# GLOBAL VARIABLE: UPPER CASE
+
+# dict that converts raw organization names to clean, official organization names
 RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
 
+
 class Person:
+    """A Person object represents information of a person (possibly parsed from raw strings,
+    or merged from different strings)
 
-    def __init__(self, name_raw='', last='', first='', middle='', position = 'not calculated',
-                 positions=None, aliases=None, count=0):
+    Attributes:
+        last (str): official parsed last name
+        first (str): official parsed first name
+        middle (str): official parsed middle name
+        position (str): most likely organization of the person
+        positions (Counter of str): counter of all parsed organizations/extra information
+        aliases (list of str): list of raw names that correspond to the person
+        count (int): number of times the alias appeared in the data
+    """
+    def __init__(self, name_raw='', last='', first='', middle='', position='not calculated',
+                 positions=None, aliases=None, count=1):
+        """
+        Returns a person object
+        :param name_raw: raw string for the name (str)
+        :param last: official parsed last name (if known) (str)
+        :param first: official parsed first name (if known) (str)
+        :param middle: official parsed middle name (if known) (str)
+        :param position: official organization (if known; default is "not calculated") (str)
+        :param positions: compilation of organizations/other information (if known) (Counter of str)
+        :param aliases: list of raw strings that correspond to this person object (if known) (
+        list of str)
+        :param count: number of times the alias appeared in the data (int)
+        """
 
+        # if raw name is given, parse it using parse_raw_name() to get first, middle, last,
+        # and positions
         if name_raw:
             first, middle, last, positions = self.parse_raw_name(name_raw, count)
 
+        # initialize positions as an empty Counter if it is not given
         if positions is None:
             positions = Counter()
 
@@ -41,45 +69,70 @@ class Person:
             else:
                 aliases = [name_raw]
 
+        # set last, first, middle, position, positions: all converted to upper case
+        # set aliases and count
         self.last = last.upper()
         self.first = first.upper()
         self.middle = middle.upper()
         self.position = position
+        # initialize positions as a Counter
         self.positions = Counter()
+        # remove periods and convert to upper case
         for i in positions:
             cleaned = re.sub('\.', '', i)
-            print(cleaned)
-            print(positions)
-            print(i)
             self.positions[cleaned.upper()] = i
         self.aliases = aliases
         self.count = count
 
     def __repr__(self):
+        """
+        Returns string representation of first, middle, last name, positions,
+        and all aliases
+        :return: str of first, middle, last, positions, aliases
+        """
         s = f'{self.first} {self.middle} {self.last}'
-        s = s + ", Position: " + str(self.positions.most_common(10)) + ". Aliases: "
+        s = s + ", Position: " + str(self.positions) + ", Aliases: " + \
+            str(self.aliases) + ", count: " + str(self.count)
         return s
 
     def __eq__(self, other):
-        return (
-            self.last == other.last and
-            self.first == other.first and
-            self.middle == other.middle and
-            sorted(self.positions) == sorted(other.positions)
-        )
+        # TODO: figure out where this is actually called & what we should compare
+        """
+        Compares two person object by last, first, middle
+        :param other: another person object
+        :return: bool (if two person objects are the same)
+        """
+        return hash(self) == hash(other)
 
     def copy(self):
+        """
+        Copies a person object
+        :return: a copied person object
+        """
         return Person(last=self.last, first=self.first, middle=self.middle,
+                      position=self.position,
                       positions=copy.deepcopy(self.positions),
                       aliases=copy.deepcopy(self.aliases), count=self.count)
 
     def __hash__(self):
+        """
+        Hashes the person
+        :return: hash (int)
+        """
         return hash(f'{self.last} {self.first} {self.middle} {self.positions}')
 
     def stemmed(self):
+        """
+        Returns only the official name ("LAST FIRST MIDDLE") of the person
+        :return: str of official name
+        """
         return f'{self.last} {self.first} {self.middle}'
 
     def set_likely_position(self):
+        """
+        Calculates and sets position as the organization with the highest number of count
+        :return: None
+        """
         likely_position = self.positions.most_common(1)[0][0]
         self.position = likely_position
 
@@ -90,6 +143,7 @@ class Person:
         first, middle, last names and a set of extracted positions
 
         :param name_raw: str
+        :param count: int
         :return: str, str, str, set
 
 
@@ -292,42 +346,76 @@ class Person:
         if name.suffix:
             extracted_positions.append(name.suffix)
 
-        # map organization names to clean official names
+        # map organization names to clean official names (if they are in the dict) using
+        # RAW_ORG_TO_CLEAN_ORG_DICT
         for i in range(len(extracted_positions)):
             if extracted_positions[i] in RAW_ORG_TO_CLEAN_ORG_DICT:
                 extracted_positions[i] = RAW_ORG_TO_CLEAN_ORG_DICT[extracted_positions[i]]
 
-        # make it into a counter
+        # convert mapped positions into a counter
         result_positions = Counter()
         for position in extracted_positions:
             result_positions[position] = count
 
         return name.first, name.middle, name.last, result_positions
 
-
+# PeopleDatabase object
 class PeopleDatabase:
+    """A PeopleDatabase object represents the collection of person objects
+    and contains functions that merge person objects
 
+    Attributes:
+        people (set): collection of all person objects in the database
+    """
     def __init__(self):
+        """
+        Intiailizes an empty PeopleDatabase
+        """
         self.people = set()
 
-    def add_person_raw(self, name_raw: str, count=0):
+    def add_person_raw(self, name_raw: str, count=1):
+        """
+        Adds Person object to the database from a raw name string & count
+        :param name_raw: raw name (str)
+        :param count: number of times name_raw appeared (int)
+        :return: None
+        """
         new_p = Person(name_raw=name_raw, count=count)
         self.people.add(new_p)
 
     def __len__(self):
+        """
+        Returns the number of people in the database
+        :return: int (length of self.people)
+        """
         return len(self.people)
 
     def __eq__(self, other):
-        return self.people == other.people
+        """
+        Compares two PeopleDatabase objects
+        :param other: another PeopleDatabase object
+        :return: bool (if the people sets are the same)
+        """
+        hash1 = []
+        hash2 = []
+        for person in self.people:
+            hash1.append(hash(person))
+        for person in other.people:
+            hash2.append(hash(person))
+        return sorted(hash1) == sorted(hash2)
 
     def __repr__(self):
+        """
+        Returns string representation of the database: number of people in the database,
+        and string representation of each person
+        :return: str
+        """
         return f"<PeopleDatabase with {len(self.people)} people:\n {[i for i in self.people]}>"
-
 
     def get_alias_to_person_dict(self):
         """
         Returns a dict that corresponds aliases to person objects
-        :return:
+        :return: dict
         """
         alias_to_person = {}
         for person in self.people:
@@ -356,17 +444,14 @@ class PeopleDatabase:
             loaded_db = pickle.load(infile)
             self.people = loaded_db.people
 
-
-
-
-
+    # TODO: Figure out if we still need this / add authoritative name
     def create_positions_csv(self):
         """
         Makes a Counter of all positions appearing in db,
         Translates this info into a CSV,
         1st Col = raw name
         2nd Col = count in Counter
-        3rd Col = authoritative name– for now, just '' because we will fill in later
+        3rd Col = authoritative name – for now, just '' because we will fill in later
         :returns: None
         """
         positions_counter = Counter()
@@ -486,7 +571,13 @@ class PeopleDatabase:
         return True
 
     def merge_two_persons(self, person1, person2):
-
+        """
+        Create a new person by merging data of person1 and person2, and replace person1 and
+        person2 in the people db with the new person
+        :param person1: a person object
+        :param person2: another person object to be merged
+        :return:
+        """
         new_p = person1.copy()
 
         for attr in ['first', 'middle']:
@@ -508,12 +599,22 @@ class PeopleDatabase:
             embed()
 
     def set_people_position(self):
+        """
+        For each Person object in the people db, set its position as the most appeared
+        organization name
+        :return:
+        """
         for person in self.people:
             person.set_likely_position()
 
 
 def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_names_raw_test.json')):
-
+    """
+    Creates a people db from reading json file (dict of raw names and counts) and merges people
+    in it. Stores people db in a pickle file
+    :param name_file:
+    :return:
+    """
     with open(name_file, 'r') as infile:
         name_dict = json.load(infile)
 
@@ -530,32 +631,36 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
     people_db.merge_duplicates()
     people_db.store_to_disk(Path('d_names_db.pickle'))
 
-
+# TODO: fix these so the test works
 class TestNameParser(unittest.TestCase):
+    """Tests name parsing (parse_raw_name) of the Person class
+    Attributes:
+        test_raw_names: dict that corresponds raw names (str) to the expected Person object
+    """
     def setUp(self):
+        # TODO: Add more test cases
         self.test_raw_names = {
             "TEAGUE CE JR": Person(last = "Teague", first = "C", middle = "E", positions = {"JR"}),
             "teague ce jr": Person(last="Teague", first="C", middle="E", positions={"JR"}),
             'Teague, J - BAT': Person(last='Teague', first='J', middle='', positions={'BAT'}),
             "Teague, Claude Edward, Jr., Ph.D.": Person(
                 last="Teague", first="Claude", middle="Edward", positions={"JR, PHD"}
-            ),
-
-
-                               }
-        self.default_raw_names = []
+            ),}
 
     def test_all_names(self):
+        """
+        Iterates over all test names in self.test_raw_names and check if the Person object parsed
+        from Person class matches the expected Person object
+        :return:
+        """
         for name in self.test_raw_names:
             self.assertEqual(Person(name_raw = name), self.test_raw_names[name])
 
-
 class TestPeopleDB(unittest.TestCase):
-
     def setUp(self):
         self.people_db = PeopleDatabase()
         for name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan']:
-            self.people_db.add_person_raw(name, 10)
+            self.people_db.add_person_raw(name, 1)
 
     def test_pickle(self):
         """
@@ -585,7 +690,6 @@ class TestPeopleDB(unittest.TestCase):
         print(self.people_db)
         print(expected_people_db)
 
-        # TODO figure out why this doesn't work
         self.assertEqual(self.people_db, expected_people_db)
 
 
@@ -627,11 +731,18 @@ def add_au_org(db, path: Path):
 
 
 if __name__ == '__main__':
-    unittest.main()
-    merge_names()
-    db = PeopleDatabase()
-    db.load_from_disk("d_names_db.pickle")
-    print(add_au_org(db))
+    a = PeopleDatabase()
+    b = PeopleDatabase()
+    a.add_person_raw("Teague, J - BAT")
+    b.add_person_raw("Teague, J - BAT")
+    print(a)
+    print(b)
+    print(a == b)
+    # unittest.main()
+    # merge_names()
+    # db = PeopleDatabase()
+    # db.load_from_disk("d_names_db.pickle")
+    # print(add_au_org(db))
 
 
 
