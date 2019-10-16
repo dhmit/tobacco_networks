@@ -97,6 +97,7 @@ class Info extends React.Component {
             <div className="col-3">
                 <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                 <p>The current viz color is {this.props.currentColor}</p>
+                {/* TODO: add display/hide toggle*/}
                 <table className="table">
                     <tbody><tr>
                         <th scope="row">Name:</th>
