@@ -36,7 +36,7 @@ class Person:
         aliases (list of str): list of raw names that correspond to the person
         count (int): number of times the alias appeared in the data
     """
-    def __init__(self, name_raw='', last='', first='', middle='', position='not calculated',
+    def __init__(self, name_raw=None, last='', first='', middle='', position='not calculated',
                  positions=None, aliases=None, count=1):
         """
         Returns a person object
@@ -69,6 +69,7 @@ class Person:
             else:
                 aliases = [name_raw]
 
+
         # set last, first, middle, position, positions: all converted to upper case
         # set aliases and count
         self.last = last.upper()
@@ -80,7 +81,7 @@ class Person:
         # remove periods and convert to upper case
         for i in positions:
             cleaned = re.sub('\.', '', i)
-            self.positions[cleaned.upper()] = i
+            self.positions[cleaned.upper()] += 1
         self.aliases = aliases
         self.count = count
 
@@ -357,7 +358,9 @@ class Person:
         for position in extracted_positions:
             result_positions[position] = count
 
+        print(name.first, name.middle, name.last, result_positions)
         return name.first, name.middle, name.last, result_positions
+
 
 # PeopleDatabase object
 class PeopleDatabase:
@@ -631,6 +634,7 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
     people_db.merge_duplicates()
     people_db.store_to_disk(Path('d_names_db.pickle'))
 
+
 # TODO: fix these so the test works
 class TestNameParser(unittest.TestCase):
     """Tests name parsing (parse_raw_name) of the Person class
@@ -640,11 +644,15 @@ class TestNameParser(unittest.TestCase):
     def setUp(self):
         # TODO: Add more test cases
         self.test_raw_names = {
-            "TEAGUE CE JR": Person(last = "Teague", first = "C", middle = "E", positions = {"JR"}),
-            "teague ce jr": Person(last="Teague", first="C", middle="E", positions={"JR"}),
-            'Teague, J - BAT': Person(last='Teague', first='J', middle='', positions={'BAT'}),
+            "TEAGUE CE JR": Person(last="Teague", first="C", middle="E", positions={
+                "JR"}, aliases=["TEAGUE CE JR"]),
+            "teague ce jr": Person(last="Teague", first="C", middle="E", positions={"JR"},
+                aliases=["teague ce jr"]),
+            'Teague, J - BAT': Person(last='Teague', first='J', middle='',
+                positions={'British American Tobacco'}, aliases=['Teague, J - BAT']),
             "Teague, Claude Edward, Jr., Ph.D.": Person(
-                last="Teague", first="Claude", middle="Edward", positions={"JR, PHD"}
+                last="Teague", first="Claude", middle="Edward", positions={"JR, PHD"},
+                aliases=["Teague, Claude Edward, Jr., Ph.D."]
             ),}
 
     def test_all_names(self):
@@ -655,6 +663,7 @@ class TestNameParser(unittest.TestCase):
         """
         for name in self.test_raw_names:
             self.assertEqual(Person(name_raw = name), self.test_raw_names[name])
+
 
 class TestPeopleDB(unittest.TestCase):
     def setUp(self):
@@ -684,7 +693,7 @@ class TestPeopleDB(unittest.TestCase):
         expected_people_db.people.add(dunn)
 
         stephan = Person('Risi, Stephan')
-        stephan.positions = Counter(["Philip Morris"])
+        stephan.positions = Counter(["Philip Morris", "Philip Morris"])
         expected_people_db.people.add(stephan)
 
         print(self.people_db)
@@ -738,7 +747,7 @@ if __name__ == '__main__':
     print(a)
     print(b)
     print(a == b)
-    # unittest.main()
+    unittest.main()
     # merge_names()
     # db = PeopleDatabase()
     # db.load_from_disk("d_names_db.pickle")
