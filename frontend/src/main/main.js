@@ -97,8 +97,22 @@ class Info extends React.Component {
             <div className="col-3">
                 <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                 <p>The current viz color is {this.props.currentColor}</p>
-                <p>{this.props.person.length > 0 ? "The name of the person you clicked is: "
-                    + this.props.person + "\n": ''}</p>
+                {/* TODO: add display/hide toggle*/}
+                <table className="table">
+                    <tbody><tr>
+                        <th scope="row">Name:</th>
+                        <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Docs</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Words</th>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         );
     }
@@ -118,8 +132,8 @@ class MainView extends React.Component {
         super(props);
         this.state = {
             config: {
-                width: 500,
-                height: 500,
+                width: 1000,
+                height: 800,
                 color: 'blue',
             },  // initial configuration for the viz
             data: null,  // data for the viz
@@ -192,6 +206,9 @@ class MainView extends React.Component {
                             handle_checkbox={() => this.handle_checkbox()}
                             config={this.state.config}
                         />
+                    </div>
+
+                    <div className="row">
                         <Viz
                             data={this.state.data}
                             config={this.state.config}
