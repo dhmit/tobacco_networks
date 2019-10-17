@@ -76,12 +76,16 @@ class Person:
         self.first = first.upper()
         self.middle = middle.upper()
         self.position = position
-        # initialize positions as a Counter
-        self.positions = Counter()
         # remove periods and convert to upper case
-        for i in positions:
-            cleaned = re.sub('\.', '', i)
-            self.positions[cleaned.upper()] += 1
+        print(type(positions))
+        if isinstance(positions, Counter):
+            self.positions = positions
+        else:
+            # initialize positions as a Counter
+            self.positions = Counter()
+            for i in positions:
+                cleaned = re.sub('\.', '', i)
+                self.positions[cleaned.upper()] += count
         self.aliases = aliases
         self.count = count
 
@@ -356,7 +360,8 @@ class Person:
         # convert mapped positions into a counter
         result_positions = Counter()
         for position in extracted_positions:
-            result_positions[position] = count
+            cleaned = re.sub('\.', '', position)
+            result_positions[cleaned.upper()] += count
 
         print(name.first, name.middle, name.last, result_positions)
         return name.first, name.middle, name.last, result_positions
