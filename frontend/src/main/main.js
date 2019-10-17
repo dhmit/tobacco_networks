@@ -135,8 +135,8 @@ class MainView extends React.Component {
         super(props);
         this.state = {
             config: {
-                width: 500,
-                height: 500,
+                width: 1000,
+                height: 800,
                 color: 'blue',
             },  // initial configuration for the viz
             data: null,  // data for the viz
@@ -220,6 +220,9 @@ class MainView extends React.Component {
                             handle_checkbox={() => this.handle_checkbox()}
                             config={this.state.config}
                         />
+                    </div>
+
+                    <div className="row">
                         <Viz
                             data={this.state.data}
                             config={this.state.config}
