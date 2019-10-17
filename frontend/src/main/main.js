@@ -235,6 +235,7 @@ class MainView extends React.Component {
                             currentColor={this.state.config.color}
                             person={this.state.person}
                             showTableData={this.state.showTableData}
+                            toggle_show_data={(showTableData) => this.toggle_show_table(showTableData)}
                         />
                     </div>
                 </div>

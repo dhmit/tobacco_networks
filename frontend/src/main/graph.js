@@ -126,8 +126,8 @@ export function create_graph(el, data, config, handle_viz_events) {
                 d.x = d.node.x;
                 d.y = d.node.y;
             } else {
-                console.log(this);
-                console.log(typeof this);
+                // console.log(this);
+                // console.log(typeof this);
                 const b = this.getBBox();
 
                 const diffX = d.x - d.node.x;
