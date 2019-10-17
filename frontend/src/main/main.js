@@ -97,9 +97,9 @@ class Info extends React.Component {
      * Calls when button is pressed.  Shows the table containing info about person when it is
      * hidden and hides table when visible.
      */
-    toggle_show_table() {
+    toggle_show_table(tb) {
         this.setState({
-            showTableData:!this.state.showTableData
+            showTableData:!tb
         })
     }
 
@@ -234,6 +234,7 @@ class MainView extends React.Component {
                             currentColor={this.state.config.color}
                             person={this.state.person}
                             showTableData={this.state.showTableData}
+                            toggle_show_data={(showTableData) => this.toggle_show_table(showTableData)}
                         />
                     </div>
                 </div>
