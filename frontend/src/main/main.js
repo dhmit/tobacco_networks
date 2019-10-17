@@ -98,8 +98,9 @@ class Info extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
+        const table_data = {...this.state.showTableData};
         this.setState({
-            showTableData:!this.state.showTableData
+            showTableData:! table_data
         })
     }
 
