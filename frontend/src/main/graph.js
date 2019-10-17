@@ -25,13 +25,13 @@ export function create_graph(el, data, config, handle_viz_events) {
         }
     });
 
+    // label = floating names
     const label = {
         'nodes': [],
         'links': []
     };
 
-    // not sure what this does, will come back later
-    // why repeat label.nodes.push({node:d}) twice? what is node?
+    //adds nodes to label, push nodes twice = make 2 edges between nodes, make link stronger
     data.nodes.forEach(function(d, i) {
         label.nodes.push({node: d});
         label.nodes.push({node: d});
@@ -41,10 +41,12 @@ export function create_graph(el, data, config, handle_viz_events) {
         });
     });
 
+    // defines forces between labels and nodes
     const labelLayout = d3.forceSimulation(label.nodes)
         .force("charge", d3.forceManyBody().strength(-50))
         .force("link", d3.forceLink(label.links).distance(0).strength(2));
 
+    // defines the set up for the nodes themselves, charges are for the nodes
     const graphLayout = d3.forceSimulation(data.nodes)
         .force("charge", d3.forceManyBody().strength(-5000))
         .force("center", d3.forceCenter(width / 2, height / 2))
@@ -54,7 +56,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             .strength(1))
         .on("tick", ticked);
 
-    let adjlist = [];
+    let adjlist = {};
 
     data.links.forEach(function(d) {
         adjlist[d.source.index + "-" + d.target.index] = true;
