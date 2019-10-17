@@ -32,6 +32,7 @@ class Controls extends React.Component {
 
     }
 }
+
 Controls.propTypes = {
     config: PropTypes.object.isRequired,
     handle_checkbox: PropTypes.func.isRequired,
@@ -97,7 +98,6 @@ class Info extends React.Component {
             <div className="col-3">
                 <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                 <p>The current viz color is {this.props.currentColor}</p>
-                {/* TODO: add display/hide toggle*/}
                 <table className="table">
                     <tbody><tr>
                         <th scope="row">Name:</th>
@@ -113,6 +113,7 @@ class Info extends React.Component {
                     </tr>
                     </tbody>
                 </table>
+                <button onClick={()=>this.toggle_show_table()}>Toggle Display</button>
             </div>
         );
     }
@@ -121,6 +122,8 @@ Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
     person: PropTypes.string,
+    showTableData: PropTypes.bool,
+    toggle_show_table: PropTypes.func,
 };
 
 
@@ -139,6 +142,7 @@ class MainView extends React.Component {
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
             person: "",
+            showTableData: true,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -193,6 +197,16 @@ class MainView extends React.Component {
     }
 
     /**
+     * Calls when button is pressed.  Shows the table containing info about person when it is
+     * hidden and hides table when visible.
+     */
+    toggle_show_table() {
+        this.setState({
+            showTableData:!this.state.showTableData
+        })
+    }
+
+    /**
      * Render the app on the page
      *
      * @returns {Node}
@@ -216,6 +230,7 @@ class MainView extends React.Component {
                             mouseover={this.state.mouseover}
                             currentColor={this.state.config.color}
                             person={this.state.person}
+                            showTableData={this.state.showTableData}
                         />
                     </div>
                 </div>
