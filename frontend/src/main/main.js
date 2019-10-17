@@ -93,6 +93,16 @@ class Info extends React.Component {
         super(props);
     }
 
+    /**
+     * Calls when button is pressed.  Shows the table containing info about person when it is
+     * hidden and hides table when visible.
+     */
+    toggle_show_table() {
+        this.setState({
+            showTableData:!this.state.showTableData
+        })
+    }
+
     render() {
         return (
             <div className="col-3">
@@ -194,16 +204,6 @@ class MainView extends React.Component {
         } else if (event_name === "click") {
             this.setState({person: data.name});
         }
-    }
-
-    /**
-     * Calls when button is pressed.  Shows the table containing info about person when it is
-     * hidden and hides table when visible.
-     */
-    toggle_show_table() {
-        this.setState({
-            showTableData:!this.state.showTableData
-        })
     }
 
     /**
