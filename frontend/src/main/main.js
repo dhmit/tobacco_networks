@@ -93,38 +93,31 @@ class Info extends React.Component {
         super(props);
     }
 
-    /**
-     * Calls when button is pressed.  Shows the table containing info about person when it is
-     * hidden and hides table when visible.
-     */
-    toggle_show_table() {
-        console.log(this.state.showTableData)
-        this.setState({
-            showTableData:!this.state.showTableData
-        })
-    }
+
 
     render() {
         return (
             <div className="col-3">
-                <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
-                <p>The current viz color is {this.props.currentColor}</p>
-                <table className="table">
-                    <tbody><tr>
-                        <th scope="row">Name:</th>
-                        <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Docs</th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Words</th>
-                        <td></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <button onClick={()=>this.toggle_show_table()}>Toggle Display</button>
+                <div hidden={!this.props.showTableData}>
+                    <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
+                    <p>The current viz color is {this.props.currentColor}</p>
+                    <table className="table">
+                        <tbody><tr>
+                            <th scope="row">Name:</th>
+                            <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Docs</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Words</th>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button onClick={()=>this.props.toggle_show_table()}>Toggle Display</button>
             </div>
         );
     }
@@ -208,6 +201,18 @@ class MainView extends React.Component {
     }
 
     /**
+     * Calls when button is pressed.  Shows the table containing info about person when it is
+     * hidden and hides table when visible.
+     */
+    toggle_show_table() {
+
+        this.setState({
+            showTableData:!this.state.showTableData
+        })
+        console.log(this.state.showTableData)
+    }
+
+    /**
      * Render the app on the page
      *
      * @returns {Node}
@@ -235,7 +240,7 @@ class MainView extends React.Component {
                             currentColor={this.state.config.color}
                             person={this.state.person}
                             showTableData={this.state.showTableData}
-                            toggle_show_data={() => this.toggle_show_table()}
+                            toggle_show_table={() => this.toggle_show_table()}
                         />
                     </div>
                 </div>
