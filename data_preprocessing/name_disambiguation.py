@@ -421,7 +421,8 @@ class PeopleDatabase:
         and string representation of each person
         :return: str
         """
-        return f"<PeopleDatabase with {len(self.people)} people:\n {[i for i in self.people]}>"
+        return f"<PeopleDatabase with {len(self.people)} people:\n " \
+               f"{[i for i in self.people]}>"
 
     def get_alias_to_person_dict(self):
         """
@@ -718,7 +719,7 @@ class TestPeopleDB(unittest.TestCase):
         self.assertEqual(self.people_db, expected_people_db)
 
 
-def add_au_org(db, path: Path):
+def add_au_org(db, path):
     """
     Input are a people database and a path to a document
     Returns None
@@ -756,14 +757,11 @@ def add_au_org(db, path: Path):
 
 
 if __name__ == '__main__':
-    a = PeopleDatabase()
-    b = PeopleDatabase()
-    a.add_person_raw("Teague, J - BAT")
-    b.add_person_raw("Teague, J - BAT")
-    print(a)
-    print(b)
-    print(a == b)
-    unittest.main()
+    db = PeopleDatabase()
+    db.load_from_disk("names_db_10.pickle")
+    add_au_org(db, Path('..', 'data', 'name_disambiguation', 'dunn_docs.csv'))
+    print(db)
+
     # merge_names()
     # db = PeopleDatabase()
     # db.load_from_disk("d_names_db.pickle")
