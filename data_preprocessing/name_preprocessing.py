@@ -42,12 +42,12 @@ def get_author_counter() -> Counter:
     return name_counter
 
 
-def get_authors_by_document(path) -> list:
+def get_au_and_rc_by_document(path) -> list:
     """
     Creates a list of documents such that each element consists of a dict with keys
     'au', 'au_org', 'au_person'
 
-    >>> authors_by_docs = get_authors_by_document()
+    >>> authors_by_docs = get_au_and_rc_by_document()
     >>> authors_by_docs[0]
     {'au': '', 'au_org': '', 'au_person': 'BOWLING,JC'}
 
@@ -58,28 +58,38 @@ def get_authors_by_document(path) -> list:
     authors_by_docs = []
     for _, row in df.iterrows():
         authors_by_docs.append({
-            'au': parse_au_person(row['au']),
-            'au_org': parse_au_org(row['au_org']),
-            'au_person': parse_au_person(row['au_person'])
+            'au': parse_column_person(row['au']),
+            'au_org': parse_column_org(row['au_org']),
+            'au_person': parse_column_person(row['au_person'])
         })
-    return authors_by_docs
+    recipients_by_docs = []
+    for _, row in df.iterrows():
+        recipients_by_docs.append({
+            'rc': parse_column_person(row['rc']),
+            'rc_org': parse_column_org(row['rc_org']),
+            'rc_person': parse_column_person(row['rc_person'])
+        })
+    return authors_by_docs, recipients_by_docs
 
-def parse_au_person(au_person):
+
+def parse_column_person(column):
     names = []
-    for name_split_semicolon in [n.strip() for n in au_person.split(';')]:
+    for name_split_semicolon in [n.strip() for n in column.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
             if 0 < len(name_split_bar) < 100:
                 names.append(name_split_bar)
     return names
 
-def parse_au_org(au_org):
+
+def parse_column_org(column_org):
     names = []
-    for name_split_semicolon in [n.strip() for n in au_org.split(';')]:
+    for name_split_semicolon in [n.strip() for n in column_org.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
             for name_split_comma in [m.strip() for m in name_split_bar.split(',')]:
                 if 0 < len(name_split_comma) < 100:
                     names.append(name_split_comma)
     return names
+
 
 def get_clean_org_names():
     # read clean_org_names

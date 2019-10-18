@@ -12,7 +12,7 @@ from IPython import embed
 from nameparser import HumanName
 from nameparser.config import CONSTANTS
 
-from name_preprocessing import get_authors_by_document, get_clean_org_names
+from name_preprocessing import get_au_and_rc_by_document, get_clean_org_names
 
 import unittest
 
@@ -620,7 +620,8 @@ class PeopleDatabase:
             person.set_likely_position()
 
 
-def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_names_raw.json')):
+def merge_names_from_file(name_file=Path('..', 'data', 'name_disambiguation',
+                                         'tobacco_names_raw.json')):
     """
     Creates a people db from reading json file (dict of raw names and counts) and merges people
     in it. Stores people db in a pickle file
@@ -697,8 +698,8 @@ class TestPeopleDB(unittest.TestCase):
         loaded_db.load_from_disk(Path('test.pickle'))
         self.assertEqual(self.people_db, loaded_db)
 
-    def test_add_au_org(self):
-        add_au_org(self.people_db, Path('..', 'data', 'name_disambiguation', 'test_docs.csv'))
+    def test_add_au_and_rc_org(self):
+        add_au_and_rc_org(self.people_db, Path('..', 'data', 'name_disambiguation', 'test_docs.csv'))
 
         expected_people_db = PeopleDatabase()
         raquel = Person('Garcia, Raquel')
@@ -719,7 +720,7 @@ class TestPeopleDB(unittest.TestCase):
         self.assertEqual(self.people_db, expected_people_db)
 
 
-def add_au_org(db, path):
+def add_au_and_rc_org(db, path):
     """
     Input are a people database and a path to a document
     Returns None
@@ -732,40 +733,56 @@ def add_au_org(db, path):
     :return: None
     """
 
-    # if we have 1 known company & 1 unknown company
-    au_dict = get_authors_by_document(path)
     alias_to_person_dict = db.get_alias_to_person_dict()
-    for doc in au_dict:
-        orgs = set()
-        for org in doc['au_org']:
-            if org not in RAW_ORG_TO_CLEAN_ORG_DICT:
+
+    def update_au_and_rc_positions(db, path, au_or_rc, relevant_dicts):
+        if au_or_rc == 'au':
+            relevant_person = 'au_person'
+            relevant_org = 'au_org'
+        else:
+            relevant_person = 'rc_person'
+            relevant_org = 'rc_org'
+
+        for doc in relevant_dicts:
+            orgs = set()
+            for org in doc[relevant_org]:
+                if org not in RAW_ORG_TO_CLEAN_ORG_DICT:
+                    continue
+                else:
+                    orgs.add(RAW_ORG_TO_CLEAN_ORG_DICT[org])
+
+            if len(orgs) != 1:
                 continue
             else:
-                orgs.add(RAW_ORG_TO_CLEAN_ORG_DICT[org])
-        if len(orgs) != 1:
-            continue
-        else:
-            org = list(orgs)[0]
-            doc['au_person'].extend(doc['au'])
-            aliases = doc['au_person']
-            if not aliases:
-                continue
-            for alias in aliases:
-                if alias not in alias_to_person_dict:
+                org = list(orgs)[0]
+                aliases = doc[relevant_person]
+                aliases.extend(doc[au_or_rc])
+                if au_or_rc == 'rc' and len(aliases) >= 5:
                     continue
-                alias_to_person_dict[alias].positions[org] += 1
+                if not aliases:
+                    continue
+                for alias in aliases:
+                    if alias not in alias_to_person_dict:
+                        db.add_person_raw(alias)
+                    else:
+                        alias_to_person_dict[alias].positions[org] += 1
+
+    au_dicts, rc_dicts = get_au_and_rc_by_document(path)
+    update_au_and_rc_positions(db, path, 'au', au_dicts)
+    update_au_and_rc_positions(db, path, 'rc', rc_dicts)
 
 
 if __name__ == '__main__':
     db = PeopleDatabase()
     db.load_from_disk("names_db_10.pickle")
-    add_au_org(db, Path('..', 'data', 'name_disambiguation', 'dunn_docs.csv'))
+    add_au_and_rc_org(db, Path('..', 'data', 'name_disambiguation', 'dunn_docs.csv'))
+    # db.merge_duplicates()
     print(db)
 
-    # merge_names()
+    # merge_names_from_file()
     # db = PeopleDatabase()
     # db.load_from_disk("d_names_db.pickle")
-    # print(add_au_org(db))
+    # print(add_au_and_rc_org(db))
 
 
 
