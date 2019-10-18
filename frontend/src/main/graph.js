@@ -90,7 +90,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         .data(data.nodes)
         .enter()
         .append("circle")
-        .attr("r", function (d) {return Math.max(Math.pow(d.weight, 1/3), 5);})
+        .attr("r", function (d) {return Math.max(Math.pow(d.weight, 1/4), 5);})
         .attr("fill", function(d) { return color(0.5 + (Math.pow(d.weight/max_weight, 1/2))/2); });
 
     node.on("mouseover", focus).on("mouseout", unfocus);
@@ -106,8 +106,16 @@ export function create_graph(el, data, config, handle_viz_events) {
         .selectAll("text")
         .data(label.nodes)
         .enter()
+        // .append("rect")
+        // .attr("width", 20)
+        // .attr("height", 10)
+        // .style("fill", "#FFFFFF")
+        // .style("stroke", "#0000FF")
+        // .style("fill-opacity", 0.1)
+        // .style("stroke-opacity", 0.9)
         .append("text")
         .text(function(d, i) { return i % 2 === 0 ? "" : d.node.name; })
+        //.attr("class", "labelNode")
         .style("fill", "#555")
         .style("font-family", "Arial")
         .style("font-size", 12)
