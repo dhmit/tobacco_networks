@@ -77,7 +77,6 @@ class Person:
         self.middle = middle.upper()
         self.position = position
         # remove periods and convert to upper case
-        print(type(positions))
         if isinstance(positions, Counter):
             self.positions = positions
         else:
@@ -388,8 +387,12 @@ class PeopleDatabase:
         :param count: number of times name_raw appeared (int)
         :return: None
         """
-        new_p = Person(name_raw=name_raw, count=count)
-        self.people.add(new_p)
+
+        try:
+            new_p = Person(name_raw=name_raw, count=count)
+            self.people.add(new_p)
+        except IndexError:
+            print(f"Could not parse name_raw {name_raw} to Person.")
 
     def __len__(self):
         """
@@ -492,7 +495,7 @@ class PeopleDatabase:
         for person in self.people:
             last_names.add(person.last)
 
-        for last_name in last_names:
+        for last_name in sorted(last_names):
             print(f"Merging: ", last_name)
             while True:
                 last_names_dict = defaultdict(list)
@@ -616,20 +619,24 @@ class PeopleDatabase:
             person.set_likely_position()
 
 
-def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_names_raw_test.json')):
+def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_names_raw.json')):
     """
     Creates a people db from reading json file (dict of raw names and counts) and merges people
     in it. Stores people db in a pickle file
     :param name_file:
     :return:
     """
+
     with open(name_file, 'r') as infile:
         name_dict = json.load(infile)
+
+    import time
+    s = time.time()
 
     # add everyone to a PeopleDatabase
     people_db = PeopleDatabase()
     for name in name_dict:
-        if name.lower().find('dunn') > -1:
+        if name_dict[name] >= 3:
             people_db.add_person_raw(name_raw=name, count=name_dict[name])
 
     print("Length: ", len(people_db))
@@ -637,8 +644,12 @@ def merge_names(name_file=Path('..', 'data', 'name_disambiguation', 'tobacco_nam
     # then merge the duplicate / similar names
     people_db.create_positions_csv()
     people_db.merge_duplicates()
-    people_db.store_to_disk(Path('d_names_db.pickle'))
 
+    people_db.store_to_disk(Path('names_db_3.pickle'))
+    print("Merging names took", time.time() - s)
+
+#    with open('alias_to_name.json', 'w') as outfile:
+#        json.dump(people_db.get_alias_to_name(), outfile)
 
 # TODO: fix these so the test works
 class TestNameParser(unittest.TestCase):
