@@ -1,3 +1,6 @@
 .labelNode{
-    font-size: 30px;
+    fill: #555;
+    font-family: Arial;
+    font-size: 12px;
+    pointer-events: None;
 }

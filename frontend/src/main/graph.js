@@ -115,11 +115,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         // .style("stroke-opacity", 0.9)
         .append("text")
         .text(function(d, i) { return i % 2 === 0 ? "" : d.node.name; })
-        //.attr("class", "labelNode")
-        .style("fill", "#555")
-        .style("font-family", "Arial")
-        .style("font-size", 12)
-        .style("pointer-events", "none"); // to prevent mouseover/drag capture
+        .attr("class", "labelNode"); // store style info in main.css
 
     node.on("mouseover", focus)
         .on("mouseout", unfocus)
