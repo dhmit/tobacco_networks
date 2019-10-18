@@ -100,6 +100,9 @@ export function create_graph(el, data, config, handle_viz_events) {
             .on("start", dragstarted)
             .on("drag", dragged)
             .on("end", dragended)
+
+
+
     );
 
     const labelNode = container.append("g").attr("class", "labelNodes")
@@ -202,13 +205,26 @@ export function create_graph(el, data, config, handle_viz_events) {
     function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
+        fix_nodes(d);
+    }
+
+    // Preventing other nodes from moving while dragging one node
+    function fix_nodes(this_node) {
+        node.each(function(d){
+            if (this_node != d){
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+        });
     }
 
     function dragended(d) {
         if (!d3.event.active) {graphLayout.alphaTarget(0);}
-        d.fx = null;
-        d.fy = null;
+        // Set the dragged node equal to the original x and y positions
+        d.fx = d.x;
+        d.fy = d.y;
     }
+
 }
 
 // export function create_graph(el, data, config, handle_viz_events) {
