@@ -98,9 +98,9 @@ class Info extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
-        const table_data = {...this.state.showTableData};
+        console.log(this.state.showTableData)
         this.setState({
-            showTableData:! table_data
+            showTableData:!this.state.showTableData
         })
     }
 
@@ -235,7 +235,7 @@ class MainView extends React.Component {
                             currentColor={this.state.config.color}
                             person={this.state.person}
                             showTableData={this.state.showTableData}
-                            toggle_show_data={(showTableData) => this.toggle_show_table(showTableData)}
+                            toggle_show_data={() => this.toggle_show_table()}
                         />
                     </div>
                 </div>
