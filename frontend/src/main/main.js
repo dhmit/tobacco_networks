@@ -26,7 +26,7 @@ class Controls extends React.Component {
                     checked={checked}
                     onChange={this.props.handle_checkbox}
                 />
-                <label>Color is blue</label>
+                {/*<label>Color is blue</label>*/}
             </div>
         );
 
@@ -98,6 +98,7 @@ class Info extends React.Component {
     render() {
         return (
             <div className="col-3">
+                <button onClick={()=>this.props.toggle_show_table()}>Toggle Display</button>
                 <div id="sidebar" className={this.props.showTableData ? "sidebarHide" : "sidebarShow"}>
                     <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                     <p>The current viz color is {this.props.currentColor}</p>
@@ -108,16 +109,15 @@ class Info extends React.Component {
                         </tr>
                         <tr>
                             <th scope="row">Docs</th>
-                            <td></td>
+                            <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
                         </tr>
                         <tr>
                             <th scope="row">Words</th>
-                            <td></td>
+                            <td>{this.props.words > 0 ? this.props.words : 0}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <button onClick={()=>this.props.toggle_show_table()}>Toggle Display</button>
             </div>
         );
     }
@@ -126,6 +126,8 @@ Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
     person: PropTypes.string,
+    docs: PropTypes.number,
+    words: PropTypes.number,
     showTableData: PropTypes.bool,
     toggle_show_table: PropTypes.func,
 };
@@ -146,6 +148,8 @@ class MainView extends React.Component {
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
             person: "",
+            docs: 0,
+            words: 0,
             showTableData: true,
         };
         this.csrftoken = getCookie('csrftoken');
@@ -197,6 +201,8 @@ class MainView extends React.Component {
             this.setState({mouseover: false});
         } else if (event_name === "click") {
             this.setState({person: data.name});
+            this.setState({docs: data.docs});
+            this.setState({words: data.words});
         }
     }
 
@@ -238,6 +244,8 @@ class MainView extends React.Component {
                             mouseover={this.state.mouseover}
                             currentColor={this.state.config.color}
                             person={this.state.person}
+                            docs={this.state.docs}
+                            words={this.state.words}
                             showTableData={this.state.showTableData}
                             toggle_show_table={() => this.toggle_show_table()}
                         />
