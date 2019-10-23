@@ -98,7 +98,7 @@ class Info extends React.Component {
     render() {
         return (
             <div className="col-3">
-                <div hidden={!this.props.showTableData}>
+                <div id="sidebar" className={this.props.showTableData ? "sidebarHide" : "sidebarShow"}>
                     <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                     <p>The current viz color is {this.props.currentColor}</p>
                     <table className="table">
@@ -205,7 +205,6 @@ class MainView extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
-
         this.setState({
             showTableData:!this.state.showTableData
         })
