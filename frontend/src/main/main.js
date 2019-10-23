@@ -8,36 +8,6 @@ import { getCookie } from '../common'
 import { create_graph, update_graph_color } from './graph.js'
 import './main.css';
 
-
-/***************************************************************************************************
- * Controls and settings components for the visualization
- **************************************************************************************************/
-class Controls extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        const checked = this.props.config.color === 'blue';
-        return (
-            <div className="col-3">
-                <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={this.props.handle_checkbox}
-                />
-                <label>Color is blue</label>
-            </div>
-        );
-
-    }
-}
-Controls.propTypes = {
-    config: PropTypes.object.isRequired,
-    handle_checkbox: PropTypes.func.isRequired,
-};
-
-
 /***************************************************************************************************
  * Wrapper for the Visualization
  **************************************************************************************************/
@@ -84,38 +54,14 @@ Viz.propTypes = {
     handle_viz_events: PropTypes.func,
 };
 
-/**
- * Info panel - data from the visualization
- */
-class Info extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div className="col-3">
-                <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
-                <p>The current viz color is {this.props.currentColor}</p>
-                <p>{this.props.person.length > 0 ? "The name of the person you clicked is: "
-                    + this.props.person + "\n": ''}</p>
-            </div>
-        );
-    }
-}
-Info.propTypes ={
-    mouseover: PropTypes.bool,
-    currentColor: PropTypes.string,
-    person: PropTypes.string,
-};
-
-
 /***************************************************************************************************
  * Main component for the main view.
  **************************************************************************************************/
+
 class MainView extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             config: {
                 width: 1000,
@@ -128,7 +74,6 @@ class MainView extends React.Component {
         };
         this.csrftoken = getCookie('csrftoken');
     }
-
     /**
      * Runs when the MainView item is connected to the server.
      */
@@ -143,23 +88,6 @@ class MainView extends React.Component {
             }).catch(() => {
                 console.log("error");
             });
-    }
-
-    /**
-     * Calls when checkbox is changed.  Changes the color from blue to red or vice versa.
-     */
-    handle_checkbox() {
-        // "..." is the 'spread' operator - this is a copy
-        const config = {...this.state.config};
-        if (config.color === 'blue') {
-            config.color = 'red';
-        } else {
-            config.color = 'blue'
-        }
-        config.viz_update_func = 'update_graph_color';
-        this.setState({
-            config: config,
-        })
     }
 
     /**
@@ -187,12 +115,6 @@ class MainView extends React.Component {
         if (this.state.data) {
             return (
                 <div className="container">
-                    <div className="row">
-                        <Controls
-                            handle_checkbox={() => this.handle_checkbox()}
-                            config={this.state.config}
-                        />
-                    </div>
 
                     <div className="row">
                         <Viz
@@ -200,11 +122,6 @@ class MainView extends React.Component {
                             config={this.state.config}
                             handle_viz_events={(event_name, data) =>
                                 this.handle_viz_events(event_name, data )}
-                        />
-                        <Info
-                            mouseover={this.state.mouseover}
-                            currentColor={this.state.config.color}
-                            person={this.state.person}
                         />
                     </div>
                 </div>
