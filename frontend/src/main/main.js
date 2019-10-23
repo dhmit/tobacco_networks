@@ -138,7 +138,7 @@ class MainView extends React.Component {
                 response
                     .json()
                     .then((data) => {
-                        this.setState({data});
+                        this.setState({data:data});
                     })
             }).catch(() => {
                 console.log("error");
