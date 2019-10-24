@@ -1,5 +1,5 @@
 /**
- * Graph code mostly in sigma.js for the visualization
+ * Graph code mostly in D3 for the visualization
  */
 import * as d3 from 'd3';
 

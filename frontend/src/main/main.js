@@ -106,6 +106,10 @@ class MainView extends React.Component {
         }
     }
 
+    submitFormHandler = event => {
+        event.preventDefault();
+    }
+
     /**
      * Render the app on the page
      *
@@ -115,6 +119,15 @@ class MainView extends React.Component {
         if (this.state.data) {
             return (
                 <div className="container">
+
+                    <div className="row">
+
+                        <form onSubmit={this.submitFormHandler}>
+                            <div>
+                                <input type="text"/>
+                            </div>
+                        </form>
+                    </div>
 
                     <div className="row">
                         <Viz
