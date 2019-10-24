@@ -5,9 +5,6 @@ import re
 import csv
 from collections import Counter, defaultdict
 from pathlib import Path
-
-from typing import Union
-
 from IPython import embed
 from nameparser import HumanName
 from nameparser.config import CONSTANTS
@@ -32,7 +29,8 @@ class Person:
         first (str): official parsed first name
         middle (str): official parsed middle name
         position (str): most likely organization of the person
-        positions (Counter of str): counter of all parsed organizations/extra information
+        positions (Counter of str): counter of all parsed organizations/extra information (must
+                                    be clean official org names; can be in lower case)
         aliases (list of str): list of raw names that correspond to the person
         count (int): number of times the alias appeared in the data
     """
@@ -68,7 +66,6 @@ class Person:
                 aliases = []
             else:
                 aliases = [name_raw]
-
 
         # set last, first, middle, position, positions: all converted to upper case
         # set aliases and count
@@ -149,85 +146,6 @@ class Person:
         :param name_raw: str
         :param count: int
         :return: str, str, str, set
-
-
-        Parses name and returns as human name
-        >>> n = Person('TEAGUE CE JR')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Teague', 'C', 'E', 'JR')
-
-
-        >>> n = Person('teague, ce jr')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Teague', 'C', 'E', 'JR')
-
-
-        >>> n = Person('Teague, Claude Edward, Jr., Ph.D. ')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Teague', 'Claude', 'Edward', 'JR., PH.D.')
-
-        >>> n = Person('Teague, J - BAT')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Teague', 'J', '', 'BAT')
-
-        >>> n = Person('BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Baker', 'T', 'E', 'NATIONAL ASSOCIATION OF ATTORNEYS GENERAL')
-
-        >>> n = Person('BAKER-cj')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Baker', 'C', 'J', '')
-
-        JR and SR are by default recognized as titles -> turn off through CONSTANTS.
-        >>> n = Person('Baker, JR')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Baker', 'J', 'R', '')
-
-        >>> n = Person('DUNN WL #')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Dunn', 'W', 'L', '')
-
-        >>> n = Person('Dunn, W. L.')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Dunn', 'W', 'L', '')
-
-        >>> n = Person('TEMKO SL, COVINGTON AND BURLING')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Temko', 'S', 'L', 'COVINGTON AND BURLING')
-
-        >>> n = Person('Temko, Stanley L [Privlog:] TEMKO,SL')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Temko', 'Stanley', 'L', '')
-
-        >>> n = Person('Temko-SL, Covington & Burling')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Temko', 'S', 'L', 'COVINGTON & BURLING')
-
-        >>> n = Person('HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL)')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Henson', 'A', '', 'AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL')
-
-        >>> n = Person('HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Henson', 'A', '', 'CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE COUNSEL HANDWRITTEN NOTES')
-
-        >>> n = Person('Holtzman, A.,  Murray, J. ,  Henson, A. ,  Pepples, E. ,  Stevens, A. ,  Witt, S.')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Holtzman', 'A', '', '')
-
-        >>> n = Person('Holtz, Jacob, Jacob & Medinger')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Holtz', 'Jacob', '', 'JACOB & MEDINGER')
-
-        # This one breaks. But I don't think it can be avoided.
-        >>> n = Person('Holtz, Jacob Alexander, Jacob & Medinger')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Holtz', '', '', 'JACOB ALEXANDER, JACOB & MEDINGER')
-
-        >>> n = Person('PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE')
-        >>> n.last, n.first, n.middle, " ".join(n.positions).upper()
-        ('Proctor', 'D', 'F', 'JOHNS HOPKINS SCHOOL OF HYGIENE')
-
         """
 
         # remove privlog info, e.g. 'Temko, Stanley L [Privlog:] TEMKO,SL'. It confuses
@@ -660,18 +578,75 @@ class TestNameParser(unittest.TestCase):
         test_raw_names: dict that corresponds raw names (str) to the expected Person object
     """
     def setUp(self):
-        # TODO: Add more test cases
         self.test_raw_names = {
-            "TEAGUE CE JR": Person(last="Teague", first="C", middle="E", positions={
-                "JR"}, aliases=["TEAGUE CE JR"]),
-            "teague ce jr": Person(last="Teague", first="C", middle="E", positions={"JR"},
+            # test Person constructor: use list as positions
+            "TEAGUE CE JR": Person(last="Teague", first="C", middle="E", positions=["JR"],
+                                   aliases=["TEAGUE CE JR"]),
+            # test Person constructor: use Counter as positions
+            "teague ce jr": Person(last="Teague", first="C", middle="E", positions=Counter(["JR"]),
                 aliases=["teague ce jr"]),
             'Teague, J - BAT': Person(last='Teague', first='J', middle='',
                 positions={'British American Tobacco'}, aliases=['Teague, J - BAT']),
             "Teague, Claude Edward, Jr., Ph.D.": Person(
                 last="Teague", first="Claude", middle="Edward", positions={"JR, PHD"},
                 aliases=["Teague, Claude Edward, Jr., Ph.D."]
-            ),}
+            ),
+            "BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL": Person(
+                last="Baker", first="T", middle="E",
+                positions={"NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"},
+                aliases = ["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"]
+            ),
+            # specify positions: test to make sure Counter can handle no data
+            "BAKER-cj": Person(last="Baker", first="C", middle="J", positions={},
+                               aliases=["BAKER-cj"]),
+            # not specify positions: test to make sure Person constructor can handle no data
+            "Baker, JR": Person(last="Baker", first="J", middle="R", aliases=["Baker, JR"]),
+            "DUNN WL #": Person(last="Dunn", first="W", middle="L", aliases=["DUNN WL #"]),
+            "Dunn, W. L.": Person(last="Dunn", first="W", middle="L", aliases=["Dunn, W. L."]),
+            "TEMKO SL, COVINGTON AND BURLING": Person(last="Temko", first="S", middle="L",
+                                                      positions=["COVINGTON AND BURLING"],
+                                                      aliases=["TEMKO SL, COVINGTON AND BURLING"],
+            ),
+            "Temko, Stanley L [Privlog:] TEMKO,SL": Person(
+                last="Temko", first="Stanley", middle="L",
+                aliases=["Temko, Stanley L [Privlog:] TEMKO,SL"]
+            ),
+            "Temko-SL, Covington & Burling": Person(
+                last="Temko", first="S", middle="L", positions=["Covington & Burling"],
+                aliases=["Temko-SL, Covington & Burling"]
+            ),
+            "HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL)": Person(
+                last="Henson", first="A", middle="",
+                positions=["AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL"],
+                aliases=["HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL)"]
+            ),
+            "HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE COUNSEL) " +
+            "(HANDWRITTEN NOTES)": Person(
+                last="Henson", first="A", middle="",
+                positions=["CHADBOURNE, PARK, WHITESIDE & WOLFF", "@skip@"],
+                aliases=["HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE " +
+                         "COUNSEL) (HANDWRITTEN NOTES)"]
+            ),
+            "Holtzman, A.,  Murray, J. ,  Henson, A. ,  Pepples, E. ,  Stevens, A. ,  Witt, S.":
+            Person(last="Holtzman", first="A", middle="", positions=[],
+                   aliases=["Holtzman, A.,  Murray, J. ,  Henson, A. ,  " +
+                            "Pepples, E. ,  Stevens, A. ,  Witt, S."]),
+            "Holtz, Jacob, Jacob & Medinger": Person(
+                last="Holtz", first="Jacob", middle="", positions=["JACOB & MEDINGER"],
+                aliases=["Holtz, Jacob, Jacob & Medinger"]
+            ),
+            "PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE": Person(
+                last="Proctor", first="D", middle="F",
+                positions=["JOHNS HOPKINS SCHOOL OF HYGIENE"],
+                aliases=["PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"]
+            )
+        }
+
+    # Not sure what the correct parsing is!
+    # This one breaks. But I don't think it can be avoided.
+    # >> > n = Person('Holtz, Jacob Alexander, Jacob & Medinger')
+    # >> > n.last, n.first, n.middle, " ".join(n.positions).upper()
+    # ('Holtz', '', '', 'JACOB ALEXANDER, JACOB & MEDINGER')
 
     def test_all_names(self):
         """
