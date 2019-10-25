@@ -98,8 +98,12 @@ class Info extends React.Component {
     render() {
         if (this.props.showTableData) {
             return (<div className="col-3">
-                <button id="toggle_button" onClick={()=>this.props.toggle_show_table()}>Toggle Display</button>
-                <div id="sidebar">
+                <button className="btn btn-primary" type="button" data-toggle="collapse"
+                    data-target="#displayInfoButton" id="toggle_button"
+                //    onClick={()=>this.props.toggle_show_table()}
+                >Toggle Display</button>
+                <div //id="sidebar"
+                    className="collapse" id="displayInfoButton">
                     <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                     <p>The current viz color is {this.props.currentColor}</p>
                     <table className="table">
