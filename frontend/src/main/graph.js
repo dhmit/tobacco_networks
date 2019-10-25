@@ -1,190 +1,144 @@
+
 /**
- * Graph code mostly in sigma.js for the visualization
+ * Graph code mostly in D3.js for the visualization
  */
 import * as d3 from 'd3';
 
+// D3 code is much more readable with non-standard indentation,
+// so turning off standard eslint indent rules just for this file
+/* eslint indent: 0 */
+
 /**
- * Create a graph for d3
+ * Create a graph using d3
  *
- * @param el: a DOM element
- * @param data: Object, the data for the visualization, keys: "nodes" and "edges", each with
- *              an array
+ * @param el: DOM element where we'll render the graph
+ * @param data: Object, the data for the visualization
+ *              keys: "nodes" and "edges", each with an array of values
  * @param config: config for the visualization like width and height
  * @param handle_viz_events: function to pass visualization events back to react.
-
  */
 export function create_graph(el, data, config, handle_viz_events) {
-    let width = config.width;
-    let height = config.height;
+    const graph_width = config.width;
+    const graph_height = config.height;
 
-    const color = d3.scaleSequential(d3.interpolateBlues);
-    let max_weight = 0;
-    data.nodes.forEach(function(d){
-        if (d.weight > max_weight){
-            max_weight = d.weight;
-        }
-    });
+    // Initialize the force simulation - see https://github.com/d3/d3-force
+    // This creates the x and y values for the data, based on relationships here
+    // n.b. this doesn't actually render the sim - we do that below
+    // by adding nodes to the svg and updating their position in render_simulation
+    const force_link = d3.forceLink(data.links)
+                         .id((d) => d.name)  // which data field to use as id for links
+                         .distance(50)
+                         .strength(1);
+    const graph_x_center = graph_width / 2;
+    const graph_y_center = graph_height / 2;
 
-    const label = {
-        'nodes': [],
-        'links': []
-    };
-
-    // not sure what this does, will come back later
-    // why repeat label.nodes.push({node:d}) twice? what is node?
-    data.nodes.forEach(function(d, i) {
-        label.nodes.push({node: d});
-        label.nodes.push({node: d});
-        label.links.push({
-            source: i * 2,
-            target: i * 2 + 1
-        });
-    });
-
-    const labelLayout = d3.forceSimulation(label.nodes)
-        .force("charge", d3.forceManyBody().strength(-50))
-        .force("link", d3.forceLink(label.links).distance(0).strength(2));
-
-    const graphLayout = d3.forceSimulation(data.nodes)
+    const force_simulation = d3.forceSimulation(data.nodes)
+        .force("link", force_link)
         .force("charge", d3.forceManyBody().strength(-5000))
-        .force("center", d3.forceCenter(width / 2, height / 2))
-        .force("x", d3.forceX(width / 2).strength(1))
-        .force("y", d3.forceY(height / 2).strength(1))
-        .force("link", d3.forceLink(data.links).id(function(d) {return d.name; }).distance(50)
-            .strength(1))
-        .on("tick", ticked);
+        .force("center", d3.forceCenter(graph_x_center, graph_y_center))
+        .force("x", d3.forceX(graph_x_center).strength(1))
+        .force("y", d3.forceY(graph_y_center).strength(1))
+        .on("tick", render_simulation);  // what to do when the sim updates
 
-    let adjlist = [];
 
-    data.links.forEach(function(d) {
-        adjlist[d.source.index + "-" + d.target.index] = true;
-        adjlist[d.target.index + "-" + d.source.index] = true;
-    });
+    // Setup the SVG that we're going to draw the graph into
+    const svg = d3.select(el)
+        .append('svg')
+            .attr("width", graph_width)
+            .attr("height", graph_height);
 
-    function neigh(a, b) {
-        return a === b || adjlist[a + "-" + b];
-    }
 
-    const el_dom = d3.select(el);
-    const svg = el_dom.append('svg').attr("width", width).attr("height", height);
-    const container = svg.append("g");
-
-    svg.call(
-        d3.zoom()
-            .scaleExtent([0.1, 4])
-            .on("zoom", function() { container.attr("transform", d3.event.transform); })
-    );
-
-    const link = container.append("g").attr("class", "links")
+    // Create links
+    const links = svg
+        .append("g")
+            .attr("id", "graph_links")
         .selectAll("line")
-        .data(data.links)
+            .data(data.links)
         .enter()
-        .append("line")
-        .attr("stroke", "#aaa")
-        .attr("stroke-width", "1px");
+            .append("line")
+            .attr("stroke", "#aaa")
+            .attr("stroke-width", "1px");
 
-    const node = container.append("g").attr("class", "nodes")
+
+    // node is an SVG g -- will contain circle + label
+    const nodes = svg
+        .append("g")
+            .attr("id", "graph_nodes")
         .selectAll("g")
-        .data(data.nodes)
+            .data(data.nodes)
         .enter()
+            .append("g")
+                .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
+
+    nodes  // bind event handlers for nodes
+        .call(
+            d3.drag()
+                .on("start", drag_started)
+                .on("drag", dragged)
+                .on("end", drag_ended)
+        )
+        .on("mouseover", focus_node)
+        .on("mouseout", unfocus_node)
+        .on("click", (d, _i) => handle_viz_events('click', d));
+
+    // Setup circle helper funcs
+    // Find max weight of all nodes, for scaling
+    // TODO: replace this with a scale with domain/range
+    let max_weight = 0;
+    for (const node of data.nodes) {
+        if (node.weight > max_weight) {
+            max_weight = node.weight;
+        }
+    }
+    const circle_color_scale = d3.scaleSequential(d3.interpolateBlues)
+    const calc_circle_color = (d) => {
+        const floor = .5;
+        return circle_color_scale(floor + .5 * Math.pow(d.weight / max_weight, .5));
+    };
+    const calc_circle_radius = (d) => Math.max(Math.pow(d.weight, 1/3), 5);
+
+    // Actually setup circles
+    nodes
         .append("circle")
-        .attr("r", function (d) {return Math.max(Math.pow(d.weight, 1/3), 5);})
-        .attr("fill", function(d) { return color(0.5 + (Math.pow(d.weight/max_weight, 1/2))/2); });
+            .attr("r", (d) => calc_circle_radius(d))
+            .attr("fill", (d) => calc_circle_color(d))
 
-    node.on("mouseover", focus).on("mouseout", unfocus);
-
-    node.call(
-        d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended)
-    );
-
-    const labelNode = container.append("g").attr("class", "labelNodes")
-        .selectAll("text")
-        .data(label.nodes)
-        .enter()
+    // Setup labels
+    const calc_label_pos = (_d, _i, _nodes) => {
+        // const label = nodes[i];
+        // const b = label.getBBox();  // bounding box of the label
+        // TODO: adjust position of the label based on radius of the circle
+        const shiftX = 10;
+        const shiftY = 5;
+        return `translate(${shiftX}, ${shiftY})`;
+    };
+    nodes
         .append("text")
-        .text(function(d, i) { return i % 2 === 0 ? "" : d.node.name; })
-        .style("fill", "#555")
-        .style("font-family", "Arial")
-        .style("font-size", 12)
-        .style("pointer-events", "none"); // to prevent mouseover/drag capture
+            .text((d) => d.name)
+            .style("fill", "#555")
+            .style("font-family", "Arial")
+            .style("font-size", 12)
+            .attr("transform", (d, i, n) => calc_label_pos(d, i, n));
 
-    node.on("mouseover", focus)
-        .on("mouseout", unfocus)
-        .on("click", (node_data,_i) => handle_viz_events('click', node_data));
+    /*
+     * Event handlers
+     */
+    // Update the position of all svg elements according to the force sim
+    // This function is called whenever the simulation updates
+    function render_simulation() {
+        // Update node positions
+        nodes.attr("transform", (d) => `translate(${d.x}, ${d.y})` );
 
-    function ticked() {
-
-        node.call(updateNode);
-        link.call(updateLink);
-
-        labelLayout.alphaTarget(0.3).restart();
-        labelNode.each(function(d, i) {
-            if(i % 2 === 0) {
-                d.x = d.node.x;
-                d.y = d.node.y;
-            } else {
-                console.log(this);
-                console.log(typeof this);
-                const b = this.getBBox();
-
-                const diffX = d.x - d.node.x;
-                const diffY = d.y - d.node.y;
-
-                const dist = Math.sqrt(diffX * diffX + diffY * diffY);
-
-                let shiftX = b.width * (diffX - dist) / (dist * 2);
-                shiftX = Math.max(-b.width, Math.min(0, shiftX));
-                const shiftY = 16;
-                this.setAttribute("transform", "translate(" + shiftX + "," + shiftY + ")");
-            }
-        });
-        labelNode.call(updateNode);
-
+        // Update link positions
+        links.attr("x1", (d) => d.source.x)
+            .attr("y1", (d) => d.source.y)
+            .attr("x2", (d) => d.target.x)
+            .attr("y2", (d) => d.target.y);
     }
 
-    function fixna(val) {
-        if (isFinite(val)) {return val}
-        return 0;
-    }
-
-    function focus() {
-        const index = d3.select(d3.event.target).datum().index;
-        node.style("opacity", function(o) {
-            return neigh(index, o.index) ? 1 : 0.1;
-        });
-        labelNode.attr("display", function(o) {
-            return neigh(index, o.node.index) ? "block": "none";
-        });
-        link.style("opacity", function(o) {
-            return o.source.index === index || o.target.index === index ? 1 : 0.1;
-        });
-    }
-
-    function unfocus() {
-        labelNode.attr("display", "block");
-        node.style("opacity", 1);
-        link.style("opacity", 1);
-    }
-
-    function updateLink(link) {
-        link.attr("x1", function(d) { return fixna(d.source.x); })
-            .attr("y1", function(d) { return fixna(d.source.y); })
-            .attr("x2", function(d) { return fixna(d.target.x); })
-            .attr("y2", function(d) { return fixna(d.target.y); });
-    }
-
-    function updateNode(node) {
-        node.attr("transform", function(d) {
-            return "translate(" + fixna(d.x) + "," + fixna(d.y) + ")";
-        });
-    }
-
-    function dragstarted(d) {
+    function drag_started(d) {
         d3.event.sourceEvent.stopPropagation();
-        if (!d3.event.active) {graphLayout.alphaTarget(0.3).restart();}
+        if (!d3.event.active) {force_simulation.alphaTarget(0.3).restart();}
         d.fx = d.x;
         d.fy = d.y;
     }
@@ -194,32 +148,38 @@ export function create_graph(el, data, config, handle_viz_events) {
         d.fy = d3.event.y;
     }
 
-    function dragended(d) {
-        if (!d3.event.active) {graphLayout.alphaTarget(0);}
+    function drag_ended(d) {
+        if (!d3.event.active) {force_simulation.alphaTarget(0);}
         d.fx = null;
         d.fy = null;
     }
-}
 
-// export function create_graph(el, data, config, handle_viz_events) {
-//     d3.select(el)
-//         .append('svg')
-//         .attr('width', config.width)
-//         .attr('height', config.height)
-//         .selectAll('rect')
-//         .data(data['nodes'])
-//         .enter()
-//         .append('rect')
-//         .attr('x', (d, _i) => _i * 10)
-//         .attr('y', (d) => config.height - d.docs / 25)
-//         .attr('width', 9)
-//         .attr('height', (d) => d.docs / 25)
-//         .attr('fill', config.color)
-//         .on('mouseover', (node_data,_i) => handle_viz_events('mouseover', node_data))
-//         .on('mouseout',  (node_data,_i) => handle_viz_events('mouseout', node_data))
-//         .on('click', (node_data, _i)    => handle_viz_events('click', node_data))
-//     ;
-// }
+    // Setup adjacencies (maybe refactor this...)
+    const adjacent_nodes = {};
+    for (const link of data.links) {
+        adjacent_nodes[link.source.index + "-" + link.target.index] = true;
+        adjacent_nodes[link.target.index + "-" + link.source.index] = true;
+    }
+    function neigh(a, b) {
+        return a === b || adjacent_nodes[a + "-" + b];
+    }
+
+    function focus_node() {
+        const node = d3.select(d3.event.target);
+        const index = node.datum().index;
+        nodes.style("opacity", function(o) {
+            return neigh(index, o.index) ? 1 : 0;
+        });
+        links.style("opacity", function(o) {
+            return o.source.index === index || o.target.index === index ? 1 : 0;
+        });
+    }
+
+    function unfocus_node() {
+        nodes.style("opacity", 1);
+        links.style("opacity", 1);
+    }
+}
 
 
 /**
@@ -237,13 +197,4 @@ export function update_graph_color(el, data, config) {
         .duration(1000)
         .style('fill', config.color)
 }
-
-/*
- * TODO:
- *   - destroy and recreate graph with new data
- *   - some kind of hooks to call different updates; e.g.,
- *     - filtering by topic
- *     -
- *
- */
 
