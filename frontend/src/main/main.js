@@ -100,10 +100,10 @@ class Info extends React.Component {
             return (<div className="col-3">
                 <div className="row float-right">
                     <button className="btn btn-primary" type="button" data-toggle="collapse"
-                        data-target="#displayInfoButton" id="toggle_button"
+                        data-target="#toggleDisplayButton" id="toggle_button"
                     >Toggle Display</button>
                 </div>
-                <div className="collapse row  float-right" id="displayInfoButton">
+                <div className="collapse row  float-right" id="toggleDisplayButton">
                     <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                     <p>The current viz color is {this.props.currentColor}</p>
                     <table className="table">
