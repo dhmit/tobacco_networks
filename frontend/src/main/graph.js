@@ -189,10 +189,12 @@ export function create_graph(el, data, config, handle_viz_events) {
  * @param data: object[]
  * @param config: object
  */
+
+// TODO: rewrite this for width resize
 export function update_graph_color(el, data, config) {
     //D3 Code to update the chart
     // Re-compute the scales, and render the data points
-    d3.select(el).selectAll('rect')
+    d3.select(el).selectAll('rect') // select by id (svg)
         .transition()
         .duration(1000)
         .style('fill', config.color)

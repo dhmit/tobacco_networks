@@ -104,12 +104,12 @@ class Info extends React.Component {
     render() {
         if (this.props.showTableData) {
             return (<div className="col-3">
-                <button className="btn btn-primary float-right" type="button" data-toggle="collapse"
-                    data-target="#displayInfoButton" id="toggle_button"
-                //    onClick={()=>this.props.toggle_show_table()}
-                >Toggle Display</button>
-                <div //id="sidebar"
-                    className="collapse" id="displayInfoButton">
+                <div className="row float-right">
+                    <button className="btn btn-primary" type="button" data-toggle="collapse"
+                        data-target="#toggleDisplayButton" id="toggle_button"
+                    >Toggle Display</button>
+                </div>
+                <div className="collapse row  float-right" id="toggleDisplayButton">
                     <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                     <p>The current viz color is {this.props.currentColor}</p>
                     <table className="table">
@@ -155,8 +155,8 @@ class MainView extends React.Component {
         super(props);
         this.state = {
             config: {
-                width: 500,
-                height: 800,
+                width: window.innerWidth,
+                height: window.innerHeight,
                 color: 'blue',
             },  // initial configuration for the viz
             data: null,  // data for the viz
@@ -170,7 +170,7 @@ class MainView extends React.Component {
     }
 
     /**
-     * Runs when the MainView item is connected to the server.
+     * Runs when the MainView item is connected to the DOM.
      */
     componentDidMount() {
         fetch("get_network_data")
@@ -183,6 +183,9 @@ class MainView extends React.Component {
             }).catch(() => {
                 console.log("error");
             });
+        window.addEventListener("resize", () => {
+            this.setState({width: window.innerWidth, height: window.innerHeight})
+        });
     }
 
     /**
@@ -196,6 +199,7 @@ class MainView extends React.Component {
         } else {
             config.color = 'blue'
         }
+        //TODO: rewrite this to update width and height for the vis
         config.viz_update_func = 'update_graph_color';
         this.setState({
             config: config,
