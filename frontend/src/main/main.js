@@ -118,7 +118,7 @@ class MainView extends React.Component {
         super(props);
         this.state = {
             config: {
-                width: 1000,
+                width: 500,
                 height: 800,
                 color: 'blue',
             },  // initial configuration for the viz
