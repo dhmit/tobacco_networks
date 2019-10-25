@@ -149,8 +149,8 @@ class MainView extends React.Component {
         super(props);
         this.state = {
             config: {
-                width: 500,
-                height: 800,
+                width: window.innerWidth,
+                height: window.innerHeight,
                 color: 'blue',
             },  // initial configuration for the viz
             data: null,  // data for the viz
@@ -164,7 +164,7 @@ class MainView extends React.Component {
     }
 
     /**
-     * Runs when the MainView item is connected to the server.
+     * Runs when the MainView item is connected to the DOM.
      */
     componentDidMount() {
         fetch("get_network_data")
@@ -177,6 +177,9 @@ class MainView extends React.Component {
             }).catch(() => {
                 console.log("error");
             });
+        window.addEventListener("resize", () => {
+            this.setState({width: window.innerWidth, height: window.innerHeight})
+        });
     }
 
     /**
@@ -190,6 +193,7 @@ class MainView extends React.Component {
         } else {
             config.color = 'blue'
         }
+        //TODO: rewrite this to update width and height for the vis
         config.viz_update_func = 'update_graph_color';
         this.setState({
             config: config,
