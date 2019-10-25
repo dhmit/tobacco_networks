@@ -197,3 +197,14 @@ export function update_graph_color(el, data, config) {
         .duration(1000)
         .style('fill', config.color)
 }
+export function update_graph_size(el, data, config) {
+    // d3.select(el).selectAll('rect')
+    //     .transition()
+    //     .duration(1000)
+    //     .style('fill', config.color)
+
+    d3.select(el)
+        .append('svg')
+            .attr("width", config.width)
+            .attr("height", config.height);
+}

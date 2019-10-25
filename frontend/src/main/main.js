@@ -60,13 +60,19 @@ class Viz extends React.Component {
 
     componentDidUpdate() {
         // D3 Code to update the chart
+
+        let update_func;
         if (this.props.config.viz_update_func === 'update_graph_color') {
-            update_graph_color(
-                this._graphRoot.current,
-                this.props.data,
-                this.props.config,
-            );
+            update_func = update_graph_color;
         }
+        else if (this.props.config.viz_update_func === 'update_graph_size'){
+            update_func = update_graph_size;
+        }
+        update_func(
+            this._graphRoot.current,
+            this.props.data,
+            this.props.config,
+        );
     }
 
     render() {
@@ -98,7 +104,7 @@ class Info extends React.Component {
     render() {
         if (this.props.showTableData) {
             return (<div className="col-3">
-                <button className="btn btn-primary" type="button" data-toggle="collapse"
+                <button className="btn btn-primary float-right" type="button" data-toggle="collapse"
                     data-target="#displayInfoButton" id="toggle_button"
                 //    onClick={()=>this.props.toggle_show_table()}
                 >Toggle Display</button>
