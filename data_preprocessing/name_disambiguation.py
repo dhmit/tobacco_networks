@@ -120,7 +120,7 @@ class Person:
         Hashes the person
         :return: hash (int)
         """
-        return hash(f'{self.last} {self.first} {self.middle} {self.positions}')
+        return hash(f'{self.last} {self.first} {self.middle} {self.positions} {self.aliases}')
 
     def stemmed(self):
         """
@@ -397,7 +397,6 @@ class PeopleDatabase:
                 writer.writerow({'Raw Name': organization, 'Count': positions_counter[
                     organization], 'Authoritative Name': ''})
 
-
     def merge_duplicates(self, print_merge_results_for_name='Dunn'):
         """
         Tries to merge all duplicates and only retain authoritative names.
@@ -571,7 +570,7 @@ def merge_names_from_file(name_file=Path('..', 'data', 'name_disambiguation',
 #    with open('alias_to_name.json', 'w') as outfile:
 #        json.dump(people_db.get_alias_to_name(), outfile)
 
-# TODO: fix these so the test works
+
 class TestNameParser(unittest.TestCase):
     """Tests name parsing (parse_raw_name) of the Person class
     Attributes:
@@ -586,7 +585,7 @@ class TestNameParser(unittest.TestCase):
             "teague ce jr": Person(last="Teague", first="C", middle="E", positions=Counter(["JR"]),
                 aliases=["teague ce jr"]),
             'Teague, J - BAT': Person(last='Teague', first='J', middle='',
-                positions={'British American Tobacco'}, aliases=['Teague, J - BAT']),
+                                    positions={'British American Tobacco'}, aliases=['Teague, J - BAT']),
             "Teague, Claude Edward, Jr., Ph.D.": Person(
                 last="Teague", first="Claude", middle="Edward", positions={"JR, PHD"},
                 aliases=["Teague, Claude Edward, Jr., Ph.D."]
@@ -594,7 +593,7 @@ class TestNameParser(unittest.TestCase):
             "BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL": Person(
                 last="Baker", first="T", middle="E",
                 positions={"NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"},
-                aliases = ["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"]
+                aliases=["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"]
             ),
             # specify positions: test to make sure Counter can handle no data
             "BAKER-cj": Person(last="Baker", first="C", middle="J", positions={},
@@ -655,7 +654,7 @@ class TestNameParser(unittest.TestCase):
         :return:
         """
         for name in self.test_raw_names:
-            self.assertEqual(Person(name_raw = name), self.test_raw_names[name])
+            self.assertEqual(Person(name_raw=name), self.test_raw_names[name])
 
 
 class TestPeopleDB(unittest.TestCase):
@@ -674,7 +673,8 @@ class TestPeopleDB(unittest.TestCase):
         self.assertEqual(self.people_db, loaded_db)
 
     def test_add_au_and_rc_org(self):
-        add_au_and_rc_org(self.people_db, Path('..', 'data', 'name_disambiguation', 'test_docs.csv'))
+        add_au_and_rc_org(self.people_db, Path('..', 'data', 'name_disambiguation',
+                                               'test_docs.csv'))
 
         expected_people_db = PeopleDatabase()
         raquel = Person('Garcia, Raquel')
@@ -695,7 +695,7 @@ class TestPeopleDB(unittest.TestCase):
         self.assertEqual(self.people_db, expected_people_db)
 
 
-def add_au_and_rc_org(db, path):
+def add_au_and_rc_org(db_to_add, path):
     """
     Input are a people database and a path to a document
     Returns None
@@ -704,13 +704,14 @@ def add_au_and_rc_org(db, path):
     finds Person that that document author alias maps to,
     and adds that company to the position counter of that Person
 
-    :param db: a PeopleDatabase, path: path to authors/orgs document
+    :param db_to_add: a PeopleDatabase, path: path to authors/orgs document
+    :param path: file path to the docs csv file that includes au_org & rc_org
     :return: None
     """
 
-    alias_to_person_dict = db.get_alias_to_person_dict()
+    alias_to_person_dict = db_to_add.get_alias_to_person_dict()
 
-    def update_au_and_rc_positions(db, path, au_or_rc, relevant_dicts):
+    def update_au_and_rc_positions(db_current, au_or_rc, relevant_dicts):
         if au_or_rc == 'au':
             relevant_person = 'au_person'
             relevant_org = 'au_org'
@@ -738,18 +739,18 @@ def add_au_and_rc_org(db, path):
                     continue
                 for alias in aliases:
                     if alias not in alias_to_person_dict:
-                        db.add_person_raw(alias)
+                        db_current.add_person_raw(alias)
                     else:
                         alias_to_person_dict[alias].positions[org] += 1
 
     au_dicts, rc_dicts = get_au_and_rc_by_document(path)
-    update_au_and_rc_positions(db, path, 'au', au_dicts)
-    update_au_and_rc_positions(db, path, 'rc', rc_dicts)
+    update_au_and_rc_positions(db_to_add, 'au', au_dicts)
+    update_au_and_rc_positions(db_to_add, 'rc', rc_dicts)
 
 
 if __name__ == '__main__':
     db = PeopleDatabase()
-    db.load_from_disk("names_db_10.pickle")
+    db.load_from_disk(Path("names_db_10.pickle"))
     add_au_and_rc_org(db, Path('..', 'data', 'name_disambiguation', 'dunn_docs.csv'))
     # db.merge_duplicates()
     print(db)
@@ -758,7 +759,3 @@ if __name__ == '__main__':
     # db = PeopleDatabase()
     # db.load_from_disk("d_names_db.pickle")
     # print(add_au_and_rc_org(db))
-
-
-
-
