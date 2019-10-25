@@ -71,7 +71,7 @@ class Viz extends React.Component {
 
     render() {
         return (
-            <div className="col-6" ref={this._graphRoot}>
+            <div className="col-9" ref={this._graphRoot}>
 
             </div>
         )
@@ -98,12 +98,12 @@ class Info extends React.Component {
     render() {
         if (this.props.showTableData) {
             return (<div className="col-3">
-                <button className="btn btn-primary" type="button" data-toggle="collapse"
-                    data-target="#displayInfoButton" id="toggle_button"
-                //    onClick={()=>this.props.toggle_show_table()}
-                >Toggle Display</button>
-                <div //id="sidebar"
-                    className="collapse" id="displayInfoButton">
+                <div className="row float-right">
+                    <button className="btn btn-primary" type="button" data-toggle="collapse"
+                        data-target="#displayInfoButton" id="toggle_button"
+                    >Toggle Display</button>
+                </div>
+                <div className="collapse row  float-right" id="displayInfoButton">
                     <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                     <p>The current viz color is {this.props.currentColor}</p>
                     <table className="table">
