@@ -71,7 +71,7 @@ class Viz extends React.Component {
 
     render() {
         return (
-            <div className="col-6" ref={this._graphRoot}>
+            <div className="col-9" ref={this._graphRoot}>
 
             </div>
         )
