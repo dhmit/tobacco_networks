@@ -8,6 +8,33 @@ import { getCookie } from '../common'
 import { create_graph, update_graph_color } from './graph.js'
 import './main.css';
 
+
+/***************************************************************************************************
+ * Search bar
+ **************************************************************************************************/
+class SearchBar extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render(){
+        return(
+            <div className="col-6">
+                <input className="form-control"
+                    type="text"
+                    maxLength="20" size="20"
+                    value={this.props.person_to_highlight}
+                    onChange={(e) => this.props.handle_searchbar_update(e.target.value)}
+                />
+            </div>
+        )
+    }
+}
+SearchBar.propTypes = {
+    person_to_highlight: PropTypes.string.isRequired,
+    handle_searchbar_update: PropTypes.func.isRequired
+};
+
 /***************************************************************************************************
  * Wrapper for the Visualization
  **************************************************************************************************/
@@ -67,10 +94,10 @@ class MainView extends React.Component {
                 width: 500,
                 height: 800,
                 color: 'blue',
+                person_to_highlight: "DUNN,WL",
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
-            person: "",
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -106,6 +133,14 @@ class MainView extends React.Component {
         }
     }
 
+    handle_searchbar_update(search_string) {
+        let config = {... this.state.config};
+        config.person_to_highlight = search_string;
+        this.setState({config: config})
+
+        //TODO: trigger update of visualization
+    }
+
     submitFormHandler = event => {
         event.preventDefault();
     }
@@ -121,12 +156,11 @@ class MainView extends React.Component {
                 <div className="container">
 
                     <div className="row">
-
-                        <form onSubmit={this.submitFormHandler}>
-                            <div>
-                                <input type="text"/>
-                            </div>
-                        </form>
+                        <SearchBar
+                            person_to_highlight={this.state.config.person_to_highlight}
+                            handle_searchbar_update={(search_string) =>
+                                this.handle_searchbar_update(search_string)}
+                        />
                     </div>
 
                     <div className="row">
