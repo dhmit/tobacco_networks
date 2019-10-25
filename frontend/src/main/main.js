@@ -96,10 +96,10 @@ class Info extends React.Component {
 
 
     render() {
-        return (
-            <div className="col-3">
-                <button onClick={()=>this.props.toggle_show_table()}>Toggle Display</button>
-                <div id="sidebar" className={this.props.showTableData ? "sidebarHide" : "sidebarShow"}>
+        if (this.props.showTableData) {
+            return (<div className="col-3">
+                <button id="toggle_button" onClick={()=>this.props.toggle_show_table()}>Toggle Display</button>
+                <div id="sidebar">
                     <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
                     <p>The current viz color is {this.props.currentColor}</p>
                     <table className="table">
@@ -118,8 +118,12 @@ class Info extends React.Component {
                         </tbody>
                     </table>
                 </div>
-            </div>
-        );
+            </div>);
+        } else {
+            return (
+                <button id="toggle_button" onClick={()=>this.props.toggle_show_table()}>Toggle Display</button>
+            );
+        }
     }
 }
 Info.propTypes ={
