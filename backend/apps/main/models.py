@@ -3,7 +3,9 @@ Models for the Rereading app.
 """
 import json
 from pathlib import Path
-# from django.db import models
+from django.db import models
+import pandas as pd
+import pickle
 
 from config.settings.base import BACKEND_DIR
 
@@ -18,6 +20,91 @@ class Person:
         self.name = name
         self.docs = docs
         self.words = words
+
+MAX_LENGTH = 250
+
+class Document(models.Model):
+    au = models.CharField(blank=True, max_length=MAX_LENGTH)
+    au_org = models.CharField(blank=True, max_length=MAX_LENGTH)
+    au_person = models.CharField(blank=True, max_length=MAX_LENGTH)
+    cc = models.CharField(blank=True, max_length=MAX_LENGTH)
+    cc_org = models.CharField(blank=True, max_length=MAX_LENGTH)
+    collection = models.CharField(blank=True, max_length=MAX_LENGTH)
+    date = models.CharField(blank=True, max_length=MAX_LENGTH)
+    doc_type = models.CharField(blank=True, max_length=MAX_LENGTH)
+    pages = models.IntegerField(blank=True)
+    rc = models.CharField(blank=True, max_length=MAX_LENGTH)
+    rc_org = models.CharField(blank=True, max_length=MAX_LENGTH)
+    rc_person = models.CharField(blank=True, max_length=MAX_LENGTH)
+    text = models.TextField(blank=True)
+    tid = models.CharField(unique=True, max_length=MAX_LENGTH)
+    title = models.CharField(blank=True, max_length=MAX_LENGTH)
+
+    recipients = models.ManyToManyField(Person)
+    authors = models.ManyToManyField(Person)
+
+    def __str__(self):
+        return f'tid: {self.tid}, title: {self.title}, date: {self.date}'
+
+def import_csv_to_document_model(path):
+    df = pd.read_csv(path).fillna('')
+    for _, row in df.iterrows():
+        d = Document(au=row['au'],
+                     au_org=row['au_org'],
+                     au_person=row['au_person'],
+                     cc=row['cc'],
+                     cc_org=row['cc_org'],
+                     collection=row['collection'],
+                     date=row['date'],
+                     doc_type=row['doc_type'],
+                     pages=int(row['pages']),
+                     rc=row['rc'],
+                     rc_org=row['rc_org'],
+                     rc_person=row['rc_person'],
+                     text=row['text'],
+                     tid=row['tid'],
+                     title=row['title']
+                     )
+        d.save()
+
+class Person(models.Model):
+    # Maybe should be blank = True??
+    last = models.CharField(max_length=255)
+    first = models.CharField(max_length=255)
+    middle = models.CharField(max_length=255)
+    position = models.CharField(max_length=MAX_LENGTH)
+    # TODO: Make counter into textfield as json
+    positions = models.TextField()
+    aliases = models.
+    count = models.IntegerField()
+
+    # TODO: write getter to parse json in textfield
+    # See rereading/.../backend, analysis
+    # Look into JSON Fields -- they won't work here, but it's
+    # an example of how to do this stuff
+    def get_parsed_positions(self)
+        self.positions
+
+    def __str__(self):
+        s = f'{self.first} {self.middle} {self.last}'
+        s = s + ", Position: " + str(self.positions) + ", Aliases: " + \
+            str(self.aliases) + ", count: " + str(self.count)
+        return s
+
+def import_peopledb_to_person_model(file_path):
+    with open(str(file_path), 'rb') as infile:
+        db = pickle.load(infile)
+    for person in db.people:
+        p = Person(last=person.last,
+                   first=person.first,
+                   middle=person.middle,
+                   position=person.position,
+                   positions=person.positions,
+                   aliases=person.aliases,
+                   count=person.count
+                   )
+        p.save()
+
 
 
 class Edge:
@@ -66,3 +153,9 @@ def load_network_json_data(return_type: str):
             words = int(person_dict.get('words'))
             people.append(Person(pk, name, docs, words))
         return people
+
+
+if __name__ == '__main__':
+    path = Path('..', 'data', 'name_disambiguation', 'dunn_docs.csv')
+    import_csv_to_document_model(path)
+    Document.objects.all()
