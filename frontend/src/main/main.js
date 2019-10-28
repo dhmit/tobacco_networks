@@ -61,6 +61,10 @@ class Viz extends React.Component {
     componentDidUpdate() {
         // D3 Code to update the chart
 
+        if (this.props.config.viz_update_func === undefined) {
+            return;
+        }
+
         let update_func;
         if (this.props.config.viz_update_func === 'update_graph_color') {
             update_func = update_graph_color;
