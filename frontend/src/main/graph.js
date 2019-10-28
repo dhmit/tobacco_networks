@@ -193,20 +193,15 @@ export function create_graph(el, data, config, handle_viz_events) {
 // TODO: rewrite this for width resize
 export function update_graph_color(el, data, config) {
     //D3 Code to update the chart
-    // Re-compute the scales, and render the data points
-    d3.select(el).selectAll('rect') // select by id (svg)
+    d3.select(el).selectAll('rect')
         .transition()
         .duration(1000)
         .style('fill', config.color)
 }
 export function update_graph_size(el, data, config) {
-    // d3.select(el).selectAll('rect')
-    //     .transition()
-    //     .duration(1000)
-    //     .style('fill', config.color)
-
-    d3.select(el)
-        .append('svg')
-            .attr("width", config.width)
-            .attr("height", config.height);
+    // Re-compute the scales, and render the data points
+    // TODO: the main SVG should really have an ID
+    d3.select(el).select('svg')
+        .attr("width", config.width)
+        .attr("height", config.height);
 }

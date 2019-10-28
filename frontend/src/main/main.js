@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph_color } from './graph.js'
+import { create_graph, update_graph_color, update_graph_size } from './graph.js'
 import './main.css';
 
 
@@ -184,7 +184,14 @@ class MainView extends React.Component {
                 console.log("error");
             });
         window.addEventListener("resize", () => {
-            this.setState({width: window.innerWidth, height: window.innerHeight})
+            const config = {...this.state.config};
+            config.width = window.innerWidth;
+            config.height = window.innerHeight;
+
+            config.viz_update_func = 'update_graph_size';
+            this.setState({
+                config: config,
+            })
         });
     }
 
