@@ -75,14 +75,14 @@ class Person(models.Model):
     position = models.CharField(max_length=MAX_LENGTH)
     # TODO: Make counter into textfield as json
     positions = models.TextField()
-    aliases = models.
+    aliases = models.TextField()
     count = models.IntegerField()
 
     # TODO: write getter to parse json in textfield
     # See rereading/.../backend, analysis
     # Look into JSON Fields -- they won't work here, but it's
     # an example of how to do this stuff
-    def get_parsed_positions(self)
+    def get_parsed_positions(self):
         self.positions
 
     def __str__(self):
@@ -99,8 +99,8 @@ def import_peopledb_to_person_model(file_path):
                    first=person.first,
                    middle=person.middle,
                    position=person.position,
-                   positions=person.positions,
-                   aliases=person.aliases,
+                   positions=json.dumps(person.positions),
+                   aliases=json.dumps(list(person.aliases.keys())),
                    count=person.count
                    )
         p.save()
