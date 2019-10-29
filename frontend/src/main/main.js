@@ -135,7 +135,7 @@ class Info extends React.Component {
             </div>);
         } else {
             return (
-                <button id="toggle_button" onClick={()=>this.props.toggle_show_table()}>Toggle Display</button>
+                <button id="toggle_button" onClick={() => this.props.toggle_show_table()}>Toggle Display</button>
             );
         }
     }
@@ -241,7 +241,7 @@ class MainView extends React.Component {
      */
     toggle_show_table() {
         this.setState({
-            showTableData:!this.state.showTableData
+            showTableData: !this.state.showTableData
         })
         console.log(this.state.showTableData)
     }
