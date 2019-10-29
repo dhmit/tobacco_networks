@@ -45,7 +45,8 @@ def get_author_counter() -> Counter:
 def get_au_and_rc_by_document(path) -> list:
     """
     Creates a list of documents such that each element consists of a dict with keys
-    'au', 'au_org', 'au_person'
+    'au', 'au_org', 'au_person' OR 'rc', 'rc_org', 'rc_person'.
+    These keys map to info about the authors/recipients and organizations associated with docs
 
     >>> authors_by_docs = get_au_and_rc_by_document()
     >>> authors_by_docs[0]
@@ -73,6 +74,11 @@ def get_au_and_rc_by_document(path) -> list:
 
 
 def parse_column_person(column):
+    """
+
+    :param column: list, taken from csv with doc info
+    :return: list, names of people in column
+    """
     names = []
     for name_split_semicolon in [n.strip() for n in column.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
@@ -82,6 +88,10 @@ def parse_column_person(column):
 
 
 def parse_column_org(column_org):
+    """
+    :param column_org: list, column of organization names taken from csv with doc info
+    :return: list of organization names
+    """
     names = []
     for name_split_semicolon in [n.strip() for n in column_org.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
@@ -92,6 +102,9 @@ def parse_column_org(column_org):
 
 
 def get_clean_org_names():
+    """
+    :return: dict, maps official organization names to all their variants
+    """
     # read clean_org_names
     file_name = Path('..', 'data', 'name_disambiguation', 'clean_org_names_to_raw_org_names.json')
     with open(file_name, 'r') as infile:

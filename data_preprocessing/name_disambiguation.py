@@ -742,6 +742,26 @@ def add_au_and_rc_org(db_to_add, path):
     alias_to_person_dict = db_to_add.get_alias_to_person_dict()
 
     def update_au_and_rc_positions(db_current, au_or_rc, relevant_dicts):
+        """
+        Goes through documents and updates authors/recipients' positions
+        based on organization associated with document
+
+        Adds people to db_current if their alias is associated with a doc but is not in
+        db_current yet
+
+        Ignores:
+            organizations not in RAW_ORG_TO_CLEAN_ORG_DICT
+            docs with more than 1 organization
+            docs with more than 4 recipients
+            docs with no people associated with them
+
+        :param db_current: People Database
+        :param au_or_rc: string ('au' or 'rc')– specifies whether we're looking at authors or
+        recipients
+        :param relevant_dicts: 2 item list, 1st = dict with authors and organizations, by doc,
+        2nd = dict of recipients and organizations by doc.
+        :return: None
+        """
         if au_or_rc == 'au':
             relevant_person = 'au_person'
             relevant_org = 'au_org'
