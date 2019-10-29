@@ -5,39 +5,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph_color, update_graph_size } from './graph.js'
+import { create_graph, update_graph_size } from './graph.js'
 import './main.css';
 
 
 /***************************************************************************************************
  * Controls and settings components for the visualization
  **************************************************************************************************/
-class Controls extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        const checked = this.props.config.color === 'blue';
-        return (
-            <div className="col-3">
-                <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={this.props.handle_checkbox}
-                />
-                {/*<label>Color is blue</label>*/}
-            </div>
-        );
-
-    }
-}
-
-Controls.propTypes = {
-    config: PropTypes.object.isRequired,
-    handle_checkbox: PropTypes.func.isRequired,
-};
-
 
 /***************************************************************************************************
  * Wrapper for the Visualization
@@ -66,10 +40,7 @@ class Viz extends React.Component {
         }
 
         let update_func;
-        if (this.props.config.viz_update_func === 'update_graph_color') {
-            update_func = update_graph_color;
-        }
-        else if (this.props.config.viz_update_func === 'update_graph_size'){
+        if (this.props.config.viz_update_func === 'update_graph_size'){
             update_func = update_graph_size;
         }
         update_func(
@@ -115,7 +86,6 @@ class Info extends React.Component {
                 </div>
                 <div className="collapse row  float-right" id="toggleDisplayButton">
                     <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
-                    <p>The current viz color is {this.props.currentColor}</p>
                     <table className="table">
                         <tbody><tr>
                             <th scope="row">Name:</th>
@@ -161,7 +131,6 @@ class MainView extends React.Component {
             config: {
                 width: window.innerWidth,
                 height: window.innerHeight,
-                color: 'blue',
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
@@ -199,23 +168,6 @@ class MainView extends React.Component {
         });
     }
 
-    /**
-     * Calls when checkbox is changed.  Changes the color from blue to red or vice versa.
-     */
-    handle_checkbox() {
-        // "..." is the 'spread' operator - this is a copy
-        const config = {...this.state.config};
-        if (config.color === 'blue') {
-            config.color = 'red';
-        } else {
-            config.color = 'blue'
-        }
-        //TODO: rewrite this to update width and height for the vis
-        config.viz_update_func = 'update_graph_color';
-        this.setState({
-            config: config,
-        })
-    }
 
     /**
      * Handles a visualization event
@@ -255,12 +207,6 @@ class MainView extends React.Component {
         if (this.state.data) {
             return (
                 <div className="container">
-                    <div className="row">
-                        <Controls
-                            handle_checkbox={() => this.handle_checkbox()}
-                            config={this.state.config}
-                        />
-                    </div>
 
                     <div className="row">
                         <Viz
@@ -271,7 +217,6 @@ class MainView extends React.Component {
                         />
                         <Info
                             mouseover={this.state.mouseover}
-                            currentColor={this.state.config.color}
                             person={this.state.person}
                             docs={this.state.docs}
                             words={this.state.words}

@@ -182,22 +182,6 @@ export function create_graph(el, data, config, handle_viz_events) {
 }
 
 
-/**
- * Change the color of each of the rectangles in the graph, slowly.
- *
- * @param el: Node
- * @param data: object[]
- * @param config: object
- */
-
-// TODO: rewrite this for width resize
-export function update_graph_color(el, data, config) {
-    //D3 Code to update the chart
-    d3.select(el).selectAll('rect')
-        .transition()
-        .duration(1000)
-        .style('fill', config.color)
-}
 export function update_graph_size(el, data, config) {
     // Re-compute the scales, and render the data points
     // TODO: the main SVG should really have an ID
