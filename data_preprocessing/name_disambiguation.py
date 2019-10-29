@@ -80,7 +80,7 @@ class Person:
             # initialize positions as a Counter
             self.positions = Counter()
             for i in positions:
-                cleaned = re.sub('\.', '', i)
+                cleaned = re.sub(r'\.', '', i)
                 self.positions[cleaned.upper()] += count
         self.aliases = aliases
         self.count = count
@@ -99,11 +99,14 @@ class Person:
     def __eq__(self, other):
         # TODO: figure out where this is actually called & what we should compare
         """
-        Compares two person object by last, first, middle
+        Compares two person object using hash (which hashes the string of last, first, middle,
+        position, positions, aliases, and count)
         :param other: another person object
         :return: bool (if two person objects are the same)
         """
-        return hash(self) == hash(other)
+        return self.last == other.last and self.first == other.first and self.middle == \
+               other.middle and self.position == other.position and self.positions == \
+               other.positions and self.aliases == other.aliases
 
     def copy(self):
         """
@@ -150,7 +153,6 @@ class Person:
 
         # remove privlog info, e.g. 'Temko, Stanley L [Privlog:] TEMKO,SL'. It confuses
         # the name parser
-        # TODO: figure out if Privlog contains position information
         privlog_id = name_raw.find('[Privlog:]')
         if privlog_id == 0:
             name_raw = name_raw[privlog_id:]
@@ -219,11 +221,11 @@ class Person:
                 extracted_positions.append(extracted_institution.group().strip(',#() '))
                 name_raw = name_raw[:name_raw.find(extracted_institution.group())]
 
+
         # remove #
         name_raw = name_raw.strip("#").strip()
 
         # DUNN-W -> Dunn W
-        # TODO this does not seem correct. maybe return last, first?
         if name_raw[-2] == '-':
             name_raw = name_raw[:-2] + " " + name_raw[-1:]
 
@@ -231,6 +233,13 @@ class Person:
         if len(name_raw) > 2 and name_raw[-3] == '-':
             name_raw = name_raw[:-3] + " " + name_raw[-2:]
 
+        # if there is a special character, take out the word surrounding it (i.e. no space or
+        # comma) into extracted_positions (since it is unlikely to be in the name)
+        match_non_alpha = r'[^ ,]*[^A-Z ,\-\(\)\.][^ ,]*'
+        while(re.search(match_non_alpha, name_raw, re.IGNORECASE)):
+            non_alpha = re.search(match_non_alpha, name_raw, re.IGNORECASE)
+            extracted_positions.append(non_alpha.group())
+            name_raw = name_raw[:name_raw.find(non_alpha.group())] + name_raw[name_raw.find(non_alpha.group()) + len(non_alpha.group()):]
         name = HumanName(name_raw)
 
         # e.g. Dunn W -> parsed as last name W. -> switch first/last
@@ -277,7 +286,7 @@ class Person:
         # convert mapped positions into a counter
         result_positions = Counter()
         for position in extracted_positions:
-            cleaned = re.sub('\.', '', position)
+            cleaned = re.sub(r'\.', '', position)
             result_positions[cleaned.upper()] += count
 
         print(name.first, name.middle, name.last, result_positions)
@@ -394,8 +403,11 @@ class PeopleDatabase:
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
             for organization in positions_counter:
+                authoritative_name = "-"
+                if organization in RAW_ORG_TO_CLEAN_ORG_DICT:
+                    authoritative_name = RAW_ORG_TO_CLEAN_ORG_DICT[organization]
                 writer.writerow({'Raw Name': organization, 'Count': positions_counter[
-                    organization], 'Authoritative Name': ''})
+                    organization], 'Authoritative Name': authoritative_name})
 
     def merge_duplicates(self, print_merge_results_for_name='Dunn'):
         """
@@ -538,7 +550,7 @@ class PeopleDatabase:
 
 
 def merge_names_from_file(name_file=Path('..', 'data', 'name_disambiguation',
-                                         'tobacco_names_raw.json')):
+                                         'tobacco_names_raw_test_small.json')):
     """
     Creates a people db from reading json file (dict of raw names and counts) and merges people
     in it. Stores people db in a pickle file
@@ -576,16 +588,19 @@ class TestNameParser(unittest.TestCase):
     Attributes:
         test_raw_names: dict that corresponds raw names (str) to the expected Person object
     """
+    # TODO: fix it so that all tests run even if the first assertion fails
     def setUp(self):
         self.test_raw_names = {
             # test Person constructor: use list as positions
             "TEAGUE CE JR": Person(last="Teague", first="C", middle="E", positions=["JR"],
                                    aliases=["TEAGUE CE JR"]),
             # test Person constructor: use Counter as positions
-            "teague ce jr": Person(last="Teague", first="C", middle="E", positions=Counter(["JR"]),
-                aliases=["teague ce jr"]),
+            "teague ce jr": Person(last="Teague", first="C", middle="E", positions=Counter([
+                "JR"]), aliases=["teague ce jr"]),
             'Teague, J - BAT': Person(last='Teague', first='J', middle='',
-                                    positions={'British American Tobacco'}, aliases=['Teague, J - BAT']),
+                                      positions={'British American Tobacco'},
+                                      aliases=['Teague, J - BAT']),
+            # TODO: should be "JR", "PHD"
             "Teague, Claude Edward, Jr., Ph.D.": Person(
                 last="Teague", first="Claude", middle="Edward", positions={"JR, PHD"},
                 aliases=["Teague, Claude Edward, Jr., Ph.D."]
@@ -638,6 +653,19 @@ class TestNameParser(unittest.TestCase):
                 last="Proctor", first="D", middle="F",
                 positions=["JOHNS HOPKINS SCHOOL OF HYGIENE"],
                 aliases=["PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"]
+            ),
+            "Smith, Andy B, J.R.": Person(
+                last="Smith", first="Andy", middle="B", positions=["JR"],
+                aliases=["Smith, Andy B, J.R."]
+            ),
+            "D Cantrell, B&W": Person(
+                last="Cantrell", first="D", middle="", positions=["BROWN & WILLIAMSON"],
+                aliases=["D Cantrell, B&W"]
+            ),
+            # TODO: would be nice to pass this one
+            "A B Cantrell, BW": Person(
+                last="Cantrell", first="A", middle="B", positions=["BROWN & WILLIAMSON"],
+                aliases=["A B Cantrell, BW"]
             )
         }
 
@@ -654,7 +682,9 @@ class TestNameParser(unittest.TestCase):
         :return:
         """
         for name in self.test_raw_names:
-            self.assertEqual(Person(name_raw=name), self.test_raw_names[name])
+            print(f"Expected: {str(self.test_raw_names[name])}")
+            print(f"Parsed: {str(Person(name_raw=name))}")
+            self.assertEqual(self.test_raw_names[name], Person(name_raw=name))
 
 
 class TestPeopleDB(unittest.TestCase):
@@ -749,13 +779,13 @@ def add_au_and_rc_org(db_to_add, path):
 
 
 if __name__ == '__main__':
-    db = PeopleDatabase()
-    db.load_from_disk(Path("names_db_10.pickle"))
-    add_au_and_rc_org(db, Path('..', 'data', 'name_disambiguation', 'dunn_docs.csv'))
+    # db = PeopleDatabase()
+    # db.load_from_disk(Path("names_db_10.pickle"))
+    # add_au_and_rc_org(db, Path('..', 'data', 'name_disambiguation', 'dunn_docs.csv'))
     # db.merge_duplicates()
-    print(db)
+    # print(db)
 
-    # merge_names_from_file()
+    merge_names_from_file()
     # db = PeopleDatabase()
     # db.load_from_disk("d_names_db.pickle")
     # print(add_au_and_rc_org(db))
