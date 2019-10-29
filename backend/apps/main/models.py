@@ -100,7 +100,7 @@ def import_peopledb_to_person_model(file_path):
                    middle=person.middle,
                    position=person.position,
                    positions=json.dumps(person.positions),
-                   aliases=json.dumps(list(person.aliases.keys())),
+                   aliases=json.dumps(person.aliases),
                    count=person.count
                    )
         p.save()
