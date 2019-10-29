@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph_color } from './graph.js'
+import { create_graph, update_graph_color, update_graph_size } from './graph.js'
 import './main.css';
 
 
@@ -26,13 +26,14 @@ class SearchBar extends React.Component {
                     value={this.props.person_to_highlight}
                     onChange={(e) => this.props.handle_searchbar_update(e.target.value)}
                 />
+                {/*<label>Color is blue</label>*/}
             </div>
         )
     }
 }
 SearchBar.propTypes = {
     person_to_highlight: PropTypes.string.isRequired,
-    handle_searchbar_update: PropTypes.func.isRequired
+    handle_searchbar_update: PropTypes.func.isRequired,
 };
 
 /***************************************************************************************************
@@ -56,18 +57,28 @@ class Viz extends React.Component {
 
     componentDidUpdate() {
         // D3 Code to update the chart
-        if (this.props.config.viz_update_func === 'update_graph_color') {
-            update_graph_color(
-                this._graphRoot.current,
-                this.props.data,
-                this.props.config,
-            );
+
+        if (this.props.config.viz_update_func === undefined) {
+            return;
         }
+
+        let update_func;
+        if (this.props.config.viz_update_func === 'update_graph_color') {
+            update_func = update_graph_color;
+        }
+        else if (this.props.config.viz_update_func === 'update_graph_size'){
+            update_func = update_graph_size;
+        }
+        update_func(
+            this._graphRoot.current,
+            this.props.data,
+            this.props.config,
+        );
     }
 
     render() {
         return (
-            <div className="col-6" ref={this._graphRoot}>
+            <div className="col-9" ref={this._graphRoot}>
 
             </div>
         )
@@ -81,6 +92,61 @@ Viz.propTypes = {
     handle_viz_events: PropTypes.func,
 };
 
+/**
+ * Info panel - data from the visualization
+ */
+class Info extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+
+
+    render() {
+        if (this.props.showTableData) {
+            return (<div className="col-3">
+                <div className="row float-right">
+                    <button className="btn btn-primary" type="button" data-toggle="collapse"
+                        data-target="#toggleDisplayButton" id="toggle_button"
+                    >Toggle Display</button>
+                </div>
+                <div className="collapse row  float-right" id="toggleDisplayButton">
+                    <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
+                    <p>The current viz color is {this.props.currentColor}</p>
+                    <table className="table">
+                        <tbody><tr>
+                            <th scope="row">Name:</th>
+                            <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Docs</th>
+                            <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Words</th>
+                            <td>{this.props.words > 0 ? this.props.words : 0}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>);
+        } else {
+            return (
+                <button id="toggle_button" onClick={() => this.props.toggle_show_table()}>Toggle Display</button>
+            );
+        }
+    }
+}
+Info.propTypes ={
+    mouseover: PropTypes.bool,
+    currentColor: PropTypes.string,
+    person: PropTypes.string,
+    docs: PropTypes.number,
+    words: PropTypes.number,
+    showTableData: PropTypes.bool,
+    toggle_show_table: PropTypes.func,
+};
+
 /***************************************************************************************************
  * Main component for the main view.
  **************************************************************************************************/
@@ -91,18 +157,23 @@ class MainView extends React.Component {
 
         this.state = {
             config: {
-                width: 500,
-                height: 800,
+                width: window.innerWidth,
+                height: window.innerHeight,
                 color: 'blue',
                 person_to_highlight: "DUNN,WL",
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
+
+            person: "",
+            docs: 0,
+            words: 0,
+            showTableData: true,
         };
         this.csrftoken = getCookie('csrftoken');
     }
     /**
-     * Runs when the MainView item is connected to the server.
+     * Runs when the MainView item is connected to the DOM.
      */
     componentDidMount() {
         fetch("get_network_data")
@@ -115,6 +186,34 @@ class MainView extends React.Component {
             }).catch(() => {
                 console.log("error");
             });
+        window.addEventListener("resize", () => {
+            const config = {...this.state.config};
+            config.width = window.innerWidth;
+            config.height = window.innerHeight;
+
+            config.viz_update_func = 'update_graph_size';
+            this.setState({
+                config: config,
+            })
+        });
+    }
+
+    /**
+     * Calls when checkbox is changed.  Changes the color from blue to red or vice versa.
+     */
+    handle_checkbox() {
+        // "..." is the 'spread' operator - this is a copy
+        const config = {...this.state.config};
+        if (config.color === 'blue') {
+            config.color = 'red';
+        } else {
+            config.color = 'blue'
+        }
+        //TODO: rewrite this to update width and height for the vis
+        config.viz_update_func = 'update_graph_color';
+        this.setState({
+            config: config,
+        })
     }
 
     /**
@@ -130,6 +229,8 @@ class MainView extends React.Component {
             this.setState({mouseover: false});
         } else if (event_name === "click") {
             this.setState({person: data.name});
+            this.setState({docs: data.docs});
+            this.setState({words: data.words});
         }
     }
 
@@ -143,6 +244,17 @@ class MainView extends React.Component {
 
     submitFormHandler = event => {
         event.preventDefault();
+    }
+
+    /**
+     * Calls when button is pressed.  Shows the table containing info about person when it is
+     * hidden and hides table when visible.
+     */
+    toggle_show_table() {
+        this.setState({
+            showTableData: !this.state.showTableData
+        })
+        console.log(this.state.showTableData)
     }
 
     /**
@@ -169,6 +281,15 @@ class MainView extends React.Component {
                             config={this.state.config}
                             handle_viz_events={(event_name, data) =>
                                 this.handle_viz_events(event_name, data )}
+                        />
+                        <Info
+                            mouseover={this.state.mouseover}
+                            currentColor={this.state.config.color}
+                            person={this.state.person}
+                            docs={this.state.docs}
+                            words={this.state.words}
+                            showTableData={this.state.showTableData}
+                            toggle_show_table={() => this.toggle_show_table()}
                         />
                     </div>
                 </div>
