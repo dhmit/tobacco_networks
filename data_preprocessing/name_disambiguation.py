@@ -104,9 +104,10 @@ class Person:
         :param other: another person object
         :return: bool (if two person objects are the same)
         """
-        return self.last == other.last and self.first == other.first and self.middle == \
-            other.middle and self.position == other.position and self.positions == \
-            other.positions and self.aliases == other.aliases
+        return \
+            self.last == other.last and self.first == other.first\
+            and self.middle == other.middle and self.position == other.position\
+            and self.positions == other.positions and self.aliases == other.aliases
 
     def copy(self):
         """
