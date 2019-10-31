@@ -241,6 +241,14 @@ class Person:
             name_raw = \
                 name_raw[:name_raw.find(non_alpha.group())] + name_raw[name_raw.find(
                     non_alpha.group()) + len(non_alpha.group()):]
+
+        for raw_org in RAW_ORG_TO_CLEAN_ORG_DICT:
+            if raw_org in name_raw:
+                extracted_positions.append(RAW_ORG_TO_CLEAN_ORG_DICT[raw_org])
+                name_raw = name_raw[:name_raw.find(raw_org)] + name_raw[name_raw.find(
+                    raw_org) + len(raw_org):]
+
+
         name = HumanName(name_raw)
 
         # e.g. Dunn W -> parsed as last name W. -> switch first/last
@@ -262,6 +270,12 @@ class Person:
         if re.match(r'[a-zA-Z]\.[a-zA-Z]\.', name.first):
             name.middle = name.first[2]
             name.first = name.first[0]
+
+        # should we keep this?
+        # if ' ' in name.last:
+        #     splitname = name.last.split(' ')
+        #     name.last = splitname[0]
+        #     name.last = max(splitname, key=lambda name: len(name))
 
         name.last = name.last.capitalize()
         name.first = name.first.capitalize()
@@ -527,7 +541,7 @@ class PeopleDatabase:
                 setattr(new_p, attr, getattr(person2, attr))
         try:
             new_p.positions = person1.positions + person2.positions
-        except:
+        except TypeError:
             embed()
         new_p.aliases = person1.aliases + person2.aliases
         new_p.count = person1.count + person2.count
@@ -686,6 +700,7 @@ class TestNameParser(unittest.TestCase):
             print(f"Expected: {str(self.test_raw_names[name])}")
             print(f"Parsed: {str(Person(name_raw=name))}")
             self.assertEqual(self.test_raw_names[name], Person(name_raw=name))
+
 
 
 class TestPeopleDB(unittest.TestCase):
