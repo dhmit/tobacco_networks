@@ -232,6 +232,7 @@ class Person:
         if len(name_raw) > 2 and name_raw[-3] == '-':
             name_raw = name_raw[:-3] + " " + name_raw[-2:]
 
+        # TODO: refactor this into a function & write test case for it
         # if there is a special character, take out the word surrounding it (i.e. no space or
         # comma) into extracted_positions (since it is unlikely to be in the name)
         match_non_alpha = r'[^ ,]*[^A-Z ,\-\(\)\.][^ ,]*'
@@ -242,11 +243,16 @@ class Person:
                 name_raw[:name_raw.find(non_alpha.group())] + name_raw[name_raw.find(
                     non_alpha.group()) + len(non_alpha.group()):]
 
+        # TODO: refactor this into a function & write test case for it
         for raw_org in RAW_ORG_TO_CLEAN_ORG_DICT:
-            if raw_org in name_raw and len(raw_org) >= 2:
+            re_raw_org = f'\b{raw_org}\b'
+            if re.search(re_raw_org, name_raw) and len(raw_org) >= 3:
                 extracted_positions.append(RAW_ORG_TO_CLEAN_ORG_DICT[raw_org])
-                name_raw = name_raw[:name_raw.find(raw_org)] + name_raw[name_raw.find(
-                    raw_org) + len(raw_org):]
+                name_raw = name_raw[:name_raw.find(re_raw_org)] + name_raw[name_raw.find(
+                    re_raw_org) + len(raw_org):]
+            # TODO: consider what to do if raw_org is only length 2 (and thus could be first
+            #  initial & middle initial)
+            elif re.search(re_raw_org, name_raw) and len(raw_org) == 2
 
         name = HumanName(name_raw)
 

@@ -6,6 +6,7 @@ from pathlib import Path
 from django.db import models
 import pandas as pd
 import pickle
+from collections import Counter
 
 from config.settings.base import BACKEND_DIR
 
@@ -90,6 +91,14 @@ class Person(models.Model):
         s = s + ", Position: " + str(self.positions) + ", Aliases: " + \
             str(self.aliases) + ", count: " + str(self.count)
         return s
+
+    @property
+    def positions_counter(self):
+        return Counter(json.loads(self.positions))
+
+    # TODO: write json getter here
+    @property
+    def aliases_list(self):
 
 def import_peopledb_to_person_model(file_path):
     with open(str(file_path), 'rb') as infile:
