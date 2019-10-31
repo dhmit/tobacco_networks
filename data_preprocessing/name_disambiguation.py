@@ -105,8 +105,8 @@ class Person:
         :return: bool (if two person objects are the same)
         """
         return self.last == other.last and self.first == other.first and self.middle == \
-               other.middle and self.position == other.position and self.positions == \
-               other.positions and self.aliases == other.aliases
+            other.middle and self.position == other.position and self.positions == \
+            other.positions and self.aliases == other.aliases
 
     def copy(self):
         """
@@ -220,8 +220,6 @@ class Person:
             if extracted_institution:
                 extracted_positions.append(extracted_institution.group().strip(',#() '))
                 name_raw = name_raw[:name_raw.find(extracted_institution.group())]
-
-
         # remove #
         name_raw = name_raw.strip("#").strip()
 
@@ -236,10 +234,12 @@ class Person:
         # if there is a special character, take out the word surrounding it (i.e. no space or
         # comma) into extracted_positions (since it is unlikely to be in the name)
         match_non_alpha = r'[^ ,]*[^A-Z ,\-\(\)\.][^ ,]*'
-        while(re.search(match_non_alpha, name_raw, re.IGNORECASE)):
+        while re.search(match_non_alpha, name_raw, re.IGNORECASE):
             non_alpha = re.search(match_non_alpha, name_raw, re.IGNORECASE)
             extracted_positions.append(non_alpha.group())
-            name_raw = name_raw[:name_raw.find(non_alpha.group())] + name_raw[name_raw.find(non_alpha.group()) + len(non_alpha.group()):]
+            name_raw = \
+                name_raw[:name_raw.find(non_alpha.group())] + name_raw[name_raw.find(
+                    non_alpha.group()) + len(non_alpha.group()):]
         name = HumanName(name_raw)
 
         # e.g. Dunn W -> parsed as last name W. -> switch first/last
@@ -620,7 +620,7 @@ class TestNameParser(unittest.TestCase):
             "TEMKO SL, COVINGTON AND BURLING": Person(last="Temko", first="S", middle="L",
                                                       positions=["COVINGTON AND BURLING"],
                                                       aliases=["TEMKO SL, COVINGTON AND BURLING"],
-            ),
+                                                      ),
             "Temko, Stanley L [Privlog:] TEMKO,SL": Person(
                 last="Temko", first="Stanley", middle="L",
                 aliases=["Temko, Stanley L [Privlog:] TEMKO,SL"]
