@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph_color, update_graph_size } from './graph.js'
+import { create_graph, update_graph_color, update_graph_size, update_focused_node } from './graph.js'
 import './main.css';
 
 
@@ -240,6 +240,9 @@ class MainView extends React.Component {
         this.setState({config: config})
 
         //TODO: trigger update of visualization
+        //right now no suggestions, if enter name then focus on this person
+        //TODO: process search_string, only pass it on if it is a name
+        update_focused_node(this.state.data, search_string)
     }
 
     submitFormHandler = event => {

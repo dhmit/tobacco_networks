@@ -56,6 +56,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             .data(data.links)
         .enter()
             .append("line")
+            .attr("class", "graph_link")
             .attr("stroke", "#aaa")
             .attr("stroke-width", "1px");
 
@@ -68,7 +69,8 @@ export function create_graph(el, data, config, handle_viz_events) {
             .data(data.nodes)
         .enter()
             .append("g")
-                .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
+            .attr("class", "graph_node")
+            .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
 
     nodes  // bind event handlers for nodes
         .call(
@@ -220,3 +222,33 @@ export function update_graph_size(el, data, config) {
         .attr("width", config.width)
         .attr("height", config.height);
 }
+
+export function update_focused_node(data, name) {
+        console.log("update_focused_node");
+
+        // write a function such that if one enters a name, it returns a list of all neighbors
+    // (strings)
+        // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
+        const adjacent_nodes = {};
+        for (const link of data.links) {
+            adjacent_nodes[link.source.index + "-" + link.target.index] = true;
+            adjacent_nodes[link.target.index + "-" + link.source.index] = true;
+        }
+        function neigh(a, b) {
+            return a === b || adjacent_nodes[a + "-" + b];
+        }
+
+        const node =
+            d3.select("#" + name);
+        const index = node.datum().index;
+        const nodes = d3.selectAll(".graph_node");
+        nodes.style("opacity", function(o) {
+            return neigh(index, o.index) ? 1 : 0;
+        });
+        const links = d3.selectAll(".graph_link");
+        links.style("opacity", function(o) {
+            return o.source.index === index || o.target.index === index ? 1 : 0;
+        });
+
+
+    }
