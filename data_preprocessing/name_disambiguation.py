@@ -243,11 +243,10 @@ class Person:
                     non_alpha.group()) + len(non_alpha.group()):]
 
         for raw_org in RAW_ORG_TO_CLEAN_ORG_DICT:
-            if raw_org in name_raw:
+            if raw_org in name_raw and len(raw_org) >= 2:
                 extracted_positions.append(RAW_ORG_TO_CLEAN_ORG_DICT[raw_org])
                 name_raw = name_raw[:name_raw.find(raw_org)] + name_raw[name_raw.find(
                     raw_org) + len(raw_org):]
-
 
         name = HumanName(name_raw)
 
