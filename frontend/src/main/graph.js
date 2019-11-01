@@ -148,25 +148,24 @@ export function create_graph(el, data, config, handle_viz_events) {
     function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
-        //fix_nodes(d);
+        fix_nodes(d);
     }
 
     // Preventing other nodes from moving while dragging one node
-    // TODO: Temporarily deactivated to allow the visualization to render
-    // TODO: successfully
-    // function fix_nodes(this_node) {
-    //     node.each(function(d){
-    //         if (this_node != d){
-    //             d.fx = d.x;
-    //             d.fy = d.y;
-    //         }
-    //     });
-    // }
+    function fix_nodes(this_node) {
+        nodes.each(
+            function(node){
+            if (this_node != node){
+                node.fx = node.x;
+                node.fy = node.y;
+             }
+         });
+     }
 
     function drag_ended(d) {
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
-        d.fx = null;
-        d.fy = null;
+        d.fx = d.x;
+        d.fy = d.y;
     }
 
     // Setup adjacencies (maybe refactor this...)
