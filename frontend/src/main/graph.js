@@ -197,7 +197,6 @@ export function create_graph(el, data, config, handle_viz_events) {
     }
 }
 
-
 /**
  * Change the color of each of the rectangles in the graph, slowly.
  *
@@ -223,29 +222,52 @@ export function update_graph_size(el, data, config) {
         .attr("height", config.height);
 }
 
+/**
+ * Updates visualization according to what the user searches
+ *
+ * @param data: data
+ * @param name: String
+ */
 export function update_focused_node(data, name) {
-
-        // write a function such that if one enters a name, it returns a list of all neighbors
-    // (strings)
+        name = name.toUpperCase();
         console.log("entered update focused node")
-       // let edge = data["links"];
-       // console.log(edge);
-
-
         // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
-        const neigh = null//{}
+        const neigh = []
+        const data_edges = data["links"];
 
+        for (const indx in data_edges){
+            const other_name_1 = data_edges[indx]["node1"].toUpperCase();
+            const other_name_2 = data_edges[indx]["node2"].toUpperCase();
+            if( other_name_1 != other_name_2) {
+                if (other_name_1 == name) {
+                    neigh.push(other_name_2);
+                }
+                else if(other_name_2 == name) {
+                    neigh.push(other_name_1);
+                }
+            }
+        }
 
-        const node = d3.select("#" + name);
+        // need to fix the selector
+        const node = d3.select("#DUNN,WL");
+        console.log(node);
+        /*
+        console.log(node);
         const index = node.datum().index;
         const nodes = d3.selectAll(".graph_node");
+
         nodes.style("opacity", function(o) {
-            return neigh(index, o.index) ? 1 : 0;
+            if ( o in neigh) {
+                return o.source.index ? 1:0;
+            }
         });
         const links = d3.selectAll(".graph_link");
         links.style("opacity", function(o) {
             return o.source.index === index || o.target.index === index ? 1 : 0;
         });
+        */
+}
 
 
-    }
+
+
