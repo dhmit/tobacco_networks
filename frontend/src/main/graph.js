@@ -104,12 +104,13 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("fill", (d) => calc_circle_color(d))
 
     // Setup labels
-    const calc_label_pos = (_d, _i, _nodes) => {
-        // const label = nodes[i];
-        // const b = label.getBBox();  // bounding box of the label
+    const calc_label_pos = (d, i, nodes) => {
+        const label = nodes[i];
+        const h = label.getBBox().height;  // bounding box of the label
+        const w = label.getBBox().width;
         // TODO: adjust position of the label based on radius of the circle
-        const shiftX = 10;
-        const shiftY = 5;
+        const shiftX = -w/2;
+        const shiftY = -h/2;
         return `translate(${shiftX}, ${shiftY})`;
     };
     nodes
@@ -146,12 +147,24 @@ export function create_graph(el, data, config, handle_viz_events) {
     function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
+        fix_nodes(d);
     }
+
+    // Preventing other nodes from moving while dragging one node
+    function fix_nodes(this_node) {
+        nodes.each(
+            function(node){
+            if (this_node != node){
+                node.fx = node.x;
+                node.fy = node.y;
+             }
+         });
+     }
 
     function drag_ended(d) {
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
-        d.fx = null;
-        d.fy = null;
+        d.fx = d.x;
+        d.fy = d.y;
     }
 
     // Setup adjacencies (maybe refactor this...)
