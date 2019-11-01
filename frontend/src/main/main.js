@@ -106,8 +106,8 @@ class Info extends React.Component {
     render() {
         if (!this.props.showTableData) {
             return (
-                <div onClick={() => this.props.toggle_show_table()} className="row float-right" id="toggle">
-                    <a className="row" href="#toggleDisplayButton" data-toggle="collapse">
+                <div onClick={() => this.props.toggle_show_table()} className="row float-right info_button">
+                    <a className="row">
                         <img id="info_button" src="https://cdn1.iconfinder.com/data/icons/education-set-4/512/information-512.png"/>
                     </a>
                 </div>
@@ -115,7 +115,11 @@ class Info extends React.Component {
         } else {
             return (
                 <div className="col-3">
-                    <div className="collapse row float-right" id="toggleDisplayButton">
+                    <div className="row float-right info_panel">
+                        <button onClick={() => this.props.toggle_show_table()} type="button" className="ml-2 mb-1 close"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                         <table className="table">
                             <tbody>
                                 <tr>
@@ -253,11 +257,7 @@ class MainView extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
-        console.log(this.state.showTableData)
-        this.setState({
-            showTableData: !this.state.showTableData
-        })
-        console.log(this.state.showTableData)
+        this.setState({showTableData: !this.state.showTableData});
     }
 
     /**

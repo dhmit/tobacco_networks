@@ -11,10 +11,14 @@
     pointer-events: None;
 }
 
-#toggle_button {
+.info_button {
     height: 30px;
 }
 
-#toggle {
+.info_panel, .info_button {
     z-index: 10;
+}
+
+.info_panel {
+    background-color: darkgray;
 }
