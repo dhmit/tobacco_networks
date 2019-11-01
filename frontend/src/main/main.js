@@ -24,6 +24,7 @@ class SearchBar extends React.Component {
                     type="text"
                     maxLength="20" size="20"
                     value={this.props.person_to_highlight}
+                    placeholder={"Type a name here"}
                     onChange={(e) => this.props.handle_searchbar_update(e.target.value)}
                 />
                 {/*<label>Color is blue</label>*/}
@@ -160,7 +161,7 @@ class MainView extends React.Component {
                 width: window.innerWidth,
                 height: window.innerHeight,
                 color: 'blue',
-                person_to_highlight: "DUNN,WL",
+                person_to_highlight: "",
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
