@@ -1,3 +1,10 @@
-#toggle_button {
-    height: 30px;
+#info_button {
+    height: 20px;
+    width: 20px;
+    margin: 5px;
 }
+
+#toggle {
+    z-index: 10;
+}
+

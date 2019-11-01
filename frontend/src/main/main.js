@@ -106,40 +106,41 @@ class Info extends React.Component {
 
 
     render() {
-        if (this.props.showTableData) {
-            return (<div className="col-3">
-                <div className="row float-right">
-                    <button className="btn btn-primary" type="button" data-toggle="collapse"
-                        data-target="#toggleDisplayButton" id="toggle_button"
-                    >Toggle Display</button>
+        if (!this.props.showTableData) {
+            return (
+                <div onClick={() => this.props.toggle_show_table()} className="row float-right" id="toggle">
+                    <a className="row" href="#toggleDisplayButton" data-toggle="collapse">
+                        <img id="info_button" src="https://cdn1.iconfinder.com/data/icons/education-set-4/512/information-512.png"/>
+                    </a>
                 </div>
-                <div className="collapse row  float-right" id="toggleDisplayButton">
-                    <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
-                    <p>The current viz color is {this.props.currentColor}</p>
-                    <table className="table">
-                        <tbody><tr>
-                            <th scope="row">Name:</th>
-                            <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Docs</th>
-                            <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Words</th>
-                            <td>{this.props.words > 0 ? this.props.words : 0}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>);
+            );
         } else {
             return (
-                <button id="toggle_button" onClick={() => this.props.toggle_show_table()}>Toggle Display</button>
+                <div className="col-3">
+                    <div className="collapse row float-right" id="toggleDisplayButton">
+                        <table className="table">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Name:</th>
+                                    <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Docs</th>
+                                    <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Words</th>
+                                    <td>{this.props.words > 0 ? this.props.words : 0}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             );
         }
     }
 }
+
 Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
@@ -168,7 +169,7 @@ class MainView extends React.Component {
             person: "",
             docs: 0,
             words: 0,
-            showTableData: true,
+            showTableData: false,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -240,6 +241,7 @@ class MainView extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
+        console.log(this.state.showTableData)
         this.setState({
             showTableData: !this.state.showTableData
         })
