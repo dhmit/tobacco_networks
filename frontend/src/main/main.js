@@ -156,10 +156,14 @@ class MainView extends React.Component {
     constructor(props) {
         super(props);
 
+        this.vizDivRef = React.createRef()
+        this.searchBarDivRef = React.createRef()
+
         this.state = {
             config: {
                 width: window.innerWidth,
-                height: window.innerHeight,
+                height: window.innerHeight, // calculate height of second row as function of
+                // height of first row
                 color: 'blue',
                 person_to_highlight: "",
             },  // initial configuration for the viz
@@ -189,8 +193,20 @@ class MainView extends React.Component {
             });
         window.addEventListener("resize", () => {
             const config = {...this.state.config};
-            config.width = window.innerWidth;
-            config.height = window.innerHeight;
+            config.width = this.vizDivRef.current.offsetWidth;
+            // config.height = window.innerHeight-this.searchBarDivRef.offsetHeight;
+            // console.log(this.searchBarDivRef.offsetHeight);
+            console.log(this.vizDivRef.current.offsetWidth);
+
+            config.viz_update_func = 'update_graph_size';
+            this.setState({
+                config: config,
+            })
+        });
+        window.addEventListener("load", () => {
+            const config = {...this.state.config};
+            // config.width = this.vizDivRef.current.offsetWidth;
+            // config.height = window.innerHeight-this.searchBarDivRef.height;
 
             config.viz_update_func = 'update_graph_size';
             this.setState({
@@ -277,21 +293,25 @@ class MainView extends React.Component {
                     </div>
 
                     <div className="row">
-                        <Viz
-                            data={this.state.data}
-                            config={this.state.config}
-                            handle_viz_events={(event_name, data) =>
-                                this.handle_viz_events(event_name, data )}
-                        />
-                        <Info
-                            mouseover={this.state.mouseover}
-                            currentColor={this.state.config.color}
-                            person={this.state.person}
-                            docs={this.state.docs}
-                            words={this.state.words}
-                            showTableData={this.state.showTableData}
-                            toggle_show_table={() => this.toggle_show_table()}
-                        />
+                        <div ref={this.vizDivRef} className="col-9">
+                            <Viz
+                                data={this.state.data}
+                                config={this.state.config}
+                                handle_viz_events={(event_name, data) =>
+                                    this.handle_viz_events(event_name, data )}
+                            />
+                        </div>
+                        <div ref={this.searchBarDivRef} className="col-3">
+                            <Info
+                                mouseover={this.state.mouseover}
+                                currentColor={this.state.config.color}
+                                person={this.state.person}
+                                docs={this.state.docs}
+                                words={this.state.words}
+                                showTableData={this.state.showTableData}
+                                toggle_show_table={() => this.toggle_show_table()}
+                            />
+                        </div>
                     </div>
                 </div>
             );
