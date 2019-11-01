@@ -10,34 +10,32 @@ import './main.css';
 
 
 /***************************************************************************************************
- * Controls and settings components for the visualization
+ * Search bar
  **************************************************************************************************/
-class Controls extends React.Component {
+class SearchBar extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    render() {
-        const checked = this.props.config.color === 'blue';
-        return (
-            <div className="col-3">
-                <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={this.props.handle_checkbox}
+    render(){
+        return(
+            <div className="col-6">
+                <input className="form-control"
+                    type="text"
+                    maxLength="20" size="20"
+                    value={this.props.person_to_highlight}
+                    placeholder={"Type a name here"}
+                    onChange={(e) => this.props.handle_searchbar_update(e.target.value)}
                 />
                 {/*<label>Color is blue</label>*/}
             </div>
-        );
-
+        )
     }
 }
-
-Controls.propTypes = {
-    config: PropTypes.object.isRequired,
-    handle_checkbox: PropTypes.func.isRequired,
+SearchBar.propTypes = {
+    person_to_highlight: PropTypes.string.isRequired,
+    handle_searchbar_update: PropTypes.func.isRequired,
 };
-
 
 /***************************************************************************************************
  * Wrapper for the Visualization
@@ -151,21 +149,24 @@ Info.propTypes ={
     toggle_show_table: PropTypes.func,
 };
 
-
 /***************************************************************************************************
  * Main component for the main view.
  **************************************************************************************************/
+
 class MainView extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             config: {
                 width: window.innerWidth,
                 height: window.innerHeight,
                 color: 'blue',
+                person_to_highlight: "",
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
+
             person: "",
             docs: 0,
             words: 0,
@@ -173,7 +174,6 @@ class MainView extends React.Component {
         };
         this.csrftoken = getCookie('csrftoken');
     }
-
     /**
      * Runs when the MainView item is connected to the DOM.
      */
@@ -183,7 +183,7 @@ class MainView extends React.Component {
                 response
                     .json()
                     .then((data) => {
-                        this.setState({data});
+                        this.setState({data:data});
                     })
             }).catch(() => {
                 console.log("error");
@@ -236,6 +236,18 @@ class MainView extends React.Component {
         }
     }
 
+    handle_searchbar_update(search_string) {
+        let config = {... this.state.config};
+        config.person_to_highlight = search_string;
+        this.setState({config: config})
+
+        //TODO: trigger update of visualization
+    }
+
+    submitFormHandler = event => {
+        event.preventDefault();
+    }
+
     /**
      * Calls when button is pressed.  Shows the table containing info about person when it is
      * hidden and hides table when visible.
@@ -257,10 +269,12 @@ class MainView extends React.Component {
         if (this.state.data) {
             return (
                 <div className="container">
+
                     <div className="row">
-                        <Controls
-                            handle_checkbox={() => this.handle_checkbox()}
-                            config={this.state.config}
+                        <SearchBar
+                            person_to_highlight={this.state.config.person_to_highlight}
+                            handle_searchbar_update={(search_string) =>
+                                this.handle_searchbar_update(search_string)}
                         />
                     </div>
 
