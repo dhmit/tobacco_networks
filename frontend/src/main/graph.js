@@ -229,14 +229,8 @@ export function update_focused_node(data, name) {
         // write a function such that if one enters a name, it returns a list of all neighbors
     // (strings)
         // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
-        const adjacent_nodes = {};
-        for (const link of data.links) {
-            adjacent_nodes[link.source.index + "-" + link.target.index] = true;
-            adjacent_nodes[link.target.index + "-" + link.source.index] = true;
-        }
-        function neigh(a, b) {
-            return a === b || adjacent_nodes[a + "-" + b];
-        }
+        const neigh = {}
+        
 
         const node =
             d3.select("#" + name);
