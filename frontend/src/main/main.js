@@ -12,7 +12,21 @@ import './main.css';
 /***************************************************************************************************
  * Controls and settings components for the visualization
  **************************************************************************************************/
+ class Controls extends React.Component {
+     constructor(props) {
+         super(props);
+     }
 
+     render() {
+         );
+
+     }
+ }
+
+ Controls.propTypes = {
+     config: PropTypes.object.isRequired,
+     handle_checkbox: PropTypes.func.isRequired,
+ };
 /***************************************************************************************************
  * Wrapper for the Visualization
  **************************************************************************************************/
