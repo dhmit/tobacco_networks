@@ -235,21 +235,25 @@ class MainView extends React.Component {
         }
     }
 
+    /**
+     * Handles search bar update
+     *
+     * @param event_name: String
+     */
     handle_searchbar_update(search_string) {
         let config = {... this.state.config};
         config.person_to_highlight = search_string;
         this.setState({config: config})
-        let is_a_name = false;
-        let data = this.state.data["nodes"];
-        for (var k in data) {
-            let name = data[k]["name"];
-            if(search_string === name){
-                is_a_name = true;
+
+        const data_nodes = this.state.data["nodes"];
+
+        for (const idx in data_nodes) {
+            const name = data_nodes[idx]["name"];
+            if(search_string.toLowerCase() === name.toLowerCase()){
+                update_focused_node(this.state.data, search_string)
+                return;
             }
         }
-
-        if (is_a_name)
-            update_focused_node(this.state.data, search_string);
     }
 
     submitFormHandler = event => {

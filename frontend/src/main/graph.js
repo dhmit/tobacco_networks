@@ -224,16 +224,19 @@ export function update_graph_size(el, data, config) {
 }
 
 export function update_focused_node(data, name) {
-        console.log("update_focused_node");
 
         // write a function such that if one enters a name, it returns a list of all neighbors
     // (strings)
-        // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
-        const neigh = {}
-        
+        console.log("entered update focused node")
+       // let edge = data["links"];
+       // console.log(edge);
 
-        const node =
-            d3.select("#" + name);
+
+        // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
+        const neigh = null//{}
+
+
+        const node = d3.select("#" + name);
         const index = node.datum().index;
         const nodes = d3.selectAll(".graph_node");
         nodes.style("opacity", function(o) {
