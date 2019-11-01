@@ -97,7 +97,6 @@ class Person:
         return s
 
     def __eq__(self, other):
-        # TODO: figure out where this is actually called & what we should compare
         """
         Compares two person object using hash (which hashes the string of last, first, middle,
         position, positions, aliases, and count)
@@ -239,21 +238,46 @@ class Person:
         while re.search(match_non_alpha, name_raw, re.IGNORECASE):
             non_alpha = re.search(match_non_alpha, name_raw, re.IGNORECASE)
             extracted_positions.append(non_alpha.group())
-            name_raw = \
-                name_raw[:name_raw.find(non_alpha.group())] + name_raw[name_raw.find(
-                    non_alpha.group()) + len(non_alpha.group()):]
+            name_raw = name_raw[:name_raw.find(non_alpha.group())] + \
+                       name_raw[name_raw.find(non_alpha.group()) + len(non_alpha.group()):]
 
         # TODO: refactor this into a function & write test case for it
-        for raw_org in RAW_ORG_TO_CLEAN_ORG_DICT:
-            re_raw_org = f'\b{raw_org}\b'
-            if re.search(re_raw_org, name_raw) and len(raw_org) >= 3:
-                extracted_positions.append(RAW_ORG_TO_CLEAN_ORG_DICT[raw_org])
-                name_raw = name_raw[:name_raw.find(re_raw_org)] + name_raw[name_raw.find(
-                    re_raw_org) + len(raw_org):]
-            # TODO: consider what to do if raw_org is only length 2 (and thus could be first
-            #  initial & middle initial)
-            elif re.search(re_raw_org, name_raw) and len(raw_org) == 2
+        # Search for known raw_org strings in name_raw, extract them as positions if necessary
+        # If found (with word boundary on both sides): for raw_org of at least length 3 (unlikely
+        # to represent names or initials), pull it out into extracted_positions and delete from
+        # raw_name; for raw_org of length 2, test if after pulling it out, there are other
+        # initials (so that the raw_org likely does not represent initals); if so,
 
+        for raw_org in RAW_ORG_TO_CLEAN_ORG_DICT:
+            re_raw_org = r'\b' + raw_org + r'\b'
+            # if raw_org is found (with word boundary on both sides)
+            if re.search(re_raw_org, name_raw):
+                # raw_org of at least length 3 (unlikely to represent names or initials),
+                # pull it out into extracted_positions and delete from name_raw;
+                if len(raw_org) >= 3:
+                    extracted_positions.append(raw_org)
+                    name_raw = name_raw[:name_raw.find(re_raw_org)] + name_raw[name_raw.find(
+                        re_raw_org) + len(raw_org):]
+                # if raw_org is length 2, test if they are actual org or are initials
+                elif len(raw_org) == 2:
+                    raw_org_match = re.search(re_raw_org, name_raw)
+                    # tentatively delete raw_org from name_raw
+                    name_raw_test = name_raw[:name_raw.find(raw_org_match.group())] + \
+                                    name_raw[name_raw.find(raw_org_match.group()) + len(raw_org):]
+                    # test if deleted, there exists first & middle name
+                    name = HumanName(name_raw_test)
+                    print("name_raw_test: ", name_raw_test)
+                    print(name.first, ",", name.middle)
+                    # if first & middle name do not exist after deletion, the deleted org might
+                    # actually be initials, so ignore the match
+                    if len(name.first) == 0 and len(name.middle == 0):
+                        continue
+                    # if not, do extract raw_org
+                    else:
+                        extracted_positions.append(raw_org)
+                        name_raw = name_raw_test
+
+        # Parse current string using HumanName
         name = HumanName(name_raw)
 
         # e.g. Dunn W -> parsed as last name W. -> switch first/last
@@ -611,82 +635,6 @@ class TestNameParser(unittest.TestCase):
     # TODO: fix it so that all tests run even if the first assertion fails
     def setUp(self):
         self.test_raw_names = {
-            # test Person constructor: use list as positions
-            "TEAGUE CE JR": Person(last="Teague", first="C", middle="E", positions=["JR"],
-                                   aliases=["TEAGUE CE JR"]),
-            # test Person constructor: use Counter as positions
-            "teague ce jr": Person(last="Teague", first="C", middle="E", positions=Counter([
-                "JR"]), aliases=["teague ce jr"]),
-            'Teague, J - BAT': Person(last='Teague', first='J', middle='',
-                                      positions={'British American Tobacco'},
-                                      aliases=['Teague, J - BAT']),
-            # TODO: should be "JR", "PHD"
-            "Teague, Claude Edward, Jr., Ph.D.": Person(
-                last="Teague", first="Claude", middle="Edward", positions={"JR, PHD"},
-                aliases=["Teague, Claude Edward, Jr., Ph.D."]
-            ),
-            "BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL": Person(
-                last="Baker", first="T", middle="E",
-                positions={"NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"},
-                aliases=["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"]
-            ),
-            # specify positions: test to make sure Counter can handle no data
-            "BAKER-cj": Person(last="Baker", first="C", middle="J", positions={},
-                               aliases=["BAKER-cj"]),
-            # not specify positions: test to make sure Person constructor can handle no data
-            "Baker, JR": Person(last="Baker", first="J", middle="R", aliases=["Baker, JR"]),
-            "DUNN WL #": Person(last="Dunn", first="W", middle="L", aliases=["DUNN WL #"]),
-            "Dunn, W. L.": Person(last="Dunn", first="W", middle="L", aliases=["Dunn, W. L."]),
-            "TEMKO SL, COVINGTON AND BURLING": Person(last="Temko", first="S", middle="L",
-                                                      positions=["COVINGTON AND BURLING"],
-                                                      aliases=["TEMKO SL, COVINGTON AND BURLING"],
-                                                      ),
-            "Temko, Stanley L [Privlog:] TEMKO,SL": Person(
-                last="Temko", first="Stanley", middle="L",
-                aliases=["Temko, Stanley L [Privlog:] TEMKO,SL"]
-            ),
-            "Temko-SL, Covington & Burling": Person(
-                last="Temko", first="S", middle="L", positions=["Covington & Burling"],
-                aliases=["Temko-SL, Covington & Burling"]
-            ),
-            "HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL)": Person(
-                last="Henson", first="A", middle="",
-                positions=["AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL"],
-                aliases=["HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL)"]
-            ),
-            "HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE COUNSEL) " +
-            "(HANDWRITTEN NOTES)": Person(
-                last="Henson", first="A", middle="",
-                positions=["CHADBOURNE, PARK, WHITESIDE & WOLFF", "@skip@"],
-                aliases=["HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, AMERICAN OUTSIDE " +
-                         "COUNSEL) (HANDWRITTEN NOTES)"]
-            ),
-            "Holtzman, A.,  Murray, J. ,  Henson, A. ,  Pepples, E. ,  Stevens, A. ,  Witt, S.":
-            Person(last="Holtzman", first="A", middle="", positions=[],
-                   aliases=["Holtzman, A.,  Murray, J. ,  Henson, A. ,  " +
-                            "Pepples, E. ,  Stevens, A. ,  Witt, S."]),
-            "Holtz, Jacob, Jacob & Medinger": Person(
-                last="Holtz", first="Jacob", middle="", positions=["JACOB & MEDINGER"],
-                aliases=["Holtz, Jacob, Jacob & Medinger"]
-            ),
-            "PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE": Person(
-                last="Proctor", first="D", middle="F",
-                positions=["JOHNS HOPKINS SCHOOL OF HYGIENE"],
-                aliases=["PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"]
-            ),
-            "Smith, Andy B, J.R.": Person(
-                last="Smith", first="Andy", middle="B", positions=["JR"],
-                aliases=["Smith, Andy B, J.R."]
-            ),
-            "D Cantrell, B&W": Person(
-                last="Cantrell", first="D", middle="", positions=["BROWN & WILLIAMSON"],
-                aliases=["D Cantrell, B&W"]
-            ),
-            # TODO: would be nice to pass this one
-            "A B Cantrell, BW": Person(
-                last="Cantrell", first="A", middle="B", positions=["BROWN & WILLIAMSON"],
-                aliases=["A B Cantrell, BW"]
-            )
         }
 
     # Not sure what the correct parsing is!
@@ -695,18 +643,134 @@ class TestNameParser(unittest.TestCase):
     # >> > n.last, n.first, n.middle, " ".join(n.positions).upper()
     # ('Holtz', '', '', 'JACOB ALEXANDER, JACOB & MEDINGER')
 
-    def test_all_names(self):
-        """
-        Iterates over all test names in self.test_raw_names and check if the Person object parsed
-        from Person class matches the expected Person object
-        :return:
-        """
-        for name in self.test_raw_names:
-            print(f"Expected: {str(self.test_raw_names[name])}")
-            print(f"Parsed: {str(Person(name_raw=name))}")
-            self.assertEqual(self.test_raw_names[name], Person(name_raw=name))
+    def test_parse_name_1(self):
+        # Also test Person constructor: use list as positions
+        self.assertEqual(Person(last="Teague", first="C", middle="E", positions=["JR"],
+                                aliases=["TEAGUE CE JR"]),
+                         Person(name_raw="TEAGUE CE JR"))
 
+    def test_parse_name_2(self):
+        # Also test Person constructor: use Counter as positions
+        self.assertEqual(Person(last="Teague", first="C", middle="E", positions=Counter(["JR"]),
+                                aliases=["teague ce jr"]),
+                         Person(name_raw="teague ce jr"))
 
+    def test_parse_name_3(self):
+        # TODO parse JR & PHD in positions into two separate strings
+        # (currently parse them together, which is suboptimal but acceptable)
+        self.assertEqual(Person(last="Teague", first="Claude", middle="Edward",
+                                positions={"JR", "PHD"},
+                                aliases=["Teague, Claude Edward, Jr., Ph.D."]),
+                         Person(name_raw="Teague, Claude Edward, Jr., Ph.D."))
+
+    def test_parse_name_4(self):
+        # Test parsing of dashes
+        self.assertEqual(Person(last="Baker", first="T", middle="E",
+                                positions={"NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"},
+                                aliases=["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"]
+                                ),
+                         Person(name_raw="BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"))
+
+    def test_parse_name_5(self):
+        self.assertEqual(Person(last="Baker", first="C", middle="J", positions={},
+                                aliases=["BAKER-cj"]),
+                         Person(name_raw="BAKER-cj"))
+
+    def test_parse_name_6(self):
+        # Not specify positions: test to make sure Person constructor can handle no data
+        # Here we assume for "Baker, JR", it is more likely that JR are initials and not junior
+        self.assertEqual(Person(last="Baker", first="J", middle="R", aliases=["Baker, JR"]),
+                         Person(name_raw="Baker, JR"))
+
+    def test_parse_name_7(self):
+        # Test if parser ignores special characters
+        self.assertEqual(Person(last="Dunn", first="W", middle="L", aliases=["DUNN WL #"]),
+                         Person(name_raw="DUNN WL #"))
+
+    def test_parse_name_8(self):
+        self.assertEqual(Person(last="Dunn", first="W", middle="L", aliases=["Dunn, W. L."]),
+                         Person(name_raw="Dunn, W. L."))
+
+    def test_parse_name_9(self):
+        self.assertEqual(Person(last="Temko", first="S", middle="L",
+                                positions=["COVINGTON AND BURLING"],
+                                aliases=["TEMKO SL, COVINGTON AND BURLING"]),
+                         Person(name_raw="TEMKO SL, COVINGTON AND BURLING"))
+
+    def test_parse_name_10(self):
+        # Test if Privlog and information after it is disregarded
+        self.assertEqual(Person(last="Temko", first="Stanley", middle="L",
+                                aliases=["Temko, Stanley L [Privlog:] TEMKO,SL"]),
+                         Person(name_raw="Temko, Stanley L [Privlog:] TEMKO,SL"))
+
+    def test_parse_name_11(self):
+        self.assertEqual(Person(last="Temko", first="S", middle="L",
+                                positions=["Covington & Burling"],
+                                aliases=["Temko-SL, Covington & Burling"]),
+                         Person(name_raw="Temko-SL, Covington & Burling"))
+
+    def test_parse_name_12(self):
+        # Test if info inside parentheses is taken as positions
+        self.assertEqual(Person(last="Henson", first="A", middle="",
+                                positions=["AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL"],
+                                aliases=["HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL "
+                                         "COUNSEL)"]),
+                         Person(name_raw="HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL "
+                                         "COUNSEL)"))
+
+    def test_parse_name_13(self):
+        # Test if
+        self.assertEqual(Person(last="Henson", first="A", middle="",
+                                positions=["CHADBOURNE, PARK, WHITESIDE & WOLFF", "@skip@"],
+                                aliases=["HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, "
+                                         "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"]),
+                         Person(name_raw="HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, "
+                                         "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"))
+
+    def test_parse_name_14(self):
+        # TODO fix when multiple names are in the same string, not parse remaining name as positions
+        # This one does not discard the rest of the names and instead stores in positions
+        # (see test_parse_name_14b which correctly handles the situation, when there are more names)
+        print("positions: ", Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A.").positions)
+        self.assertEqual(Person(last="Holtzman", first="A", middle="", positions=[],
+                                aliases=["Holtzman, A.,  Murray, J. ,  Henson, A."]),
+                         Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A."))
+
+    def test_parse_name_14b(self):
+        print("positions: ", Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
+                                         "Pepples, E. ,  Stevens, A. ,  Witt, S.").positions)
+        self.assertEqual(Person(last="Holtzman", first="A", middle="", positions=[],
+                                aliases=["Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
+                                         "Pepples, E. ,  Stevens, A. ,  Witt, S."]),
+                         Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
+                                         "Pepples, E. ,  Stevens, A. ,  Witt, S."))
+
+    def test_parse_name_15(self):
+        self.assertEqual(Person(last="Holtz", first="Jacob", middle="",
+                                positions=["JACOB & MEDINGER"],
+                                aliases=["Holtz, Jacob, Jacob & Medinger"]),
+                         Person(name_raw="Holtz, Jacob, Jacob & Medinger"))
+
+    def test_parse_name_16(self):
+        self.assertEqual(Person(last="Proctor", first="D", middle="F",
+                                positions=["JOHNS HOPKINS SCHOOL OF HYGIENE"],
+                                aliases=["PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"]),
+                         Person(name_raw="PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"))
+
+    def test_parse_name_17(self):
+        self.assertEqual(Person(last="Smith", first="Andy", middle="B", positions=["JR"],
+                                aliases=["Smith, Andy B, J.R."]),
+                         Person(name_raw="Smith, Andy B, J.R."))
+
+    def test_parse_name_18(self):
+        self.assertEqual(Person(last="Cantrell", first="D", middle="",
+                                positions=["BROWN & WILLIAMSON"], aliases=["D Cantrell, B&W"]),
+                         Person(name_raw="D Cantrell, B&W"))
+
+    def test_parse_name_19(self):
+        self.assertEqual(Person(last="Cantrell", first="A", middle="B",
+                                positions=["BROWN & WILLIAMSON"], aliases=["A B Cantrell, BW"]),
+                         Person(name_raw="A B Cantrell, BW"))
 
 class TestPeopleDB(unittest.TestCase):
     def setUp(self):
@@ -826,7 +890,9 @@ if __name__ == '__main__':
     # db.merge_duplicates()
     # print(db)
 
-    merge_names_from_file()
+    # merge_names_from_file()
     # db = PeopleDatabase()
     # db.load_from_disk("d_names_db.pickle")
     # print(add_au_and_rc_org(db))
+
+    unittest.main()
