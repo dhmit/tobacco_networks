@@ -243,9 +243,11 @@ class MainView extends React.Component {
         //TODO: trigger update of visualization
         //right now no suggestions, if enter name then focus on this person
         //TODO: process search_string, only pass it on if it is a name
-        let data = this.state.data["nodes"]
+        let data = this.state.data["nodes"];
+        for (var k in data) {
+            console.log(data[k]["name"]);
+        }
 
-        console.log(data)
 
 
         update_focused_node(this.state.data, search_string)
