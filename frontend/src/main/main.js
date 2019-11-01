@@ -240,15 +240,14 @@ class MainView extends React.Component {
         config.person_to_highlight = search_string;
         this.setState({config: config})
         console.log(search_string)
-        JSON.stringify(search_string);
         //TODO: trigger update of visualization
         //right now no suggestions, if enter name then focus on this person
         //TODO: process search_string, only pass it on if it is a name
         let is_a_name = false;
+        console.log(is_a_name)
         let data = this.state.data["nodes"];
         for (var k in data) {
             let name = data[k]["name"];
-            JSON.stringify(name);
             if(search_string === name){
                 is_a_name = true;
                 console.log(is_a_name)
