@@ -73,14 +73,17 @@ def get_au_and_rc_by_document(path) -> list:
     return authors_by_docs, recipients_by_docs
 
 
-def parse_column_person(column):
+def parse_column_person(column_name):
     """
+    Splits individual names by semicolon or bar (|)
 
     :param column: list, taken from csv with doc info
     :return: list, names of people in column
+
+
     """
     names = []
-    for name_split_semicolon in [n.strip() for n in column.split(';')]:
+    for name_split_semicolon in [n.strip() for n in column_name.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
             if 0 < len(name_split_bar) < 100:
                 names.append(name_split_bar)
@@ -89,16 +92,20 @@ def parse_column_person(column):
 
 def parse_column_org(column_org):
     """
+    Splits individual organizations by semicolon, bar (|) or comma
+    TODO: Do we really need to split by comma?
+
     :param column_org: list, column of organization names taken from csv with doc info
     :return: list of organization names
     """
-    names = []
+    organizations = []
     for name_split_semicolon in [n.strip() for n in column_org.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
             for name_split_comma in [m.strip() for m in name_split_bar.split(',')]:
                 if 0 < len(name_split_comma) < 100:
-                    names.append(name_split_comma)
-    return names
+                    organizations.append(name_split_comma)
+
+    return organizations
 
 
 def get_clean_org_names():

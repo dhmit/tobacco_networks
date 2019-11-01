@@ -241,41 +241,11 @@ class Person:
             name_raw = name_raw[:name_raw.find(non_alpha.group())] + \
                        name_raw[name_raw.find(non_alpha.group()) + len(non_alpha.group()):]
 
-        # TODO: refactor this into a function & write test case for it
         # Search for known raw_org strings in name_raw, extract them as positions if necessary
-        # If found (with word boundary on both sides): for raw_org of at least length 3 (unlikely
-        # to represent names or initials), pull it out into extracted_positions and delete from
-        # raw_name; for raw_org of length 2, test if after pulling it out, there are other
-        # initials (so that the raw_org likely does not represent initals); if so,
+        name_raw, new_positions = Person.find_and_extract_raw_org_names_from_name(name_raw)
+        extracted_positions += new_positions
 
-        for raw_org in RAW_ORG_TO_CLEAN_ORG_DICT:
-            re_raw_org = r'\b' + raw_org + r'\b'
-            # if raw_org is found (with word boundary on both sides)
-            if re.search(re_raw_org, name_raw):
-                # raw_org of at least length 3 (unlikely to represent names or initials),
-                # pull it out into extracted_positions and delete from name_raw;
-                if len(raw_org) >= 3:
-                    extracted_positions.append(raw_org)
-                    name_raw = name_raw[:name_raw.find(re_raw_org)] + name_raw[name_raw.find(
-                        re_raw_org) + len(raw_org):]
-                # if raw_org is length 2, test if they are actual org or are initials
-                elif len(raw_org) == 2:
-                    raw_org_match = re.search(re_raw_org, name_raw)
-                    # tentatively delete raw_org from name_raw
-                    name_raw_test = name_raw[:name_raw.find(raw_org_match.group())] + \
-                                    name_raw[name_raw.find(raw_org_match.group()) + len(raw_org):]
-                    # test if deleted, there exists first & middle name
-                    name = HumanName(name_raw_test)
-                    print("name_raw_test: ", name_raw_test)
-                    print(name.first, ",", name.middle)
-                    # if first & middle name do not exist after deletion, the deleted org might
-                    # actually be initials, so ignore the match
-                    if len(name.first) == 0 and len(name.middle == 0):
-                        continue
-                    # if not, do extract raw_org
-                    else:
-                        extracted_positions.append(raw_org)
-                        name_raw = name_raw_test
+
 
         # Parse current string using HumanName
         name = HumanName(name_raw)
@@ -335,6 +305,69 @@ class Person:
 
         print(name.first, name.middle, name.last, result_positions)
         return name.first, name.middle, name.last, result_positions
+
+    @staticmethod
+    def find_and_extract_raw_org_names_from_name(name_raw):
+        """
+        Finds raw org names like "B&W" in a name string, standarizes them (e.g. to
+        "Brown & Williamson," and returns the name without that raw org name
+
+        :param raw_name:
+        :return:
+
+        >>> Person.find_and_extract_raw_org_names_from_name('TEMKO SL, COVINGTON AND BURLING')
+        ('TEMKO SL', ['Covington & Burling'])
+
+        >>> Person.find_and_extract_raw_org_names_from_name('TEMKO PM')
+        ('TEMKO PM', [])
+
+        >>> Person.find_and_extract_raw_org_names_from_name('TEMKO PM, PM')
+        ('TEMKO PM', ['Philip Morris'])
+
+        """
+        extracted_positions = []
+
+        for raw_org, clean_org in RAW_ORG_TO_CLEAN_ORG_DICT.items():
+
+            while True:
+                search_hit = None
+                # this is a bit of an ugly hack to get the last (rather than the first) search hit
+                # for a string: we iterate over all matches and the last one gets stored in
+                # search_hit
+                for search_hit in re.finditer(r'\b' + raw_org + r'\b', name_raw):
+                    pass
+
+                if not search_hit:
+                    break
+
+                if len(raw_org) >= 3:
+                    name_raw = name_raw[0:search_hit.start()] + name_raw[search_hit.end():]
+                    if not clean_org == "@skip@":
+                        extracted_positions.append(clean_org)
+
+                elif len(raw_org) == 2:
+                    name_raw_test = name_raw[0:search_hit.start()] + name_raw[search_hit.end():]
+
+                    # test if deleted, there exists first & middle name
+                    name = HumanName(name_raw_test)
+                    # if first & middle name do not exist after deletion, the deleted org might
+                    # actually be initials, so ignore the match
+                    if len(name.first) == 0 and len(name.middle == 0):
+                        break
+
+                    # last names without middle names ("TEMKO") get interpreted as first names
+                    # without last names. Skip those cases
+                    if len(name.last) == 0:
+                        break
+
+                    # if not, do extract raw_org
+                    else:
+                        extracted_positions.append(clean_org)
+                        name_raw = name_raw_test
+
+        name_raw = name_raw.strip(', ')
+        return name_raw, extracted_positions
+
 
 
 # PeopleDatabase object
@@ -693,7 +726,7 @@ class TestNameParser(unittest.TestCase):
 
     def test_parse_name_9(self):
         self.assertEqual(Person(last="Temko", first="S", middle="L",
-                                positions=["COVINGTON AND BURLING"],
+                                positions=["COVINGTON & BURLING"],
                                 aliases=["TEMKO SL, COVINGTON AND BURLING"]),
                          Person(name_raw="TEMKO SL, COVINGTON AND BURLING"))
 
@@ -771,6 +804,39 @@ class TestNameParser(unittest.TestCase):
         self.assertEqual(Person(last="Cantrell", first="A", middle="B",
                                 positions=["BROWN & WILLIAMSON"], aliases=["A B Cantrell, BW"]),
                          Person(name_raw="A B Cantrell, BW"))
+
+
+class TestOrgParser(unittest.TestCase):
+    """
+    Tests organization parser and extracter in find_and_extract_raw_org_names_from_name
+    """
+
+    def test_parse_org_1(self):
+        self.assertEqual(
+            Person.find_and_extract_raw_org_names_from_name('TEMKO SL, COVINGTON AND BURLING'),
+            ('TEMKO SL', ['Covington & Burling'])
+        )
+
+    def test_parse_org_2(self):
+        # if an organization could also be name initials, keep the initials
+        self.assertEqual(
+            Person.find_and_extract_raw_org_names_from_name('TEMKO PM'),
+            ('TEMKO PM', [])
+        )
+
+    def test_parse_org_3(self):
+        self.assertEqual(
+            Person.find_and_extract_raw_org_names_from_name('TEMKO PM, PM'),
+            ('TEMKO PM', ['Philip Morris'])
+        )
+
+    def test_parse_org_4(self):
+        # organizations in @skip@ like UNK (unknown) should be deleted
+        self.assertEqual(
+            Person.find_and_extract_raw_org_names_from_name('TEMKO PM, UNK'),
+            ('TEMKO PM', [])
+        )
+
 
 class TestPeopleDB(unittest.TestCase):
     def setUp(self):
