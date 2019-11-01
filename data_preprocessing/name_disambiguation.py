@@ -7,6 +7,7 @@ from people_db import PeopleDatabase
 # dict that converts raw organization names to clean, official organization names
 RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
 
+
 def merge_names_from_file(name_file=Path('..', 'data', 'name_disambiguation',
                                          'tobacco_names_raw_test_small.json')):
     """
@@ -39,7 +40,6 @@ def merge_names_from_file(name_file=Path('..', 'data', 'name_disambiguation',
 
 #    with open('alias_to_name.json', 'w') as outfile:
 #        json.dump(people_db.get_alias_to_name(), outfile)
-
 
 
 def add_au_and_rc_org(db_to_add, path):
