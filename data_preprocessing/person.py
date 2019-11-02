@@ -89,10 +89,10 @@ class Person:
         and all aliases
         :return: str of first, middle, last, positions, aliases
         """
-        s = f'{self.first} {self.middle} {self.last}'
-        s = s + ", Position: " + str(self.positions) + ", Aliases: " + \
+        str_name = f'{self.first} {self.middle} {self.last}'
+        str_name = str_name + ", Position: " + str(self.positions) + ", Aliases: " + \
             str(self.aliases) + ", count: " + str(self.count)
-        return s
+        return str_name
 
     def __eq__(self, other):
         """
@@ -139,6 +139,22 @@ class Person:
         self.position = likely_position
 
     @staticmethod
+    def remove_privlog_info(name_raw):
+        """
+        :param name_raw: the raw name alias
+        :return: name_raw with privlog info tag removed
+        """
+        # remove privlog info, e.g. 'Temko, Stanley L [Privlog:] TEMKO,SL'. It confuses
+        # the name parser
+        privlog_id = name_raw.find('[Privlog:]')
+        if privlog_id == 0:
+            return name_raw[privlog_id:]
+        elif privlog_id > 0:
+            return name_raw[:name_raw.find('[Privlog:]')]
+        else:
+            return name_raw
+
+    @staticmethod
     def parse_raw_name(name_raw: str, count: int) -> (str, str, str, Counter):
         """
         Parses a (usually messy) raw name and returns
@@ -146,19 +162,9 @@ class Person:
 
         :param name_raw: str
         :param count: int
-        :return: str, str, str, set
+        :return: str, str, str, Counter (first name, middle name, last name, positions Counter)
         """
-
-        # remove privlog info, e.g. 'Temko, Stanley L [Privlog:] TEMKO,SL'. It confuses
-        # the name parser
-        privlog_id = name_raw.find('[Privlog:]')
-        if privlog_id == 0:
-            name_raw = name_raw[privlog_id:]
-        elif privlog_id > 0:
-            name_raw = name_raw[:name_raw.find('[Privlog:]')]
-        else:
-            pass
-
+        name_raw = Person.remove_privlog_info(name_raw)
         # position is often attached with a dash,
         # e.g. 'BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS'
         if name_raw.find(" - ") > -1 and len(name_raw.split(' - ')) == 2:
@@ -174,7 +180,7 @@ class Person:
             name_raw = name_raw.replace(position, '')
 
         # Search for known raw_org strings in name_raw, extract them as positions if necessary
-        name_raw, new_positions = Person.find_and_extract_raw_org_names_from_name(name_raw)
+        name_raw, new_positions = Person.extract_raw_org_names_from_name(name_raw)
         extracted_positions += new_positions
 
         # delete any leftover hashtags
@@ -210,12 +216,6 @@ class Person:
         if re.match(r'[a-zA-Z]\.[a-zA-Z]\.', name.first):
             name.middle = name.first[2]
             name.first = name.first[0]
-
-        # should we keep this?
-        # if ' ' in name.last:
-        #     splitname = name.last.split(' ')
-        #     name.last = splitname[0]
-        #     name.last = max(splitname, key=lambda name: len(name))
 
         name.last = name.last.capitalize()
         name.first = name.first.capitalize()
@@ -254,23 +254,13 @@ class Person:
         return name.first, name.middle, name.last, result_positions
 
     @staticmethod
-    def find_and_extract_raw_org_names_from_name(name_raw):
+    def extract_raw_org_names_from_name(name_raw):
         """
         Finds raw org names like "B&W" in a name string, standarizes them (e.g. to
         "Brown & Williamson," and returns the name without that raw org name
 
         :param name_raw: str
         :return:
-
-        >>> Person.find_and_extract_raw_org_names_from_name('TEMKO SL, COVINGTON AND BURLING')
-        ('TEMKO SL', ['Covington & Burling'])
-
-        >>> Person.find_and_extract_raw_org_names_from_name('TEMKO PM')
-        ('TEMKO PM', [])
-
-        >>> Person.find_and_extract_raw_org_names_from_name('TEMKO PM, PM')
-        ('TEMKO PM', ['Philip Morris'])
-
         """
         extracted_positions = []
 
@@ -299,18 +289,16 @@ class Person:
                     name = HumanName(name_raw_test)
                     # if first & middle name do not exist after deletion, the deleted org might
                     # actually be initials, so ignore the match
-                    if len(name.first) == 0 and len(name.middle == 0):
+                    if not name.first and not name.middle:
                         break
 
                     # last names without middle names ("TEMKO") get interpreted as first names
                     # without last names. Skip those cases
-                    if len(name.last) == 0:
+                    if not name.last:
                         break
-
                     # if not, do extract raw_org
-                    else:
-                        extracted_positions.append(clean_org)
-                        name_raw = name_raw_test
+                    extracted_positions.append(clean_org)
+                    name_raw = name_raw_test
 
         name_raw = name_raw.strip(', ')
         return name_raw, extracted_positions
@@ -417,6 +405,9 @@ class TestNameParser(unittest.TestCase):
                                          "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"))
 
     def test_parse_name_14(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         # TODO fix when multiple names are in the same string, not parse remaining name as positions
         # This one does not discard the rest of the names and instead stores in positions
         # (see test_parse_name_14b which correctly handles the situation, when there are more names)
@@ -425,9 +416,12 @@ class TestNameParser(unittest.TestCase):
                                 aliases=["Holtzman, A.,  Murray, J. ,  Henson, A."]),
                          Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A."))
 
-    def test_parse_name_14b(self):                                              
+    def test_parse_name_14b(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         print("positions: ", Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
-                                         "Pepples, E. ,  Stevens, A. ,  Witt, S.").positions)
+                                    "Pepples, E. ,  Stevens, A. ,  Witt, S.").positions)
         self.assertEqual(Person(last="Holtzman", first="A", middle="", positions=[],
                                 aliases=["Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
                                          "Pepples, E. ,  Stevens, A. ,  Witt, S."]),
@@ -435,28 +429,43 @@ class TestNameParser(unittest.TestCase):
                                          "Pepples, E. ,  Stevens, A. ,  Witt, S."))
 
     def test_parse_name_15(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         self.assertEqual(Person(last="Holtz", first="Jacob", middle="",
                                 positions=["Jacob & Medinger"],
                                 aliases=["Holtz, Jacob, Jacob & Medinger"]),
                          Person(name_raw="Holtz, Jacob, Jacob & Medinger"))
 
     def test_parse_name_16(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         self.assertEqual(Person(last="Proctor", first="D", middle="F",
                                 positions=["Johns Hopkins University"],
                                 aliases=["PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"]),
                          Person(name_raw="PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"))
 
     def test_parse_name_17(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         self.assertEqual(Person(last="Smith", first="Andy", middle="B", positions=["JR"],
                                 aliases=["Smith, Andy B, J.R."]),
                          Person(name_raw="Smith, Andy B, J.R."))
 
     def test_parse_name_18(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         self.assertEqual(Person(last="Cantrell", first="D", middle="",
                                 positions=["BROWN & WILLIAMSON"], aliases=["D Cantrell, B&W"]),
                          Person(name_raw="D Cantrell, B&W"))
 
     def test_parse_name_19(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         self.assertEqual(Person(last="Cantrell", first="A", middle="B",
                                 positions=["BROWN & WILLIAMSON"], aliases=["A B Cantrell, BW"]),
                          Person(name_raw="A B Cantrell, BW"))
@@ -464,35 +473,34 @@ class TestNameParser(unittest.TestCase):
 
 class TestOrgParser(unittest.TestCase):
     """
-    Tests organization parser and extracter in find_and_extract_raw_org_names_from_name
+    Tests organization parser and extracter in extract_raw_org_names_from_name
     """
 
     def test_parse_org_1(self):
         self.assertEqual(
-            Person.find_and_extract_raw_org_names_from_name('TEMKO SL, COVINGTON AND BURLING'),
+            Person.extract_raw_org_names_from_name('TEMKO SL, COVINGTON AND BURLING'),
             ('TEMKO SL', ['Covington & Burling'])
         )
 
     def test_parse_org_2(self):
         # if an organization could also be name initials, keep the initials
         self.assertEqual(
-            Person.find_and_extract_raw_org_names_from_name('TEMKO PM'),
+            Person.extract_raw_org_names_from_name('TEMKO PM'),
             ('TEMKO PM', [])
         )
 
     def test_parse_org_3(self):
         self.assertEqual(
-            Person.find_and_extract_raw_org_names_from_name('TEMKO PM, PM'),
+            Person.extract_raw_org_names_from_name('TEMKO PM, PM'),
             ('TEMKO PM', ['Philip Morris'])
         )
 
     def test_parse_org_4(self):
         # organizations in @skip@ like UNK (unknown) should be deleted
         self.assertEqual(
-            Person.find_and_extract_raw_org_names_from_name('TEMKO PM, UNK'),
+            Person.extract_raw_org_names_from_name('TEMKO PM, UNK'),
             ('TEMKO PM', [])
         )
-
 
 if __name__ == '__main__':
     unittest.main()

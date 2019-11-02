@@ -15,8 +15,6 @@ from person import Person
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
-
-
 # dict that converts raw organization names to clean, official organization names
 RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
 
@@ -110,7 +108,6 @@ class PeopleDatabase:
             loaded_db = pickle.load(infile)
             self.people = loaded_db.people
 
-    # TODO: Figure out if we still need this / add authoritative name
     def create_positions_csv(self):
         """
         Makes a Counter of all positions appearing in db,
@@ -124,7 +121,6 @@ class PeopleDatabase:
         for person in self.people:
             for position_name in person.positions:
                 positions_counter[position_name] += 1
-        # TODO make the csv with the specified format
         with open('all_organizations.csv', mode='w') as csv_file:
             fieldnames = ['Raw Name', 'Count', 'Authoritative Name']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -293,31 +289,3 @@ class TestPeopleDB(unittest.TestCase):
         loaded_db = PeopleDatabase()
         loaded_db.load_from_disk(Path('test.pickle'))
         self.assertEqual(self.people_db, loaded_db)
-
-    # TODO: Either spin off this test into name_disambiguation or integrate add_au_and_rc_org
-    # TODO: to PeopleDatabase
-    def test_add_au_and_rc_org(self):
-        """
-        Test add_au_and_rc_function
-        """
-        from name_disambiguation import add_au_and_rc_org
-        add_au_and_rc_org(self.people_db, Path('..', 'data', 'name_disambiguation',
-                                               'test_docs.csv'))
-
-        expected_people_db = PeopleDatabase()
-        raquel = Person('Garcia, Raquel')
-        raquel.positions = Counter(["British American Tobacco"])
-        expected_people_db.people.add(raquel)
-
-        dunn = Person('Dunn, WL')
-        dunn.positions = Counter(["British American Tobacco"])
-        expected_people_db.people.add(dunn)
-
-        stephan = Person('Risi, Stephan')
-        stephan.positions = Counter(["Philip Morris", "Philip Morris"])
-        expected_people_db.people.add(stephan)
-
-        print(self.people_db)
-        print(expected_people_db)
-
-        self.assertEqual(self.people_db, expected_people_db)
