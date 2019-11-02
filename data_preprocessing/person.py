@@ -9,13 +9,9 @@ from collections import Counter
 
 from nameparser import HumanName
 from nameparser.config import CONSTANTS
-from name_preprocessing import get_clean_org_names
+from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
-
-
-# dict that converts raw organization names to clean, official organization names
-RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
 
 
 class Person:
@@ -101,10 +97,7 @@ class Person:
         :param other: another person object
         :return: bool (if two person objects are the same)
         """
-        return \
-            self.last == other.last and self.first == other.first\
-            and self.middle == other.middle and self.position == other.position\
-            and self.positions == other.positions and self.aliases == other.aliases
+        return hash(self) == hash(other)
 
     def copy(self):
         """
@@ -309,7 +302,6 @@ class TestNameParser(unittest.TestCase):
     Attributes:
         test_raw_names: dict that corresponds raw names (str) to the expected Person object
     """
-    # TODO: fix it so that all tests run even if the first assertion fails
     def setUp(self):
         self.test_raw_names = {
         }
@@ -501,6 +493,7 @@ class TestOrgParser(unittest.TestCase):
             Person.extract_raw_org_names_from_name('TEMKO PM, UNK'),
             ('TEMKO PM', [])
         )
+
 
 if __name__ == '__main__':
     unittest.main()

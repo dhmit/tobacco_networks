@@ -14,9 +14,7 @@ from collections import Counter
 import pandas as pd
 from person import Person
 from people_db import PeopleDatabase
-
-# dict that converts raw organization names to clean, official organization names
-RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
+from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 
 def merge_names_from_file(name_file=Path('..', 'data', 'name_disambiguation',
@@ -189,24 +187,6 @@ def parse_column_org(column_org):
     return organizations
 
 
-def get_clean_org_names():
-    """
-    :return: dict, maps official organization names to all their variants
-    """
-    # read clean_org_names
-    file_name = Path('..', 'data', 'name_disambiguation', 'clean_org_names_to_raw_org_names.json')
-    with open(file_name, 'r') as infile:
-        name_dict = json.load(infile)
-
-    # invert dict
-    inv_name_dict = {}
-    for official in name_dict:
-        for j in name_dict[official]:
-            inv_name_dict[j] = official
-        inv_name_dict[official] = official
-    return inv_name_dict
-
-
 class TestAddPositions(unittest.TestCase):
     """Tests adding positions to people in a people database
     Attributes:
@@ -241,15 +221,6 @@ class TestAddPositions(unittest.TestCase):
         print(expected_people_db)
 
         self.assertEqual(self.people_db, expected_people_db)
-
-    def test_add_au_and_rc_org_2(self):
-        """
-        Test add_au_and_rc_function
-        """
-        authors_by_docs = get_au_and_rc_by_document(Path('..', 'data', 'name_disambiguation',
-                                                         'test_docs.csv'))
-        result = authors_by_docs[0]
-        self.assertEqual(result, {'au': '', 'au_org': '', 'au_person': 'BOWLING,JC'})
 
 
 if __name__ == '__main__':

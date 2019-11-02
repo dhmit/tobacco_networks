@@ -9,14 +9,11 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from IPython import embed
-from name_preprocessing import get_clean_org_names
+from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 from nameparser.config import CONSTANTS  # pylint: disable=C0411
 from person import Person
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
-
-# dict that converts raw organization names to clean, official organization names
-RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
 
 
 class PeopleDatabase:
