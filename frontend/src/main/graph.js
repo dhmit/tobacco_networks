@@ -193,7 +193,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         });
 
         // TODO: Fix this to pass in the node name
-        get_information(data, "DUNN,WL");
+        get_node_info(data, "DUNN,WL");
     }
 
     function unfocus_node() {
@@ -233,7 +233,7 @@ export function update_graph_size(el, data, config) {
  * @param name: String
  */
 // TODO: Display information somewhere
-export function get_information(data, name){
+export function get_node_info(data, name){
     name = name.toUpperCase();
     const data_nodes = data["nodes"];
     let name_info = {};
@@ -254,7 +254,7 @@ export function get_information(data, name){
  * @param name: String
  */
 // TODO: Display information somewhere
-export function get_information(data, name){
+export function get_node_info(data, name){
     name = name.toUpperCase();
     const data_nodes = data["nodes"];
     let name_info = {};
