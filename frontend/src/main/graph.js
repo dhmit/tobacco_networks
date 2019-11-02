@@ -150,6 +150,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
+
         fix_nodes(d);
     }
 
@@ -183,12 +184,16 @@ export function create_graph(el, data, config, handle_viz_events) {
     function focus_node() {
         const node = d3.select(d3.event.target);
         const index = node.datum().index;
+
         nodes.style("opacity", function(o) {
             return neigh(index, o.index) ? 1 : 0;
         });
         links.style("opacity", function(o) {
             return o.source.index === index || o.target.index === index ? 1 : 0;
         });
+
+        // TODO: Fix this to pass in the node name
+        get_information(data, "DUNN,WL");
     }
 
     function unfocus_node() {
@@ -223,6 +228,28 @@ export function update_graph_size(el, data, config) {
 }
 
 /**
+ * Returns information of the given id
+ *
+ * @param data: data
+ * @param name: String
+ */
+// TODO: Display information somewhere
+export function get_information(data, name){
+    name = name.toUpperCase();
+    const data_nodes = data["nodes"];
+    let name_info = {};
+
+    for(const indx in data_nodes){
+        const current_name = data_nodes[indx];
+        if (current_name["name"]  == name){
+            name_info = current_name;
+        }
+    }
+
+    return name_info;
+}
+
+/**
  * Updates visualization according to what the user searches
  *
  * @param data: data
@@ -247,10 +274,12 @@ export function update_focused_node(data, name) {
                 }
             }
         }
+        // TODO: Fix selector
 
         // need to fix the selector
-        const node = d3.select("#DUNN,WL");
+        const node = d3.select("#"+name);
         console.log(node);
+
         /*
         console.log(node);
         const index = node.datum().index;
