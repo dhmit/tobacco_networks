@@ -226,7 +226,27 @@ export function update_graph_size(el, data, config) {
         .attr("width", config.width)
         .attr("height", config.height);
 }
+/**
+ * Returns information of the given id
+ *
+ * @param data: data
+ * @param name: String
+ */
+// TODO: Display information somewhere
+export function get_information(data, name){
+    name = name.toUpperCase();
+    const data_nodes = data["nodes"];
+    let name_info = {};
 
+    for(const indx in data_nodes){
+        const current_name = data_nodes[indx];
+        if (current_name["name"]  == name){
+            name_info = current_name;
+        }
+    }
+
+    return name_info;
+}
 /**
  * Returns information of the given id
  *
