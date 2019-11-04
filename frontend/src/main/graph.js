@@ -33,7 +33,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     const graph_y_center = graph_height / 2;
 
     const force_simulation = d3.forceSimulation(data.nodes)
-        .force("link", force_link)
+    force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(-5000))
         .force("center", d3.forceCenter(graph_x_center, graph_y_center))
         .force("x", d3.forceX(graph_x_center).strength(1))
@@ -48,16 +48,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("height", graph_height);
 
 
-    d3.select(window).on("resize", resize);
 
-    function resize() {
-
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        svg.attr("width", width).attr("height", height);
-        console.log(width,height);
-        force_simulation.force("center", d3.forceCenter(width / 2,height / 2));
-    }
 
     // Create links
     const links = svg
@@ -202,6 +193,17 @@ export function create_graph(el, data, config, handle_viz_events) {
     function unfocus_node() {
         nodes.style("opacity", 1);
         links.style("opacity", 1);
+    }
+
+    d3.select(window).on("resize", resize);
+
+    function resize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        svg.attr("width", width).attr("height", height);
+        console.log(width,height);
+        force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
+        render_simulation(); // not sure if this makes a difference
     }
 }
 
