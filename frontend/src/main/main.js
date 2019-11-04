@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph_color, update_graph_size } from './graph.js'
+import { create_graph, update_focused_node } from './graph.js'
 import './main.css';
 
 
@@ -21,6 +21,23 @@ class Controls extends React.Component {
         super(props);
     }
 
+    validate_input(e) {
+        // Check if the person we're searching for actually exists
+        const search_string = e.target.value;
+        this.props.update_searchbar_value(search_string);
+
+        const nodes = this.props.nodes;
+        for (const node of nodes) {
+            const name = node.name;
+            if (search_string.toLowerCase() === name.toLowerCase()) {
+                this.props.handle_searchbar_query(search_string);
+            } else {
+                // probably do something like tell the user the name isn't in the list
+                return;
+            }
+        }
+    }
+
     render() {
         return (
             <div className="row">
@@ -28,9 +45,9 @@ class Controls extends React.Component {
                     <input className="form-control"
                         type="text"
                         maxLength="20" size="20"
-                        value={this.props.person_to_highlight}
+                        value={this.props.searchbar_value}
                         placeholder={"Type a name here"}
-                        onChange={(e) => this.props.handle_searchbar_update(e.target.value)}
+                        onChange={(e) => this.validate_input(e)}
                     />
                     {/*<label>Color is blue</label>*/}
                 </div>
@@ -40,13 +57,17 @@ class Controls extends React.Component {
                     </a>
                 </div>
             </div>
-        )
+        );
     }
 }
+
+
 Controls.propTypes = {
-    person_to_highlight: PropTypes.string.isRequired,
-    handle_searchbar_update: PropTypes.func.isRequired,
     toggle_show_table: PropTypes.func,
+    searchbar_value: PropTypes.string.isRequired,
+    update_searchbar_value: PropTypes.func.isRequired,
+    handle_searchbar_query: PropTypes.func.isRequired,
+    nodes: PropTypes.array.isRequired,
 };
 
 /***************************************************************************************************
@@ -76,10 +97,8 @@ class Viz extends React.Component {
         }
 
         let update_func;
-        if (this.props.config.viz_update_func === 'update_graph_color') {
-            update_func = update_graph_color;
-        } else if (this.props.config.viz_update_func === 'update_graph_size'){
-            update_func = update_graph_size;
+        if (this.props.config.viz_update_func === 'focus_node') {
+            update_func = update_focused_node;
         }
         update_func(
             this._graphRoot.current,
@@ -166,6 +185,7 @@ class MainView extends React.Component {
                 height: window.innerHeight,
                 color: 'blue',
                 person_to_highlight: "",
+                searchbar_value: "",
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
@@ -191,34 +211,6 @@ class MainView extends React.Component {
             }).catch(() => {
                 console.log("error");
             });
-        window.addEventListener("resize", () => {
-            const config = {...this.state.config};
-            config.width = window.innerWidth;
-            config.height = window.innerHeight;
-
-            config.viz_update_func = 'update_graph_size';
-            this.setState({
-                config: config,
-            })
-        });
-    }
-
-    /**
-     * Calls when checkbox is changed.  Changes the color from blue to red or vice versa.
-     */
-    handle_checkbox() {
-        // "..." is the 'spread' operator - this is a copy
-        const config = {...this.state.config};
-        if (config.color === 'blue') {
-            config.color = 'red';
-        } else {
-            config.color = 'blue'
-        }
-        //TODO: rewrite this to update width and height for the vis
-        config.viz_update_func = 'update_graph_color';
-        this.setState({
-            config: config,
-        })
     }
 
     /**
@@ -239,12 +231,22 @@ class MainView extends React.Component {
         }
     }
 
-    handle_searchbar_update(search_string) {
-        let config = {... this.state.config};
-        config.person_to_highlight = search_string;
+    /**
+     * Handles search bar update
+     *
+     * @param event_name: String
+     */
+    handle_searchbar_query(search_string) {
+        const config = {... this.state.config};
+        config.search_person_name = search_string;
+        config.viz_update_func = 'focus_node';
         this.setState({config: config})
+    }
 
-        //TODO: trigger update of visualization
+    update_searchbar_value(search_string) {
+        const config = {...this.state.config};
+        config.searchbar_value = search_string;
+        this.setState({config: config});
     }
 
     submitFormHandler = event => {
@@ -272,10 +274,15 @@ class MainView extends React.Component {
                     <div className="row">
                         <Controls
                             person_to_highlight={this.state.config.person_to_highlight}
-                            handle_searchbar_update={
-                                (search_string) => this.handle_searchbar_update(search_string)
+                            handle_searchbar_query={
+                                (search_string) => this.handle_searchbar_query(search_string)
+                            }
+                            update_searchbar_value={
+                                (search_string) => this.update_searchbar_value(search_string)
                             }
                             toggle_show_table={() => this.toggle_show_table()}
+                            nodes={this.state.data.nodes}
+                            searchbar_value={this.state.config.searchbar_value}
                         />
                     </div>
 
@@ -286,17 +293,15 @@ class MainView extends React.Component {
                             handle_viz_events={(event_name, data) =>
                                 this.handle_viz_events(event_name, data )}
                         />
-                        {this.state.show_info_panel &&
-                            <Info
-                                mouseover={this.state.mouseover}
-                                currentColor={this.state.config.color}
-                                person={this.state.person}
-                                docs={this.state.docs}
-                                words={this.state.words}
-                                show_info_panel={this.state.show_info_panel}
-                                toggle_show_table={() => this.toggle_show_table()}
-                            />
-                        }
+                        <Info
+                            mouseover={this.state.mouseover}
+                            currentColor={this.state.config.color}
+                            person={this.state.person}
+                            docs={this.state.docs}
+                            words={this.state.words}
+                            show_info_panel={this.state.show_info_panel}
+                            toggle_show_table={() => this.toggle_show_table()}
+                        />
                     </div>
                 </div>
             );
