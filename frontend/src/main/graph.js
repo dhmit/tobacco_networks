@@ -121,7 +121,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             .style("fill", "#555")
             .style("font-family", "Arial")
             .style("font-size", 12)
-            .attr("transform", (d, i, n) => calc_label_pos(d, i, n));
+            .attr("transform", (d, i, n) => calc_label_pos(d, i, n)).style("pointer-events", "none");
 
     /*
      * Event handlers
