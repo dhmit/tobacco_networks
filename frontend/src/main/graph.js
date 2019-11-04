@@ -224,13 +224,3 @@ export function update_graph_color(el, data, config) {
         .duration(1000)
         .style('fill', config.color)
 }
-
-
-
-// export function update_graph_size(el, data, config) {
-//     // Re-compute the scales, and render the data points
-//     // TODO: the main SVG should really have an ID
-//     d3.select(el).select('svg')
-//         .attr("width", config.width)
-//         .attr("height", config.height);
-// }
