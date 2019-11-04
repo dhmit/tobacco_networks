@@ -109,7 +109,10 @@ class Info extends React.Component {
                     >Toggle Display</button>
                 </div>
                 <div className="collapse row  float-right" id="toggleDisplayButton">
-                    <p>Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}  a bar on the viz!</p>
+                    <p>
+                        Your mouse is {this.props.mouseover ? 'OVER' : 'NOT OVER'}
+                        a bar on the viz!
+                    </p>
                     <p>The current viz color is {this.props.currentColor}</p>
                     <table className="table">
                         <tbody><tr>
@@ -130,7 +133,10 @@ class Info extends React.Component {
             </div>);
         } else {
             return (
-                <button id="toggle_button" onClick={() => this.props.toggle_show_table()}>Toggle Display</button>
+                <button
+                    id="toggle_button"
+                    onClick={() => this.props.toggle_show_table()}
+                >Toggle Display</button>
             );
         }
     }
