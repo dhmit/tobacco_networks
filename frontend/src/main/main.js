@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph_color, update_graph_size, update_focused_node } from './graph.js'
+import { create_graph, update_graph_color, update_focused_node } from './graph.js'
 import './main.css';
 
 
