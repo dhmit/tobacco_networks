@@ -4,6 +4,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+
 import { getCookie } from '../common'
 import { create_graph, update_graph_color, update_graph_size } from './graph.js'
 import './main.css';
@@ -101,17 +104,13 @@ class Info extends React.Component {
         super(props);
     }
 
-
-
     render() {
         if (!this.props.showTableData) {
             return (
                 <div onClick={() => this.props.toggle_show_table()}
                     className="row float-right info_button">
                     <a className="row">
-                        <img id="info_button"
-                            src="https://cdn1.iconfinder.com/data/icons/education-set-4/512/information-512.png"
-                            alt="Info Button image"/>
+                        <FontAwesomeIcon icon={faInfoCircle} />
                     </a>
                 </div>
             );
