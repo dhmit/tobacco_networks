@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph_color} from './graph.js'
+import { create_graph, update_graph_color, update_focused_node } from './graph.js'
 import './main.css';
 
 
@@ -17,15 +17,32 @@ class SearchBar extends React.Component {
         super(props);
     }
 
+    validate_input(e) {
+        // Check if the person we're searching for actually exists
+        const search_string = e.target.value;
+        this.props.update_searchbar_value(search_string);
+
+        const nodes = this.props.nodes;
+        for (const node of nodes) {
+            const name = node.name;
+            if (search_string.toLowerCase() === name.toLowerCase()) {
+                this.props.handle_searchbar_query(search_string);
+            } else {
+                // probably do something like tell the user the name isn't in the list
+                return;
+            }
+        }
+    }
+
     render(){
         return(
             <div className="col-6">
                 <input className="form-control"
                     type="text"
                     maxLength="20" size="20"
-                    value={this.props.person_to_highlight}
+                    value={this.props.searchbar_value}
                     placeholder={"Type a name here"}
-                    onChange={(e) => this.props.handle_searchbar_update(e.target.value)}
+                    onChange={(e) => this.validate_input(e)}
                 />
                 {/*<label>Color is blue</label>*/}
             </div>
@@ -33,8 +50,10 @@ class SearchBar extends React.Component {
     }
 }
 SearchBar.propTypes = {
-    person_to_highlight: PropTypes.string.isRequired,
-    handle_searchbar_update: PropTypes.func.isRequired,
+    searchbar_value: PropTypes.string.isRequired,
+    update_searchbar_value: PropTypes.func.isRequired,
+    handle_searchbar_query: PropTypes.func.isRequired,
+    nodes: PropTypes.array.isRequired,
 };
 
 /***************************************************************************************************
@@ -66,6 +85,8 @@ class Viz extends React.Component {
         let update_func;
         if (this.props.config.viz_update_func === 'update_graph_color') {
             update_func = update_graph_color;
+        } else if (this.props.config.viz_update_func === 'focus_node') {
+            update_func = update_focused_node;
         }
         update_func(
             this._graphRoot.current,
@@ -228,12 +249,22 @@ class MainView extends React.Component {
         }
     }
 
-    handle_searchbar_update(search_string) {
-        let config = {... this.state.config};
-        config.person_to_highlight = search_string;
+    /**
+     * Handles search bar update
+     *
+     * @param event_name: String
+     */
+    handle_searchbar_query(search_string) {
+        const config = {... this.state.config};
+        config.search_person_name = search_string;
+        config.viz_update_func = 'focus_node';
         this.setState({config: config})
+    }
 
-        //TODO: trigger update of visualization
+    update_searchbar_value(search_string) {
+        const config = {...this.state.config};
+        config.searchbar_value = search_string;
+        this.setState({config: config});
     }
 
     submitFormHandler = event => {
@@ -263,9 +294,14 @@ class MainView extends React.Component {
 
                     <div className="row">
                         <SearchBar
-                            person_to_highlight={this.state.config.person_to_highlight}
-                            handle_searchbar_update={(search_string) =>
-                                this.handle_searchbar_update(search_string)}
+                            searchbar_value={this.state.config.searchbar_value}
+                            handle_searchbar_query={
+                                (search_string) => this.handle_searchbar_query(search_string)
+                            }
+                            update_searchbar_value={
+                                (search_string) => this.update_searchbar_value(search_string)
+                            }
+                            nodes={this.state.data.nodes}
                         />
                     </div>
 

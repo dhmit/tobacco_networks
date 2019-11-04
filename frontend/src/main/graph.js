@@ -58,6 +58,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             .data(data.links)
         .enter()
             .append("line")
+            .attr("class", "graph_link")
             .attr("stroke", "#aaa")
             .attr("stroke-width", "1px");
 
@@ -70,7 +71,8 @@ export function create_graph(el, data, config, handle_viz_events) {
             .data(data.nodes)
         .enter()
             .append("g")
-                .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
+            .attr("class", "graph_node")
+            .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
 
     nodes  // bind event handlers for nodes
         .call(
@@ -108,11 +110,12 @@ export function create_graph(el, data, config, handle_viz_events) {
     // Setup labels
     const calc_label_pos = (d, i, nodes) => {
         const label = nodes[i];
+        const r = calc_circle_radius(d);
         const h = label.getBBox().height;  // bounding box of the label
         const w = label.getBBox().width;
         // TODO: adjust position of the label based on radius of the circle
         const shiftX = -w/2;
-        const shiftY = -h/2;
+        const shiftY = -h/2-r;
         return `translate(${shiftX}, ${shiftY})`;
     };
     nodes
@@ -149,6 +152,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
+
         fix_nodes(d);
     }
 
@@ -183,12 +187,16 @@ export function create_graph(el, data, config, handle_viz_events) {
     function focus_node() {
         const node = d3.select(d3.event.target);
         const index = node.datum().index;
+
         nodes.style("opacity", function(o) {
             return neigh(index, o.index) ? 1 : 0;
         });
         links.style("opacity", function(o) {
             return o.source.index === index || o.target.index === index ? 1 : 0;
         });
+
+        // TODO: Fix this to pass in the node name
+        get_information(data, "DUNN,WL");
     }
 
     function unfocus_node() {
@@ -208,7 +216,6 @@ export function create_graph(el, data, config, handle_viz_events) {
     }
 }
 
-
 /**
  * Change the color of each of the rectangles in the graph, slowly.
  *
@@ -217,11 +224,72 @@ export function create_graph(el, data, config, handle_viz_events) {
  * @param config: object
  */
 
-// TODO: rewrite this for width resize
-export function update_graph_color(el, data, config) {
-    //D3 Code to update the chart
-    d3.select(el).selectAll('rect')
-        .transition()
-        .duration(1000)
-        .style('fill', config.color)
+/**
+ * Returns information of the given id
+ *
+ * @param data: data
+ * @param name: String
+ */
+// TODO: Display information somewhere
+export function get_information(data, name){
+    name = name.toUpperCase();
+    const data_nodes = data["nodes"];
+    let name_info = {};
+
+    for(const indx in data_nodes){
+        const current_name = data_nodes[indx];
+        if (current_name["name"]  == name){
+            name_info = current_name;
+        }
+    }
+
+    return name_info;
+}
+
+/**
+ * Updates visualization according to what the user searches
+ *
+ * @param data: data
+ * @param name: String
+ */
+export function update_focused_node(el, data, config) {
+        const name = config.search_person_name.toUpperCase();
+        console.log("entered update focused node")
+        // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
+        const neigh = []
+        const data_edges = data["links"];
+
+        for (const indx in data_edges){
+            const other_name_1 = data_edges[indx]["node1"].toUpperCase();
+            const other_name_2 = data_edges[indx]["node2"].toUpperCase();
+            if( other_name_1 != other_name_2) {
+                if (other_name_1 == name) {
+                    neigh.push(other_name_2);
+                }
+                else if(other_name_2 == name) {
+                    neigh.push(other_name_1);
+                }
+            }
+        }
+        // TODO: Fix selector
+
+        // need to fix the selector
+        const node = d3.select("#"+name);
+        console.log(node);
+
+        /*
+        console.log(node);
+        const index = node.datum().index;
+        const nodes = d3.selectAll(".graph_node");
+
+        nodes.style("opacity", function(o) {
+            if ( o in neigh) {
+                return o.source.index ? 1:0;
+            }
+        });
+        const links = d3.selectAll(".graph_link");
+        links.style("opacity", function(o) {
+            return o.source.index === index || o.target.index === index ? 1 : 0;
+        });
+        */
 }
