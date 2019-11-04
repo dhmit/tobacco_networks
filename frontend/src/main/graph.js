@@ -138,12 +138,12 @@ export function create_graph(el, data, config, handle_viz_events) {
     }
 
     function drag_started(d) {
+        nodes.on("mouseover", () => {}).on("mouseout", () => {});
         d3.event.sourceEvent.stopPropagation();
         if (!d3.event.active) {force_simulation.alphaTarget(0.3).restart();}
         d.fx = d.x;
         d.fy = d.y;
     }
-
     function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
@@ -165,6 +165,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
         d.fx = d.x;
         d.fy = d.y;
+        nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
     }
 
     // Setup adjacencies (maybe refactor this...)
