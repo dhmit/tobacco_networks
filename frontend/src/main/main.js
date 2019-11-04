@@ -13,31 +13,40 @@ import './main.css';
 
 
 /***************************************************************************************************
- * Search bar
+ * Controls
+ * The top row of the webapp, with search bar, display controls, etc.
  **************************************************************************************************/
-class SearchBar extends React.Component {
+class Controls extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    render(){
-        return(
-            <div className="col-6">
-                <input className="form-control"
-                    type="text"
-                    maxLength="20" size="20"
-                    value={this.props.person_to_highlight}
-                    placeholder={"Type a name here"}
-                    onChange={(e) => this.props.handle_searchbar_update(e.target.value)}
-                />
-                {/*<label>Color is blue</label>*/}
+    render() {
+        return (
+            <div className="row">
+                <div className="col-6">
+                    <input className="form-control"
+                        type="text"
+                        maxLength="20" size="20"
+                        value={this.props.person_to_highlight}
+                        placeholder={"Type a name here"}
+                        onChange={(e) => this.props.handle_searchbar_update(e.target.value)}
+                    />
+                    {/*<label>Color is blue</label>*/}
+                </div>
+                <div className="col-1 float-right info_button">
+                    <a onClick={this.props.toggle_show_table}>
+                        <FontAwesomeIcon icon={faInfoCircle} />
+                    </a>
+                </div>
             </div>
         )
     }
 }
-SearchBar.propTypes = {
+Controls.propTypes = {
     person_to_highlight: PropTypes.string.isRequired,
     handle_searchbar_update: PropTypes.func.isRequired,
+    toggle_show_table: PropTypes.func,
 };
 
 /***************************************************************************************************
@@ -69,8 +78,7 @@ class Viz extends React.Component {
         let update_func;
         if (this.props.config.viz_update_func === 'update_graph_color') {
             update_func = update_graph_color;
-        }
-        else if (this.props.config.viz_update_func === 'update_graph_size'){
+        } else if (this.props.config.viz_update_func === 'update_graph_size'){
             update_func = update_graph_size;
         }
         update_func(
@@ -82,7 +90,7 @@ class Viz extends React.Component {
 
     render() {
         return (
-            <div className="col-9" ref={this._graphRoot}>
+            <div className="col-12 p-0 m-0" ref={this._graphRoot}>
 
             </div>
         )
@@ -105,43 +113,32 @@ class Info extends React.Component {
     }
 
     render() {
-        if (!this.props.showTableData) {
-            return (
-                <div onClick={() => this.props.toggle_show_table()}
-                    className="row float-right info_button">
-                    <a className="row">
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                    </a>
+        return (
+            <div className="col-3">
+                <div className="row float-right info_panel">
+                    <button onClick={() => this.props.toggle_show_table()} type="button"
+                        className="ml-2 mb-1 close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <table className="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Name:</th>
+                                <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Docs</th>
+                                <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Words</th>
+                                <td>{this.props.words > 0 ? this.props.words : 0}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            );
-        } else {
-            return (
-                <div className="col-3">
-                    <div className="row float-right info_panel">
-                        <button onClick={() => this.props.toggle_show_table()} type="button"
-                            className="ml-2 mb-1 close" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <table className="table">
-                            <tbody>
-                                <tr>
-                                    <th scope="row">Name:</th>
-                                    <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Docs</th>
-                                    <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Words</th>
-                                    <td>{this.props.words > 0 ? this.props.words : 0}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            );
-        }
+            </div>
+        );
     }
 }
 
@@ -151,7 +148,7 @@ Info.propTypes ={
     person: PropTypes.string,
     docs: PropTypes.number,
     words: PropTypes.number,
-    showTableData: PropTypes.bool,
+    show_info_panel: PropTypes.bool,
     toggle_show_table: PropTypes.func,
 };
 
@@ -176,7 +173,7 @@ class MainView extends React.Component {
             person: "",
             docs: 0,
             words: 0,
-            showTableData: false,
+            show_info_panel: false,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -259,7 +256,8 @@ class MainView extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
-        this.setState({showTableData: !this.state.showTableData});
+        console.log('calling toggle show table!');
+        this.setState({show_info_panel: !this.state.show_info_panel});
     }
 
     /**
@@ -270,13 +268,14 @@ class MainView extends React.Component {
     render() {
         if (this.state.data) {
             return (
-                <div className="container">
-
+                <div className="container-fluid">
                     <div className="row">
-                        <SearchBar
+                        <Controls
                             person_to_highlight={this.state.config.person_to_highlight}
-                            handle_searchbar_update={(search_string) =>
-                                this.handle_searchbar_update(search_string)}
+                            handle_searchbar_update={
+                                (search_string) => this.handle_searchbar_update(search_string)
+                            }
+                            toggle_show_table={() => this.toggle_show_table()}
                         />
                     </div>
 
@@ -287,15 +286,17 @@ class MainView extends React.Component {
                             handle_viz_events={(event_name, data) =>
                                 this.handle_viz_events(event_name, data )}
                         />
-                        <Info
-                            mouseover={this.state.mouseover}
-                            currentColor={this.state.config.color}
-                            person={this.state.person}
-                            docs={this.state.docs}
-                            words={this.state.words}
-                            showTableData={this.state.showTableData}
-                            toggle_show_table={() => this.toggle_show_table()}
-                        />
+                        {this.state.show_info_panel &&
+                            <Info
+                                mouseover={this.state.mouseover}
+                                currentColor={this.state.config.color}
+                                person={this.state.person}
+                                docs={this.state.docs}
+                                words={this.state.words}
+                                show_info_panel={this.state.show_info_panel}
+                                toggle_show_table={() => this.toggle_show_table()}
+                            />
+                        }
                     </div>
                 </div>
             );
