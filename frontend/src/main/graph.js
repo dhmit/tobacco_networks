@@ -255,8 +255,8 @@ export function get_information(data, name){
  * @param data: data
  * @param name: String
  */
-export function update_focused_node(data, name) {
-        name = name.toUpperCase();
+export function update_focused_node(el, data, config) {
+        const name = config.search_person_name.toUpperCase();
         console.log("entered update focused node")
         // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
         const neigh = []
