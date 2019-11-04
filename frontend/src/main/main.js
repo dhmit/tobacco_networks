@@ -123,6 +123,10 @@ Viz.propTypes = {
     handle_viz_events: PropTypes.func,
 };
 
+
+
+
+
 /**
  * Info panel - data from the visualization
  */
@@ -135,7 +139,7 @@ class Info extends React.Component {
         return (
             <div className="col-3">
                 <div className="row float-right info_panel">
-                    <button onClick={() => this.props.toggle_show_table()} type="button"
+                    <button onClick={this.props.toggle_show_table} type="button"
                         className="ml-2 mb-1 close" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -293,15 +297,17 @@ class MainView extends React.Component {
                             handle_viz_events={(event_name, data) =>
                                 this.handle_viz_events(event_name, data )}
                         />
-                        <Info
-                            mouseover={this.state.mouseover}
-                            currentColor={this.state.config.color}
-                            person={this.state.person}
-                            docs={this.state.docs}
-                            words={this.state.words}
-                            show_info_panel={this.state.show_info_panel}
-                            toggle_show_table={() => this.toggle_show_table()}
-                        />
+                        {this.state.show_info_panel &&
+                            <Info
+                                mouseover={this.state.mouseover}
+                                currentColor={this.state.config.color}
+                                person={this.state.person}
+                                docs={this.state.docs}
+                                words={this.state.words}
+                                show_info_panel={this.state.show_info_panel}
+                                toggle_show_table={() => this.toggle_show_table()}
+                            />
+                        }
                     </div>
                 </div>
             );
