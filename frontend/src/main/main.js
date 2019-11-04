@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph_color, update_focused_node } from './graph.js'
+import { create_graph, update_focused_node } from './graph.js'
 import './main.css';
 
 
@@ -83,9 +83,7 @@ class Viz extends React.Component {
         }
 
         let update_func;
-        if (this.props.config.viz_update_func === 'update_graph_color') {
-            update_func = update_graph_color;
-        } else if (this.props.config.viz_update_func === 'focus_node') {
+        if (this.props.config.viz_update_func === 'focus_node') {
             update_func = update_focused_node;
         }
         update_func(
