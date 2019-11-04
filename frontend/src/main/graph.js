@@ -17,6 +17,10 @@ export function get_adj_list(data){
     return adjacent_nodes;
 }
 
+export function neigh(a, b, adjacent_nodes) {
+        return a === b || adjacent_nodes[a + "-" + b];
+    }
+
 /**
  * Create a graph using d3
  *
@@ -183,16 +187,12 @@ export function create_graph(el, data, config, handle_viz_events) {
     // Setup adjacencies (maybe refactor this...)
     const adjacent_nodes = get_adj_list(data);
 
-    function neigh(a, b) {
-        return a === b || adjacent_nodes[a + "-" + b];
-    }
-
     function focus_node() {
         const node = d3.select(d3.event.target);
         const index = node.datum().index;
 
         nodes.style("opacity", function(o) {
-            return neigh(index, o.index) ? 1 : 0;
+            return neigh(index, o.index, adjacent_nodes) ? 1 : 0;
         });
         links.style("opacity", function(o) {
             return o.source.index === index || o.target.index === index ? 1 : 0;
