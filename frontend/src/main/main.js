@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getCookie } from '../common'
-import { create_graph, update_graph_color, update_graph_size } from './graph.js'
+import { create_graph, update_graph_color} from './graph.js'
 import './main.css';
 
 
@@ -66,9 +66,6 @@ class Viz extends React.Component {
         let update_func;
         if (this.props.config.viz_update_func === 'update_graph_color') {
             update_func = update_graph_color;
-        }
-        else if (this.props.config.viz_update_func === 'update_graph_size'){
-            update_func = update_graph_size;
         }
         update_func(
             this._graphRoot.current,
@@ -187,16 +184,6 @@ class MainView extends React.Component {
             }).catch(() => {
                 console.log("error");
             });
-        window.addEventListener("resize", () => {
-            const config = {...this.state.config};
-            config.width = window.innerWidth;
-            config.height = window.innerHeight;
-
-            config.viz_update_func = 'update_graph_size';
-            this.setState({
-                config: config,
-            })
-        });
     }
 
     /**
