@@ -48,6 +48,17 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("height", graph_height);
 
 
+    d3.select(window).on("resize", resize);
+
+    function resize() {
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        svg.attr("width", width).attr("height", height);
+        console.log(width,height);
+        force_simulation.force("center", d3.forceCenter(width / 2,height / 2));
+    }
+
     // Create links
     const links = svg
         .append("g")
@@ -212,10 +223,12 @@ export function update_graph_color(el, data, config) {
         .style('fill', config.color)
 }
 
-export function update_graph_size(el, data, config) {
-    // Re-compute the scales, and render the data points
-    // TODO: the main SVG should really have an ID
-    d3.select(el).select('svg')
-        .attr("width", config.width)
-        .attr("height", config.height);
-}
+
+
+// export function update_graph_size(el, data, config) {
+//     // Re-compute the scales, and render the data points
+//     // TODO: the main SVG should really have an ID
+//     d3.select(el).select('svg')
+//         .attr("width", config.width)
+//         .attr("height", config.height);
+// }
