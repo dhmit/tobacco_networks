@@ -51,7 +51,7 @@ class Controls extends React.Component {
                     />
                     {/*<label>Color is blue</label>*/}
                 </div>
-                <div className="col-1 float-right info_button">
+                <div id="info_button">
                     <a onClick={this.props.toggle_show_table}>
                         <FontAwesomeIcon icon={faInfoCircle} />
                     </a>
@@ -137,29 +137,27 @@ class Info extends React.Component {
 
     render() {
         return (
-            <div className="col-3">
-                <div className="row float-right info_panel">
-                    <button onClick={this.props.toggle_show_table} type="button"
-                        className="ml-2 mb-1 close" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <table className="table">
-                        <tbody>
-                            <tr>
-                                <th scope="row">Name:</th>
-                                <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Docs</th>
-                                <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Words</th>
-                                <td>{this.props.words > 0 ? this.props.words : 0}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div id="info_panel">
+                <button onClick={this.props.toggle_show_table} type="button"
+                    className="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <table className="table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Name:</th>
+                            <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Docs</th>
+                            <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Words</th>
+                            <td>{this.props.words > 0 ? this.props.words : 0}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         );
     }
@@ -197,7 +195,7 @@ class MainView extends React.Component {
             person: "",
             docs: 0,
             words: 0,
-            show_info_panel: false,
+            show_info_panel: true,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -275,20 +273,18 @@ class MainView extends React.Component {
         if (this.state.data) {
             return (
                 <div className="container-fluid">
-                    <div className="row">
-                        <Controls
-                            person_to_highlight={this.state.config.person_to_highlight}
-                            handle_searchbar_query={
-                                (search_string) => this.handle_searchbar_query(search_string)
-                            }
-                            update_searchbar_value={
-                                (search_string) => this.update_searchbar_value(search_string)
-                            }
-                            toggle_show_table={() => this.toggle_show_table()}
-                            nodes={this.state.data.nodes}
-                            searchbar_value={this.state.config.searchbar_value}
-                        />
-                    </div>
+                    <Controls  // this is its own row
+                        person_to_highlight={this.state.config.person_to_highlight}
+                        handle_searchbar_query={
+                            (search_string) => this.handle_searchbar_query(search_string)
+                        }
+                        update_searchbar_value={
+                            (search_string) => this.update_searchbar_value(search_string)
+                        }
+                        toggle_show_table={() => this.toggle_show_table()}
+                        nodes={this.state.data.nodes}
+                        searchbar_value={this.state.config.searchbar_value}
+                    />
 
                     <div className="row">
                         <Viz
