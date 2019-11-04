@@ -8,6 +8,15 @@ import * as d3 from 'd3';
 // so turning off standard eslint indent rules just for this file
 /* eslint indent: 0 */
 
+export function get_adj_list(data){
+    const adjacent_nodes = {};
+    for (const link of data.links) {
+        adjacent_nodes[link.source.index + "-" + link.target.index] = true;
+        adjacent_nodes[link.target.index + "-" + link.source.index] = true;
+    }
+    return adjacent_nodes;
+}
+
 /**
  * Create a graph using d3
  *
@@ -172,11 +181,8 @@ export function create_graph(el, data, config, handle_viz_events) {
     }
 
     // Setup adjacencies (maybe refactor this...)
-    const adjacent_nodes = {};
-    for (const link of data.links) {
-        adjacent_nodes[link.source.index + "-" + link.target.index] = true;
-        adjacent_nodes[link.target.index + "-" + link.source.index] = true;
-    }
+    const adjacent_nodes = get_adj_list(data);
+
     function neigh(a, b) {
         return a === b || adjacent_nodes[a + "-" + b];
     }
