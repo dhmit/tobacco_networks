@@ -195,7 +195,7 @@ class MainView extends React.Component {
             person: "",
             docs: 0,
             words: 0,
-            show_info_panel: true,
+            show_info_panel: false,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -230,6 +230,9 @@ class MainView extends React.Component {
             this.setState({person: data.name});
             this.setState({docs: data.docs});
             this.setState({words: data.words});
+            if (this.state.show_info_panel == false) {
+                this.setState({show_info_panel: true});
+            }
         }
     }
 
