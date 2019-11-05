@@ -4,6 +4,15 @@
     font-size: 12px;
     pointer-events: None;
 }
-#toggle_button {
-    height: 30px;
+
+#info_button {
+    position: fixed;
+    right: 0;
+}
+
+#info_panel {
+    position: fixed;
+    right: 0;
+    background-color: darkgray;
+    z-index: 10;
 }

@@ -46,7 +46,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     const graph_y_center = graph_height / 2;
 
     const force_simulation = d3.forceSimulation(data.nodes)
-        .force("link", force_link)
+    force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(-5000))
         .force("center", d3.forceCenter(graph_x_center, graph_y_center))
         .force("x", d3.forceX(graph_x_center).strength(1))
@@ -59,6 +59,8 @@ export function create_graph(el, data, config, handle_viz_events) {
         .append('svg')
             .attr("width", graph_width)
             .attr("height", graph_height);
+
+
 
 
     // Create links
@@ -154,12 +156,12 @@ export function create_graph(el, data, config, handle_viz_events) {
     }
 
     function drag_started(d) {
+        nodes.on("mouseover", () => {}).on("mouseout", () => {});
         d3.event.sourceEvent.stopPropagation();
         if (!d3.event.active) {force_simulation.alphaTarget(0.3).restart();}
         d.fx = d.x;
         d.fy = d.y;
     }
-
     function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
@@ -182,6 +184,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
         d.fx = d.x;
         d.fy = d.y;
+        nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
     }
 
     // Setup adjacencies (maybe refactor this...)
@@ -206,6 +209,17 @@ export function create_graph(el, data, config, handle_viz_events) {
         nodes.style("opacity", 1);
         links.style("opacity", 1);
     }
+
+    d3.select(window).on("resize", resize);
+
+    function resize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        svg.attr("width", width).attr("height", height);
+        console.log(width,height);
+        force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
+        render_simulation(); // not sure if this makes a difference
+    }
 }
 
 /**
@@ -215,23 +229,6 @@ export function create_graph(el, data, config, handle_viz_events) {
  * @param data: object[]
  * @param config: object
  */
-
-// TODO: rewrite this for width resize
-export function update_graph_color(el, data, config) {
-    //D3 Code to update the chart
-    d3.select(el).selectAll('rect')
-        .transition()
-        .duration(1000)
-        .style('fill', config.color)
-}
-
-export function update_graph_size(el, data, config) {
-    // Re-compute the scales, and render the data points
-    // TODO: the main SVG should really have an ID
-    d3.select(el).select('svg')
-        .attr("width", config.width)
-        .attr("height", config.height);
-}
 
 /**
  * Returns information of the given id
@@ -302,7 +299,3 @@ export function update_focused_node(el, data, config) {
         });
         */
 }
-
-
-
-
