@@ -21,6 +21,3 @@ def get_clean_org_names():
             inv_name_dict[j] = official
         inv_name_dict[official] = official
     return inv_name_dict
-
-
-RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()

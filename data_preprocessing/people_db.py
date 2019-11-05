@@ -7,10 +7,9 @@ import pickle
 import unittest
 from collections import Counter, defaultdict
 from pathlib import Path
-
 from IPython import embed
-from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 from nameparser.config import CONSTANTS  # pylint: disable=C0411
+from name_preprocessing import RAW_ORG_TO_CLEAN_ORG_DICT
 from person import Person
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)

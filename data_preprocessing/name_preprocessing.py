@@ -14,7 +14,9 @@ from collections import Counter
 import pandas as pd
 from person import Person
 from people_db import PeopleDatabase
-from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
+from clean_org_names import get_clean_org_names
+
+RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
 
 
 def merge_names_from_file(name_file=Path('..', 'data', 'name_disambiguation',
