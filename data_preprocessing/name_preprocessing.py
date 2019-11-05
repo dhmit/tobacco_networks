@@ -14,17 +14,15 @@ from collections import Counter
 import pandas as pd
 from person import Person
 from people_db import PeopleDatabase
-from clean_org_names import get_clean_org_names
-
-RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()
+from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 
-def merge_names_from_file(name_file=Path('..', 'data', 'name_disambiguation',
-                                         'tobacco_names_raw_test_small.json')):
+def merge_names_from_file(name_file, out_file):
     """
     Creates a people db from reading json file (dict of raw names and counts) and merges people
     in it. Stores people db in a pickle file
-    :param name_file:
+    :param name_file: Path to json file
+    :param out_file: Path for output pickle file of the created PeopleDB
     :return:
     """
 
@@ -45,7 +43,7 @@ def merge_names_from_file(name_file=Path('..', 'data', 'name_disambiguation',
     people_db.create_positions_csv()
     people_db.merge_duplicates()
 
-    people_db.store_to_disk(Path('names_db_3.pickle'))
+    people_db.store_to_disk(out_file)
     print("Merging names took", time.time() - initial_time)
 
 #    with open('alias_to_name.json', 'w') as outfile:

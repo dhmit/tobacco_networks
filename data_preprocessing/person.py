@@ -1,5 +1,6 @@
 """
-The Person class parses raw name strings into Person objects
+The Person class represents a person's name and related information.
+Can parse raw name strings into Person objects
 """
 
 import copy
@@ -9,7 +10,7 @@ from collections import Counter
 
 from nameparser import HumanName
 from nameparser.config import CONSTANTS
-from name_preprocessing import RAW_ORG_TO_CLEAN_ORG_DICT
+from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
@@ -22,21 +23,21 @@ class Person:
         last (str): official parsed last name
         first (str): official parsed first name
         middle (str): official parsed middle name
-        position (str): most likely organization of the person
+        most_likely_org (str): most likely organization of the person
         positions (Counter of str): counter of all parsed organizations/extra information (must
                                     be clean official org names; can be in lower case)
         aliases (list of str): list of raw names that correspond to the person
-        count (int): number of times the alias appeared in the data
+        count (int): number of times the person appeared in the data
     """
     def __init__(self, name_raw=None, last='', first='', middle='',       # pylint: disable=R0913
-                 position='not calculated', positions=None, aliases=None, count=1):
+                 most_likely_org='not calculated', positions=None, aliases=None, count=1):
         """
         Returns a person object
         :param name_raw: raw string for the name (str)
         :param last: official parsed last name (if known) (str)
         :param first: official parsed first name (if known) (str)
         :param middle: official parsed middle name (if known) (str)
-        :param position: official organization (if known; default is "not calculated") (str)
+        :param most_likely_org: most likely org (if known; default "not calculated") (str)
         :param positions: compilation of organizations/other information (if known) (Counter of str)
         :param aliases: list of raw strings that correspond to this person object (if known) (
         list of str)
@@ -66,7 +67,7 @@ class Person:
         self.last = last.upper()
         self.first = first.upper()
         self.middle = middle.upper()
-        self.position = position
+        self.most_likely_org = most_likely_org
         # remove periods and convert to upper case
         if isinstance(positions, Counter):
             self.positions = positions
@@ -105,7 +106,7 @@ class Person:
         :return: a copied person object
         """
         return Person(last=self.last, first=self.first, middle=self.middle,
-                      position=self.position,
+                      most_likely_org=self.most_likely_org,
                       positions=copy.deepcopy(self.positions),
                       aliases=copy.deepcopy(self.aliases), count=self.count)
 
@@ -123,22 +124,29 @@ class Person:
         """
         return f'{self.last} {self.first} {self.middle}'
 
-    def set_likely_position(self):
+    def set_likely_position(self, official_org=True):
         """
-        Calculates and sets position as the organization with the highest number of count
+        Calculates and sets most_likely_org as the organization with the highest number of count
+        If official_org=True, returns official name of most common organization that is in
+        RAW_ORG_TO_CLEAN_ORG_DICT (if none of the raw orgs are in the dict, return the most common)
+        :param official_org: if consider only orgs in RAW_ORG_TO_CLEAN_ORG_DICT
         :return: None
         """
         likely_position = self.positions.most_common(1)[0][0]
-        self.position = likely_position
+        if official_org:
+            for name in self.positions.most_common():
+                if name[0] in RAW_ORG_TO_CLEAN_ORG_DICT:
+                    likely_position = RAW_ORG_TO_CLEAN_ORG_DICT[name[0]]
+                    break
+        self.most_likely_org = likely_position
 
     @staticmethod
     def remove_privlog_info(name_raw):
         """
+        Remove privlog tag and info from raw name (e.g. 'Temko, Stanley L [Privlog:] TEMKO,SL')
         :param name_raw: the raw name alias
         :return: name_raw with privlog info tag removed
         """
-        # remove privlog info, e.g. 'Temko, Stanley L [Privlog:] TEMKO,SL'. It confuses
-        # the name parser
         privlog_id = name_raw.find('[Privlog:]')
         if privlog_id == 0:
             return name_raw[privlog_id:]
@@ -151,7 +159,7 @@ class Person:
     def parse_raw_name(name_raw: str, count: int) -> (str, str, str, Counter):
         """
         Parses a (usually messy) raw name and returns
-        first, middle, last names and a set of extracted positions
+        first, middle, last names and a Counter of extracted positions
 
         :param name_raw: str
         :param count: int
@@ -250,10 +258,11 @@ class Person:
     def extract_raw_org_names_from_name(name_raw):
         """
         Finds raw org names like "B&W" in a name string, standarizes them (e.g. to
-        "Brown & Williamson," and returns the name without that raw org name
+        "Brown & Williamson," and returns the name without that raw org name + extracted positions
 
         :param name_raw: str
-        :return:
+        :return: str (name_raw without the raw org name), list of str (extracted clean
+        organization names)
         """
         extracted_positions = []
 
@@ -289,6 +298,7 @@ class Person:
                     # without last names. Skip those cases
                     if not name.last:
                         break
+
                     # if not, do extract raw_org
                     extracted_positions.append(clean_org)
                     name_raw = name_raw_test
@@ -313,27 +323,38 @@ class TestNameParser(unittest.TestCase):
     # ('Holtz', '', '', 'JACOB ALEXANDER, JACOB & MEDINGER')
 
     def test_parse_name_1(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         # Also test Person constructor: use list as positions
         self.assertEqual(Person(last="Teague", first="C", middle="E", positions=["JR"],
                                 aliases=["TEAGUE CE JR"]),
                          Person(name_raw="TEAGUE CE JR"))
 
     def test_parse_name_2(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         # Also test Person constructor: use Counter as positions
         self.assertEqual(Person(last="Teague", first="C", middle="E", positions=Counter(["JR"]),
                                 aliases=["teague ce jr"]),
                          Person(name_raw="teague ce jr"))
 
-    def test_parse_name_3(self):
-        # TODO parse JR & PHD in positions into two separate strings
-        # (currently parse them together, which is suboptimal but acceptable)
-        self.assertEqual(Person(last="Teague", first="Claude", middle="Edward",
-                                positions={"JR", "PHD"},
-                                aliases=["Teague, Claude Edward, Jr., Ph.D."]),
-                         Person(name_raw="Teague, Claude Edward, Jr., Ph.D."))
+    # TODO parse JR & PHD in positions into two separate strings
+    # def test_parse_name_3(self):
+    #     """
+    #     checks to see that a raw name is parsed correctly
+    #     """
+    #     # (currently parse them together, which is suboptimal but acceptable)
+    #     self.assertEqual(Person(last="Teague", first="Claude", middle="Edward",
+    #                             positions={"JR", "PHD"},
+    #                             aliases=["Teague, Claude Edward, Jr., Ph.D."]),
+    #                      Person(name_raw="Teague, Claude Edward, Jr., Ph.D."))
 
     def test_parse_name_4(self):
-        # Test parsing of dashes
+        """
+        checks to see that a raw name is parsed correctly: test parsing of dashes
+        """
         self.assertEqual(Person(last="Baker", first="T", middle="E",
                                 positions={"NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"},
                                 aliases=["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"]
@@ -341,45 +362,67 @@ class TestNameParser(unittest.TestCase):
                          Person(name_raw="BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"))
 
     def test_parse_name_5(self):
+        """
+        checks to see that a raw name is parsed correctly: test parsing of dashes
+        """
         self.assertEqual(Person(last="Baker", first="C", middle="J", positions={},
                                 aliases=["BAKER-cj"]),
                          Person(name_raw="BAKER-cj"))
 
     def test_parse_name_6(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         # Not specify positions: test to make sure Person constructor can handle no data
         # Here we assume for "Baker, JR", it is more likely that JR are initials and not junior
         self.assertEqual(Person(last="Baker", first="J", middle="R", aliases=["Baker, JR"]),
                          Person(name_raw="Baker, JR"))
 
     def test_parse_name_7(self):
-        # Test if parser ignores special characters
+        """
+        checks to see that a raw name is parsed correctly: test if parser ignores "#"
+        """
         self.assertEqual(Person(last="Dunn", first="W", middle="L", aliases=["DUNN WL #"]),
                          Person(name_raw="DUNN WL #"))
 
     def test_parse_name_8(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         self.assertEqual(Person(last="Dunn", first="W", middle="L", aliases=["Dunn, W. L."]),
                          Person(name_raw="Dunn, W. L."))
 
     def test_parse_name_9(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         self.assertEqual(Person(last="Temko", first="S", middle="L",
                                 positions=["COVINGTON & BURLING"],
                                 aliases=["TEMKO SL, COVINGTON AND BURLING"]),
                          Person(name_raw="TEMKO SL, COVINGTON AND BURLING"))
 
     def test_parse_name_10(self):
-        # Test if Privlog and information after it is disregarded
+        """
+        checks to see that a raw name is parsed correctly: test if Privlog is handled correctly
+        """
         self.assertEqual(Person(last="Temko", first="Stanley", middle="L",
                                 aliases=["Temko, Stanley L [Privlog:] TEMKO,SL"]),
                          Person(name_raw="Temko, Stanley L [Privlog:] TEMKO,SL"))
 
     def test_parse_name_11(self):
+        """
+        checks to see that a raw name is parsed correctly
+        """
         self.assertEqual(Person(last="Temko", first="S", middle="L",
                                 positions=["Covington & Burling"],
                                 aliases=["Temko-SL, Covington & Burling"]),
                          Person(name_raw="Temko-SL, Covington & Burling"))
 
     def test_parse_name_12(self):
-        # Test if info inside parentheses is taken as positions
+        """
+        checks to see that a raw name is parsed correctly:
+        test if info inside parentheses is taken as positions
+        """
         self.assertEqual(Person(last="Henson", first="A", middle="",
                                 positions=["AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL"],
                                 aliases=["HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL "
@@ -388,7 +431,10 @@ class TestNameParser(unittest.TestCase):
                                          "COUNSEL)"))
 
     def test_parse_name_13(self):
-        # Test if
+        """
+        checks to see that a raw name is parsed correctly:
+        test if only the first person's name is extracted if the raw string contain multiple people
+        """
         self.assertEqual(Person(last="Henson", first="A", middle="",
                                 positions=["CHADBOURNE, PARK, WHITESIDE & WOLFF"],
                                 aliases=["HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, "
@@ -396,21 +442,22 @@ class TestNameParser(unittest.TestCase):
                          Person(name_raw="HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, "
                                          "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"))
 
-    def test_parse_name_14(self):
-        """
-        checks to see that a raw name is parsed correctly
-        """
-        # TODO fix when multiple names are in the same string, not parse remaining name as positions
-        # This one does not discard the rest of the names and instead stores in positions
-        # (see test_parse_name_14b which correctly handles the situation, when there are more names)
-        print("positions: ", Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A.").positions)
-        self.assertEqual(Person(last="Holtzman", first="A", middle="", positions=[],
-                                aliases=["Holtzman, A.,  Murray, J. ,  Henson, A."]),
-                         Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A."))
+    # TODO fix when multiple names are in the same string, not parse remaining name as positions
+    # def test_parse_name_14(self):
+    #     """
+    #     checks to see that a raw name is parsed correctly:
+    #     test parsing of multiple people in raw string
+    #     """
+    #     # This one does not discard the rest of the names and instead stores in positions
+    #     # (see test_parse_name_14b which correctly handles it when there are more names)
+    #     print("positions: ", Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A.").positions)
+    #     self.assertEqual(Person(last="Holtzman", first="A", middle="", positions=[],
+    #                             aliases=["Holtzman, A.,  Murray, J. ,  Henson, A."]),
+    #                      Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A."))
 
     def test_parse_name_14b(self):
         """
-        checks to see that a raw name is parsed correctly
+        checks to see that a raw name is parsed correctly: comparison to 14
         """
         print("positions: ", Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
                                     "Pepples, E. ,  Stevens, A. ,  Witt, S.").positions)

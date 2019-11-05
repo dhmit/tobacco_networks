@@ -9,7 +9,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from IPython import embed
 from nameparser.config import CONSTANTS  # pylint: disable=C0411
-from name_preprocessing import RAW_ORG_TO_CLEAN_ORG_DICT
+from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 from person import Person
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
@@ -36,7 +36,6 @@ class PeopleDatabase:
         :param count: number of times name_raw appeared (int)
         :return: None
         """
-
         try:
             new_p = Person(name_raw=name_raw, count=count)
             self.people.add(new_p)
@@ -86,7 +85,7 @@ class PeopleDatabase:
     def store_to_disk(self, file_path: Path):
         """
         Stores a people db to disk as a pickle file
-        :param file_path: Path
+        :param file_path: Path for storing pickle file
         :return:
         """
 
@@ -96,7 +95,7 @@ class PeopleDatabase:
     def load_from_disk(self, file_path: Path):
         """
         Load a people db from a pickle file
-        :param file_path:
+        :param file_path: Path of pickle file
         :return:
         """
 
@@ -104,20 +103,22 @@ class PeopleDatabase:
             loaded_db = pickle.load(infile)
             self.people = loaded_db.people
 
-    def create_positions_csv(self):
+    def create_positions_csv(self, out_file=Path('..', 'data', 'name_disambiguation',
+                                                 'all_organizations.csv')):
         """
         Makes a Counter of all positions appearing in db,
         Translates this info into a CSV,
-        1st Col = raw name
+        1st Col = raw name of organization
         2nd Col = count in Counter
-        3rd Col = authoritative name – for now, just '' because we will fill in later
+        3rd Col = clean authoritative name
+        :param out_file: Path for output csv file
         :returns: None
         """
         positions_counter = Counter()
         for person in self.people:
             for position_name in person.positions:
                 positions_counter[position_name] += 1
-        with open('all_organizations.csv', mode='w') as csv_file:
+        with open(out_file, mode='w') as csv_file:
             fieldnames = ['Raw Name', 'Count', 'Authoritative Name']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
@@ -168,7 +169,7 @@ class PeopleDatabase:
         Iteratively tries to merge last names from the most common to the least common
         Returns true if it is finished,
 
-        :param last_names_dict:
+        :param last_names_dict: dict mapping last_name strings to list of
         :param last_name:
         :return:
         """
@@ -258,14 +259,16 @@ class PeopleDatabase:
             print('k')
             embed()
 
-    def set_people_position(self):
+    def set_people_position(self, official_org=True):
         """
         For each Person object in the people db, set its position as the most appeared
         organization name
+        If official_org=True, only consider most common organization that is in
+        RAW_ORG_TO_CLEAN_ORG_DICT (if none of the raw orgs are in the dict, return the most common)
         :return:
         """
         for person in self.people:
-            person.set_likely_position()
+            person.set_likely_position(official_org)
 
 
 class TestPeopleDB(unittest.TestCase):
@@ -281,7 +284,9 @@ class TestPeopleDB(unittest.TestCase):
         """
         Test if pickling works
         """
-        self.people_db.store_to_disk(Path('test.pickle'))
+        self.people_db.store_to_disk(Path('..', 'data', 'name_disambiguation',
+                                          'test_peopledb.pickle'))
         loaded_db = PeopleDatabase()
-        loaded_db.load_from_disk(Path('test.pickle'))
+        loaded_db.load_from_disk(Path('..', 'data', 'name_disambiguation',
+                                      'test_peopledb.pickle'))
         self.assertEqual(self.people_db, loaded_db)
