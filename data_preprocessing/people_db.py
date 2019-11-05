@@ -285,3 +285,7 @@ class TestPeopleDB(unittest.TestCase):
         loaded_db = PeopleDatabase()
         loaded_db.load_from_disk(Path('test.pickle'))
         self.assertEqual(self.people_db, loaded_db)
+
+
+if __name__ == '__main__':
+    unittest.main()
