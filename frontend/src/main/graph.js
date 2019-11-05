@@ -31,6 +31,7 @@ export function neigh(a, b, adjacent_nodes) {
  * @param handle_viz_events: function to pass visualization events back to react.
  */
 export function create_graph(el, data, config, handle_viz_events) {
+    console.log("The data", data);
     const graph_width = config.width;
     const graph_height = config.height;
 
