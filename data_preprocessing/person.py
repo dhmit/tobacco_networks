@@ -358,7 +358,7 @@ class TestNameParser(unittest.TestCase):
         self.assertEqual(Person(last="Baker", first="T", middle="E",
                                 positions={"NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"},
                                 aliases=["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"]
-                                ),
+                               ),
                          Person(name_raw="BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"))
 
     def test_parse_name_5(self):

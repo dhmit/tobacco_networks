@@ -183,7 +183,7 @@ class PeopleDatabase:
         for p1 in last_names_dict[last_name]:           # pylint: disable=C0103
             for p2 in last_names_dict[last_name]:       # pylint: disable=C0103
 
-                if p1 == p2:                            # pylint: disable=R1724
+                if p1 == p2:
                     continue
 
                 # if no first and middle name -> continue

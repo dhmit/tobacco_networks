@@ -165,7 +165,7 @@ def parse_column_person(column_name):
     names = []
     for name_split_semicolon in [n.strip() for n in column_name.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
-            if 0 < len(name_split_bar) < 100:
+            if 0 < len(name_split_bar) < 100:   # pylint: disable=C1801
                 names.append(name_split_bar)
     return names
 
@@ -181,7 +181,7 @@ def parse_column_org(column_org):
     for name_split_semicolon in [n.strip() for n in column_org.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
             for name_split_comma in [m.strip() for m in name_split_bar.split(',')]:
-                if 0 < len(name_split_comma) < 100:
+                if 0 < len(name_split_comma) < 100: # pylint: disable=C1801
                     organizations.append(name_split_comma)
 
     return organizations
