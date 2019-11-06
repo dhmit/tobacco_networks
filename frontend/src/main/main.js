@@ -26,14 +26,15 @@ class Controls extends React.Component {
         const search_string = e.target.value;
         this.props.update_searchbar_value(search_string);
 
+
         const nodes = this.props.nodes;
         for (const node of nodes) {
             const name = node.name;
             if (search_string.toLowerCase() === name.toLowerCase()) {
                 this.props.handle_searchbar_query(search_string);
             } else {
-                // probably do something like tell the user the name isn't in the list
-                return;
+            // probably do something like tell the user the name isn't in the list
+            //return;
             }
         }
     }
@@ -244,6 +245,7 @@ class MainView extends React.Component {
     handle_searchbar_query(search_string) {
         const config = {... this.state.config};
         config.search_person_name = search_string;
+        console.log("search_string was updated");
         config.viz_update_func = 'focus_node';
         this.setState({config: config})
     }
@@ -251,6 +253,7 @@ class MainView extends React.Component {
     update_searchbar_value(search_string) {
         const config = {...this.state.config};
         config.searchbar_value = search_string;
+        console.log("from update_searchbar_value: update detected")
         this.setState({config: config});
     }
 

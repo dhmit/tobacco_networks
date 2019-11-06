@@ -263,21 +263,32 @@ export function update_focused_node(el, data, config) {
         const name = config.search_person_name.toUpperCase();
         console.log("entered update focused node")
         // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
-        const neigh = []
-        const data_edges = data["links"];
 
-        for (const indx in data_edges){
-            const other_name_1 = data_edges[indx]["node1"].toUpperCase();
-            const other_name_2 = data_edges[indx]["node2"].toUpperCase();
-            if( other_name_1 != other_name_2) {
-                if (other_name_1 == name) {
-                    neigh.push(other_name_2);
-                }
-                else if(other_name_2 == name) {
-                    neigh.push(other_name_1);
-                }
-            }
-        }
+        const adjacent_nodes = get_adj_list(data)
+        const svg = d3.select(el);
+        console.log(svg.selectAll(".graph_node"));
+        //TODO: this currently set opacity for all nodes and edges to 0, need to change that for
+    // TODO: only the irrelevant nodes
+        svg.selectAll(".graph_node")
+            .style("opacity", function(o) {
+            return neigh(name, o.index, adjacent_nodes) ? 1 : 0;
+        });
+        svg.selectAll(".graph_link")
+            .style("opacity", function(o) {
+                return o.source.index === name || o.target.index === name ? 1 : 0;
+        });
+
+        //const nodes = svg.childNodes.selectAll("graph_node");
+
+
+        // nodes.style("opacity", function(o) {
+        //     return neigh(name, o.index, adjacent_nodes) ? 1 : 0;
+        // });
+        // links.style("opacity", function(o) {
+        //     return o.source.index === name || o.target.index === name ? 1 : 0;
+        // });
+
+
         // TODO: Fix selector
 
         // need to fix the selector
