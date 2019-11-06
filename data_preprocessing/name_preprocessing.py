@@ -17,16 +17,16 @@ from people_db import PeopleDatabase
 from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 
-def merge_names_from_file(name_file, out_file):
+def merge_names_from_json_file(json_name_file, people_db_pickle_file):
     """
     Creates a people db from reading json file (dict of raw names and counts) and merges people
     in it. Stores people db in a pickle file
-    :param name_file: Path to json file
-    :param out_file: Path for output pickle file of the created PeopleDB
+    :param json_name_file: Path to json file
+    :param people_db_pickle_file: Path for output pickle file of the created PeopleDB
     :return:
     """
 
-    with open(name_file, 'r') as infile:
+    with open(json_name_file, 'r') as infile:
         name_dict = json.load(infile)
 
     initial_time = time.time()
@@ -43,9 +43,8 @@ def merge_names_from_file(name_file, out_file):
     people_db.create_positions_csv()
     people_db.merge_duplicates()
 
-    people_db.store_to_disk(out_file)
+    people_db.store_to_disk(people_db_pickle_file)
     print("Merging names took", time.time() - initial_time)
-
 
 
 def parse_doc_metadata_csv(csv_path, people_db=None):
@@ -70,7 +69,7 @@ def parse_doc_metadata_csv(csv_path, people_db=None):
 
 
     :param csv_path: Path
-    :param db_to_add: PeopleDatabase
+    :param people_db: PeopleDatabase that information will be added to
     :return:
     """
 
@@ -84,7 +83,6 @@ def parse_doc_metadata_csv(csv_path, people_db=None):
     people_dicts = get_au_and_rc_by_document(csv_path, return_type='both')
 
     for person in people_dicts:
-
         orgs = set()
         for org in person['organization']:
             if org not in RAW_ORG_TO_CLEAN_ORG_DICT:
@@ -104,15 +102,6 @@ def parse_doc_metadata_csv(csv_path, people_db=None):
                 people_db.add_person_raw(alias)
             else:
                 alias_to_person_dict[alias].positions[org] += 1
-
-
-def load_documents_to_dataframe(path) -> pd.DataFrame:
-    """
-    Loads the Dunn documents into a pandas Dataframe
-    :return: pd.DataFrame
-    """
-    df = pd.read_csv(path).fillna('')  # pylint: disable=C0103
-    return df
 
 
 def get_au_and_rc_by_document(path, return_type='both') -> list:
@@ -135,17 +124,16 @@ def get_au_and_rc_by_document(path, return_type='both') -> list:
         raise ValueError(f'get_au_and_rc_by_document can only be called with return_type "both",'
                          f'"authors," or "recipients".')
 
-    df = load_documents_to_dataframe(path)  # pylint: disable=C0103
+    df = pd.read_csv(path).fillna('')  # pylint: disable=C0103
 
     authors_by_docs = []
+    recipients_by_docs = []
     for _, row in df.iterrows():
         authors_by_docs.append({
             'general': parse_column_person(row['au']),
             'organization': parse_column_org(row['au_org']),
             'person': parse_column_person(row['au_person'])
         })
-    recipients_by_docs = []
-    for _, row in df.iterrows():
         recipients_by_docs.append({
             'general': parse_column_person(row['rc']),
             'organization': parse_column_org(row['rc_org']),
@@ -187,7 +175,7 @@ def parse_column_org(column_org):
     for name_split_semicolon in [n.strip() for n in column_org.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
             for name_split_comma in [m.strip() for m in name_split_bar.split(',')]:
-                if 0 < len(name_split_comma) < 100: # pylint: disable=C1801
+                if 0 < len(name_split_comma) < 100:     # pylint: disable=C1801
                     organizations.append(name_split_comma)
 
     return organizations
