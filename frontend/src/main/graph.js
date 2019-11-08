@@ -32,10 +32,10 @@ export function create_graph(el, data, config, handle_viz_events) {
     const graph_x_center = graph_width / 2;
     const graph_y_center = graph_height / 2;
     // eslint-disable-next-line no-unused-vars
-    const centers = {"Phillip Morris International": [graph_width * -.25, graph_height * -.25],
-                     "British American Tobacco": [graph_width * .25, graph_height * -.25],
-                     "Imperial Tobacco": [graph_width * -.25, graph_height * .25],
-                     "Japan Tobacco": [graph_width*.25, graph_height*.25]};
+    const centers = {"Phillip Morris International": [graph_width * .25, graph_height * .25],
+                     "British American Tobacco": [graph_width * .75, graph_height * .25],
+                     "Imperial Tobacco": [graph_width * .25, graph_height * .75],
+                     "Japan Tobacco": [graph_width*.75, graph_height*.75]};
 
     // TODO: write an object or function that iterates over nodes and generates four lists each
     //  with dif affiliations
@@ -51,7 +51,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     function sortAffiliations(nodes) {
         console.log(nodes)
         for (let i = 0; i < nodes.length; i++) {
-            console.log(nodes[i].affiliation);
+            // console.log(nodes[i].affiliation);
             if (nodes[i].affiliation == "Phillip Morris International") {
                 PMInodes.push(nodes[i]);
             } else if (nodes[i].affiliation == "British American Tobacco") {
@@ -76,7 +76,6 @@ export function create_graph(el, data, config, handle_viz_events) {
         .on("tick", render_simulation);  // what to do when the sim updates
 
     sortAffiliations(force_simulation.nodes());
-    // call this with whatever argument will allow me to iterate over nodes
 
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
@@ -171,8 +170,26 @@ export function create_graph(el, data, config, handle_viz_events) {
     function render_simulation() {
         // Update node positions
         nodes.attr("transform", (d) => {
-            // console.log(d);
-            `translate(${d.x}, ${d.y})`
+            if (d["affiliation"] == "Phillip Morris International") {
+                d.x = centers["Phillip Morris International"][0];
+                d.y = centers["Phillip Morris International"][1];
+                `translate(${d.x}, ${d.y})`
+            }
+            if (d["affiliation"] == "British American Tobacco") {
+                d.x = centers["British American Tobacco"][0];
+                d.y = centers["British American Tobacco"][1];
+                `translate(${d.x}, ${d.y})`
+            }
+            if (d["affiliation"] == "Imperial Tobacco") {
+                d.x = centers["Imperial Tobacco"][0];
+                d.y = centers["Imperial Tobacco"][1];
+                `translate(${d.x}, ${d.y})`
+            }
+            if (d["affiliation"] == "Japan Tobacco") {
+                d.x = centers["Japan Tobacco"][0];
+                d.y = centers["Japan Tobacco"][1];
+                `translate(${d.x}, ${d.y})`
+            }
         } );
 
         // Update link positions
