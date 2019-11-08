@@ -170,25 +170,25 @@ export function create_graph(el, data, config, handle_viz_events) {
     function render_simulation() {
         // Update node positions
         nodes.attr("transform", (d) => {
-            if (d["affiliation"] == "Phillip Morris International") {
+            if (d["affiliation"] === "Phillip Morris International") {
                 d.x = centers["Phillip Morris International"][0];
                 d.y = centers["Phillip Morris International"][1];
-                `translate(${d.x}, ${d.y})`
+                return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "British American Tobacco") {
                 d.x = centers["British American Tobacco"][0];
                 d.y = centers["British American Tobacco"][1];
-                `translate(${d.x}, ${d.y})`
+                return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "Imperial Tobacco") {
                 d.x = centers["Imperial Tobacco"][0];
                 d.y = centers["Imperial Tobacco"][1];
-                `translate(${d.x}, ${d.y})`
+                return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "Japan Tobacco") {
                 d.x = centers["Japan Tobacco"][0];
                 d.y = centers["Japan Tobacco"][1];
-                `translate(${d.x}, ${d.y})`
+                return `translate(${d.x}, ${d.y})`
             }
         } );
 
