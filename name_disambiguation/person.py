@@ -10,7 +10,7 @@ from collections import Counter
 
 from nameparser import HumanName
 from nameparser.config import CONSTANTS
-from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
+from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
