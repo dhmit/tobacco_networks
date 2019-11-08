@@ -86,7 +86,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         .enter()
             .append("g")
             .attr("class", "graph_node")
-            .attr('id', (d) => d.name.replace(",",""));  // TODO: replace this with a fixed key
+            .attr('id', (d) => d.name);  // TODO: replace this with a fixed key
     // rather than
     // name
 
@@ -263,60 +263,37 @@ export function get_information(data, name){
  * @param name: String
  */
 export function update_focused_node(el, data, config) {
-        const name = config.search_person_name.toUpperCase().replace(",","");
+            //.replace(",","");
         console.log("entered update focused node");
-        const node = d3.select("#"+name).datum().index;
-        console.log(node);
+       // const node = d3.select("#"+name).datum().index;
+        //console.log(node);
         //const focus_node = d3.select("#DUNN,WL");
-
         //console.log("here is the node: "+focus_node);
         //console.log(focus_node);
         // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
-
-        const adjacent_nodes = get_adj_list(data);
+        const name = config.search_person_name.toUpperCase();
         const svg = d3.select(el);
-        //console.log(svg.selectAll(".graph_node"));
-        //TODO: this currently set opacity for all nodes and edges to 0, need to change that for
-    // TODO: only the irrelevant nodes
+        const adj_data = data["adjacent_nodes"];
+        console.log(adj_data);
         svg.selectAll(".graph_node")
             .style("opacity", function(o) {
-            return neigh(node, o.index, adjacent_nodes) ? 1 : 0;
-
+                const other_name = o.name;
+                if (other_name+"-"+name in adj_data){
+                    return 1;
+                }
+                else if (other_name == name){
+                    return 1;
+                }
+                return 0;
         });
         svg.selectAll(".graph_link")
             .style("opacity", function(o) {
-                return o.source.index === node || o.target.index === node ? 1 : 0;
+                const source = o.source.name;
+                //const target = o.target.name;
+                if (name==source){
+                    return 1;
+                }
+                return 0;
         });
 
-        //const nodes = svg.childNodes.selectAll("graph_node");
-
-
-        // nodes.style("opacity", function(o) {
-        //     return neigh(name, o.index, adjacent_nodes) ? 1 : 0;
-        // });
-        // links.style("opacity", function(o) {
-        //     return o.source.index === name || o.target.index === name ? 1 : 0;
-        // });
-
-
-        // TODO: Fix selector
-
-        // need to fix the selector
-
-
-        /*
-        console.log(node);
-        const index = node.datum().index;
-        const nodes = d3.selectAll(".graph_node");
-
-        nodes.style("opacity", function(o) {
-            if ( o in neigh) {
-                return o.source.index ? 1:0;
-            }
-        });
-        const links = d3.selectAll(".graph_link");
-        links.style("opacity", function(o) {
-            return o.source.index === index || o.target.index === index ? 1 : 0;
-        });
-        */
 }
