@@ -61,9 +61,6 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("width", graph_width)
             .attr("height", graph_height);
 
-
-
-
     // Create links
     const links = svg
         .append("g")
@@ -245,7 +242,6 @@ export function get_information(data, name){
     name = name.toUpperCase();
     const data_nodes = data["nodes"];
     let name_info = {};
-
     for(const indx in data_nodes){
         const current_name = data_nodes[indx];
         if (current_name["name"]  == name){
@@ -263,14 +259,7 @@ export function get_information(data, name){
  * @param name: String
  */
 export function update_focused_node(el, data, config) {
-            //.replace(",","");
         console.log("entered update focused node");
-       // const node = d3.select("#"+name).datum().index;
-        //console.log(node);
-        //const focus_node = d3.select("#DUNN,WL");
-        //console.log("here is the node: "+focus_node);
-        //console.log(focus_node);
-        // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
         const name = config.search_person_name.toUpperCase();
         const svg = d3.select(el);
         const adj_data = data["adjacent_nodes"];
@@ -289,8 +278,9 @@ export function update_focused_node(el, data, config) {
         svg.selectAll(".graph_link")
             .style("opacity", function(o) {
                 const source = o.source.name;
-                //const target = o.target.name;
-                if (name==source){
+                const target = o.target.name;
+
+                if (name == source || name == target){
                     return 1;
                 }
                 return 0;
