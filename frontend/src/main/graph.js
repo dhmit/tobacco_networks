@@ -32,20 +32,19 @@ export function create_graph(el, data, config, handle_viz_events) {
     const graph_x_center = graph_width / 2;
     const graph_y_center = graph_height / 2;
     // eslint-disable-next-line no-unused-vars
-    const centers = {"Phillip Morris International": [graph_width * .25, graph_height * .25],
-                     "British American Tobacco": [graph_width * .75, graph_height * .25],
-                     "Imperial Tobacco": [graph_width * .25, graph_height * .75],
-                     "Japan Tobacco": [graph_width*.75, graph_height*.75]};
+    const centers = {"Phillip Morris International": [graph_width * -.25, graph_height * -.25],
+                     "British American Tobacco": [graph_width * .25, graph_height * -.25],
+                     "Imperial Tobacco": [graph_width * -.25, graph_height * .25],
+                     "Japan Tobacco": [graph_width*.25, graph_height*.25]};
 
     const force_simulation = d3.forceSimulation(data.nodes)
     force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(-5000))
         .force("center", d3.forceCenter(graph_x_center, graph_y_center))
-
         .force("x", d3.forceX(graph_x_center).strength(1))
         .force("y", d3.forceY(graph_y_center).strength(1))
         .on("tick", render_simulation);  // what to do when the sim updates
-    
+
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
         .append('svg')
@@ -137,23 +136,23 @@ export function create_graph(el, data, config, handle_viz_events) {
         // Update node positions
         nodes.attr("transform", (d) => {
             if (d["affiliation"] === "Phillip Morris International") {
-                d.x = centers["Phillip Morris International"][0];
-                d.y = centers["Phillip Morris International"][1];
+                d.x += centers["Phillip Morris International"][0];
+                d.y += centers["Phillip Morris International"][1];
                 return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "British American Tobacco") {
-                d.x = centers["British American Tobacco"][0];
-                d.y = centers["British American Tobacco"][1];
+                d.x += centers["British American Tobacco"][0];
+                d.y += centers["British American Tobacco"][1];
                 return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "Imperial Tobacco") {
-                d.x = centers["Imperial Tobacco"][0];
-                d.y = centers["Imperial Tobacco"][1];
+                d.x += centers["Imperial Tobacco"][0];
+                d.y += centers["Imperial Tobacco"][1];
                 return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "Japan Tobacco") {
-                d.x = centers["Japan Tobacco"][0];
-                d.y = centers["Japan Tobacco"][1];
+                d.x += centers["Japan Tobacco"][0];
+                d.y += centers["Japan Tobacco"][1];
                 return `translate(${d.x}, ${d.y})`
             }
         } );
