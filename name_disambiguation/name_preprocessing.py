@@ -12,9 +12,10 @@ from pathlib import Path
 import unittest
 from collections import Counter
 import pandas as pd
-from person import Person
-from people_db import PeopleDatabase
-from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
+from name_disambiguation.person import Person
+from name_disambiguation.people_db import PeopleDatabase
+from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
+from name_disambiguation.config import DATA_PATH
 
 
 def merge_names_from_json_file(json_name_file, people_db_pickle_file):
@@ -195,7 +196,7 @@ class TestAddPositions(unittest.TestCase):
         """
         Test add_au_and_rc_function
         """
-        csv_path = Path('..', 'data', 'name_disambiguation', 'test_docs.csv')
+        csv_path = Path(DATA_PATH, 'name_disambiguation', 'test_docs.csv')
         parse_doc_metadata_csv(csv_path, people_db=self.people_db)
 
         expected_people_db = PeopleDatabase()
