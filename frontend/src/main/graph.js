@@ -49,7 +49,9 @@ export function create_graph(el, data, config, handle_viz_events) {
 
     // eslint-disable-next-line no-unused-vars
     function sortAffiliations(nodes) {
+        console.log(nodes)
         for (let i = 0; i < nodes.length; i++) {
+            console.log(nodes[i].affiliation);
             if (nodes[i].affiliation == "Phillip Morris International") {
                 PMInodes.push(nodes[i]);
             } else if (nodes[i].affiliation == "British American Tobacco") {
@@ -63,7 +65,6 @@ export function create_graph(el, data, config, handle_viz_events) {
             }
         }
     }
-    sortAffiliations(); // call this with whatever argument will allow me to iterate over nodes
 
     const force_simulation = d3.forceSimulation(data.nodes)
     force_simulation.force("link", force_link)
@@ -74,6 +75,8 @@ export function create_graph(el, data, config, handle_viz_events) {
         .force("y", d3.forceY(graph_y_center).strength(1))
         .on("tick", render_simulation);  // what to do when the sim updates
 
+    sortAffiliations(force_simulation.nodes());
+    // call this with whatever argument will allow me to iterate over nodes
 
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
@@ -168,7 +171,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     function render_simulation() {
         // Update node positions
         nodes.attr("transform", (d) => {
-            console.log(d);
+            // console.log(d);
             `translate(${d.x}, ${d.y})`
         } );
 
