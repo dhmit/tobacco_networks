@@ -17,16 +17,16 @@ from people_db import PeopleDatabase
 from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 
-def merge_names_from_file(name_file, out_file):
+def merge_names_from_json_file(json_name_file, people_db_pickle_file):
     """
     Creates a people db from reading json file (dict of raw names and counts) and merges people
     in it. Stores people db in a pickle file
-    :param name_file: Path to json file
-    :param out_file: Path for output pickle file of the created PeopleDB
+    :param json_name_file: Path to json file
+    :param people_db_pickle_file: Path for output pickle file of the created PeopleDB
     :return:
     """
 
-    with open(name_file, 'r') as infile:
+    with open(json_name_file, 'r') as infile:
         name_dict = json.load(infile)
 
     initial_time = time.time()
@@ -43,116 +43,110 @@ def merge_names_from_file(name_file, out_file):
     people_db.create_positions_csv()
     people_db.merge_duplicates()
 
-    people_db.store_to_disk(out_file)
+    people_db.store_to_disk(people_db_pickle_file)
     print("Merging names took", time.time() - initial_time)
 
-#    with open('alias_to_name.json', 'w') as outfile:
-#        json.dump(people_db.get_alias_to_name(), outfile)
 
-
-def add_au_and_rc_org(db_to_add, path):
+def parse_doc_metadata_csv(csv_path, people_db=None):
     """
-    Input are a people database and a path to a document
-    Returns None
+    Parses the metadata for each document in a csv of tobacco document metadata
 
     For each document belonging to a certain company,
     finds Person that that document author alias maps to,
     and adds that company to the position counter of that Person
 
-    :param db_to_add: a PeopleDatabase, path: path to authors/orgs document
-    :param path: file path to the docs csv file that includes au_org & rc_org
-    :return: None
+     Goes through documents and updates authors/recipients' positions
+     based on organization associated with document
+
+     Adds people to db_current if their alias is associated with a doc but is not in
+     db_current yet
+
+     Ignores:
+         organizations not in RAW_ORG_TO_CLEAN_ORG_DICT
+         docs with more than 1 organization
+         docs with more than 4 recipients
+         docs with no people associated with them
+
+
+    :param csv_path: Path
+    :param people_db: PeopleDatabase that information will be added to
+    :return:
     """
 
-    alias_to_person_dict = db_to_add.get_alias_to_person_dict()
+    if not people_db:
+        people_db = PeopleDatabase()
 
-    def update_au_and_rc_positions(db_current, au_or_rc, relevant_dicts):
-        """
-        Goes through documents and updates authors/recipients' positions
-        based on organization associated with document
+    alias_to_person_dict = people_db.get_alias_to_person_dict()
 
-        Adds people to db_current if their alias is associated with a doc but is not in
-        db_current yet
+    # get lists of dicts for authors and recipients. each of them has 3 fields:
+    # general, person, organization
+    people_dicts = get_au_and_rc_by_document(csv_path, return_type='both')
 
-        Ignores:
-            organizations not in RAW_ORG_TO_CLEAN_ORG_DICT
-            docs with more than 1 organization
-            docs with more than 4 recipients
-            docs with no people associated with them
-
-        :param db_current: People Database
-        :param au_or_rc: string ('au' or 'rc')– specifies whether we're looking at authors or
-        recipients
-        :param relevant_dicts: 2 item list, 1st = dict with authors and organizations, by doc,
-        2nd = dict of recipients and organizations by doc.
-        :return: None
-        """
-        if au_or_rc == 'au':
-            relevant_person = 'au_person'
-            relevant_org = 'au_org'
-        else:
-            relevant_person = 'rc_person'
-            relevant_org = 'rc_org'
-
-        for doc in relevant_dicts:
-            orgs = set()
-            for org in doc[relevant_org]:
-                if org not in RAW_ORG_TO_CLEAN_ORG_DICT:
-                    continue
-                orgs.add(RAW_ORG_TO_CLEAN_ORG_DICT[org])
-
-            if len(orgs) != 1:
+    for person in people_dicts:
+        orgs = set()
+        for org in person['organization']:
+            if org not in RAW_ORG_TO_CLEAN_ORG_DICT:
                 continue
-            org = list(orgs)[0]
-            aliases = doc[relevant_person]
-            aliases.extend(doc[au_or_rc])
-            if au_or_rc == 'rc' and len(aliases) >= 5:
-                continue
-            if not aliases:
-                continue
-            for alias in aliases:
-                if alias not in alias_to_person_dict:
-                    db_current.add_person_raw(alias)
-                else:
-                    alias_to_person_dict[alias].positions[org] += 1
+            orgs.add(RAW_ORG_TO_CLEAN_ORG_DICT[org])
 
-    au_dicts, rc_dicts = get_au_and_rc_by_document(path)
-    update_au_and_rc_positions(db_to_add, 'au', au_dicts)
-    update_au_and_rc_positions(db_to_add, 'rc', rc_dicts)
+        if len(orgs) != 1:
+            continue
+        org = list(orgs)[0]
+        aliases = person['person']
+        aliases.extend(person['general'])
+        if not aliases or len(aliases) >= 4:
+            continue
 
-
-def load_documents_to_dataframe(path) -> pd.DataFrame:
-    """
-    Loads the Dunn documents into a pandas Dataframe
-    :return: pd.DataFrame
-    """
-    df = pd.read_csv(path).fillna('')  # pylint: disable=C0103
-    return df
+        for alias in aliases:
+            if alias not in alias_to_person_dict:
+                people_db.add_person_raw(alias)
+            else:
+                alias_to_person_dict[alias].positions[org] += 1
 
 
-def get_au_and_rc_by_document(path) -> list:
+def get_au_and_rc_by_document(path, return_type='both') -> list:
     """
     Creates a list of documents such that each element consists of a dict with keys
+
+    returns either just information about the authors, the recipients, or both
+
+    Note(SR): to give authors and recipients the same structure, I have renamed 'au' and 'rc'
+    to general.
+
     'au', 'au_org', 'au_person' OR 'rc', 'rc_org', 'rc_person'.
     These keys map to info about the authors/recipients and organizations associated with docs
+    :param path: Path
+    :param return_type: str
     :return: list
     """
-    df = load_documents_to_dataframe(path)  # pylint: disable=C0103
+
+    if return_type not in ['authors', 'recipients', 'both']:
+        raise ValueError(f'get_au_and_rc_by_document can only be called with return_type "both",'
+                         f'"authors," or "recipients".')
+
+    df = pd.read_csv(path).fillna('')  # pylint: disable=C0103
+
     authors_by_docs = []
-    for _, row in df.iterrows():
-        authors_by_docs.append({
-            'au': parse_column_person(row['au']),
-            'au_org': parse_column_org(row['au_org']),
-            'au_person': parse_column_person(row['au_person'])
-        })
     recipients_by_docs = []
     for _, row in df.iterrows():
-        recipients_by_docs.append({
-            'rc': parse_column_person(row['rc']),
-            'rc_org': parse_column_org(row['rc_org']),
-            'rc_person': parse_column_person(row['rc_person'])
+        authors_by_docs.append({
+            'general': parse_column_person(row['au']),
+            'organization': parse_column_org(row['au_org']),
+            'person': parse_column_person(row['au_person'])
         })
-    return [authors_by_docs, recipients_by_docs]
+        recipients_by_docs.append({
+            'general': parse_column_person(row['rc']),
+            'organization': parse_column_org(row['rc_org']),
+            'person': parse_column_person(row['rc_person'])
+        })
+
+    if return_type == 'authors':
+        return authors_by_docs
+    elif return_type == 'recipients':
+        return recipients_by_docs
+    # if we return both, we just add recipients to the authors list
+    else:
+        return authors_by_docs + recipients_by_docs
 
 
 def parse_column_person(column_name):
@@ -181,7 +175,7 @@ def parse_column_org(column_org):
     for name_split_semicolon in [n.strip() for n in column_org.split(';')]:
         for name_split_bar in [m.strip() for m in name_split_semicolon.split('|')]:
             for name_split_comma in [m.strip() for m in name_split_bar.split(',')]:
-                if 0 < len(name_split_comma) < 100: # pylint: disable=C1801
+                if 0 < len(name_split_comma) < 100:     # pylint: disable=C1801
                     organizations.append(name_split_comma)
 
     return organizations
@@ -197,12 +191,12 @@ class TestAddPositions(unittest.TestCase):
         for name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan']:
             self.people_db.add_person_raw(name, 1)
 
-    def test_add_au_and_rc_org(self):
+    def test_parse_doc_metadata_csv(self):
         """
         Test add_au_and_rc_function
         """
-        add_au_and_rc_org(self.people_db, Path('..', 'data', 'name_disambiguation',
-                                               'test_docs.csv'))
+        csv_path = Path('..', 'data', 'name_disambiguation', 'test_docs.csv')
+        parse_doc_metadata_csv(csv_path, people_db=self.people_db)
 
         expected_people_db = PeopleDatabase()
         raquel = Person('Garcia, Raquel')
@@ -216,9 +210,6 @@ class TestAddPositions(unittest.TestCase):
         stephan = Person('Risi, Stephan')
         stephan.positions = Counter(["Philip Morris", "Philip Morris"])
         expected_people_db.people.add(stephan)
-
-        print(self.people_db)
-        print(expected_people_db)
 
         self.assertEqual(self.people_db, expected_people_db)
 
