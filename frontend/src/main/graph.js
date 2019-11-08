@@ -63,6 +63,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             }
         }
     }
+    sortAffiliations(); // call this with whatever argument will allow me to iterate over nodes
 
     const force_simulation = d3.forceSimulation(data.nodes)
     force_simulation.force("link", force_link)
