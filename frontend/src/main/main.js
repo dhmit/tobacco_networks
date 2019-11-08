@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { getCookie } from '../common'
+import * as d3 from 'd3';
 import { create_graph, update_focused_node } from './graph.js'
 import './main.css';
 
@@ -88,6 +89,7 @@ class Viz extends React.Component {
             this.props.config,
             this.props.handle_viz_events,
         );
+        window.d3 = d3;
     }
 
     componentDidUpdate() {
