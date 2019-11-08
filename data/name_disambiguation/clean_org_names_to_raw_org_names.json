@@ -63,6 +63,7 @@
     "Brown & Williamson": [
         "B&W",
         "BW",
+        "B W",
         "Brown & Williamson Tobacco Corporation",
         "B>W",
         "BW, BROWN & WILLIAMSON",
@@ -115,7 +116,8 @@
     "Covington & Burling": [
         "COVINGTON BURLING",
         "COVINGTON & BURLING, TOBACCO INSTITUTE OUTSIDE COUNSEL",
-        "COVINGTON & BURLING"
+        "COVINGTON & BURLING",
+        "COVINGTON AND BURLING"
     ],
     "Creighton University": [
         "CREIGHTON UNIV",
@@ -159,13 +161,27 @@
         "HEBREW UNIV",
         "HEBREW UNIV JERUSALEM"
     ],
+    "Imperial Tobacco": [
+        "ITC",
+        "IMPERIAL TOBACCO COMPANY",
+        "IMPERIAL MANAGEMENT",
+        "IMPERIAL TOBACCO MANAGEMENT",
+        "IMPERIAL TOBACCO LTD.",
+        "IMPERIAL TOBACCO LIMITED",
+        "IMPERIAL TOBACCO LIMITED, CANADA",
+        "IMPERIAL TOBACCO LIMITED, MONTREAL"
+    ],
     "Inbifo": [
         "INBIFO, INSTITUT FUR BIOLOGISCHE FORSCHUNG"
+    ],
+    "Jacob & Medinger": [
+        "JACOB AND MEDINGER"
     ],
     "Johns Hopkins University": [
         "JOHNS HOPKINS UNIV",
         "JOHNS HOPKINS UNIV SCHOOL MEDICINE",
-        "JOHNS HOPKINS UNIV SCHOOL OF MEDICINE"
+        "JOHNS HOPKINS UNIV SCHOOL OF MEDICINE",
+        "JOHNS HOPKINS SCHOOL OF HYGIENE"
     ],
     "Jones, Day, Reavis & Pogue": [
         "JONES DAY",
@@ -257,7 +273,8 @@
         "PM",
         "PHILIP MORRIS USA",
         "PMI, PHILIP MORRIS INTERNATIONAL",
-        "PM INC"
+        "PM INC",
+        "PHILIP MORRIS RESEARCH CENTER"
     ],
     "Princeton University": [
         "PRINCETON UNIV"
@@ -271,7 +288,8 @@
         "RJR NABISCO",
         "RJR, R.J.REYNOLDS",
         "RJR TOB",
-        "RJ REYNOLDS TOBACCO COMPANY"
+        "RJ REYNOLDS TOBACCO COMPANY",
+        "RJR BOWMAN GRAY TECHNICAL CENTER"
     ],
     "Rockefeller University": [
         "ROCKEFELLER UNIV",
