@@ -32,7 +32,6 @@ class EdgeSerializer(serializers.Serializer):
     docs = serializers.IntegerField(read_only=True)
     words = serializers.IntegerField(read_only=True)
 
-
     def create(self, validated_data):
         """ We will not create new objects using this serializer """
 
