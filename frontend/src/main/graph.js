@@ -86,7 +86,9 @@ export function create_graph(el, data, config, handle_viz_events) {
         .enter()
             .append("g")
             .attr("class", "graph_node")
-            .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
+            .attr('id', (d) => d.name.replace(",",""));  // TODO: replace this with a fixed key
+    // rather than
+    // name
 
     nodes  // bind event handlers for nodes
         .call(
@@ -261,12 +263,14 @@ export function get_information(data, name){
  * @param name: String
  */
 export function update_focused_node(el, data, config) {
-        const name = config.search_person_name.toUpperCase();
+        const name = config.search_person_name.toUpperCase().replace(",","");
         console.log("entered update focused node");
-        const focus_node = d3.select(".graph_node");
+        const node = d3.select("#"+name).datum().index;
+        console.log(node);
+        //const focus_node = d3.select("#DUNN,WL");
 
-        console.log("here is the node: "+focus_node);
-        console.log(focus_node);
+        //console.log("here is the node: "+focus_node);
+        //console.log(focus_node);
         // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
 
         const adjacent_nodes = get_adj_list(data);
@@ -276,11 +280,12 @@ export function update_focused_node(el, data, config) {
     // TODO: only the irrelevant nodes
         svg.selectAll(".graph_node")
             .style("opacity", function(o) {
-            return neigh(focus_node.datum().index, o.index, adjacent_nodes) ? 1 : 0;
+            return neigh(node, o.index, adjacent_nodes) ? 1 : 0;
+
         });
         svg.selectAll(".graph_link")
             .style("opacity", function(o) {
-                return o.source.index === name || o.target.index === name ? 1 : 0;
+                return o.source.index === node || o.target.index === node ? 1 : 0;
         });
 
         //const nodes = svg.childNodes.selectAll("graph_node");
@@ -297,8 +302,7 @@ export function update_focused_node(el, data, config) {
         // TODO: Fix selector
 
         // need to fix the selector
-        const node = d3.select("#"+name);
-        console.log(node);
+
 
         /*
         console.log(node);
