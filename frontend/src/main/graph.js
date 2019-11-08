@@ -31,6 +31,11 @@ export function create_graph(el, data, config, handle_viz_events) {
                          .strength(1);
     const graph_x_center = graph_width / 2;
     const graph_y_center = graph_height / 2;
+    // eslint-disable-next-line no-unused-vars
+    const centers = {"Phillip Morris International": [graph_width * -.25, graph_height * -.25],
+                     "British American Tobacco": [graph_width * .25, graph_height * -.25],
+                     "Imperial Tobacco": [graph_width * -.25, graph_height * .25],
+                     "Japan Tobacco": [graph_width*.25, graph_height*.25]};
 
     // TODO: write an object or function that iterates over nodes and generates four lists each
     //  with dif affiliations
@@ -42,6 +47,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     let ITnodes = [];
     let JPnodes = [];
 
+    // eslint-disable-next-line no-unused-vars
     function sortAffiliations(nodes) {
         for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].affiliation == "Phillip Morris International") {
@@ -62,6 +68,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(-5000))
         .force("center", d3.forceCenter(graph_x_center, graph_y_center))
+
         .force("x", d3.forceX(graph_x_center).strength(1))
         .force("y", d3.forceY(graph_y_center).strength(1))
         .on("tick", render_simulation);  // what to do when the sim updates
@@ -159,7 +166,10 @@ export function create_graph(el, data, config, handle_viz_events) {
     // This function is called whenever the simulation updates
     function render_simulation() {
         // Update node positions
-        nodes.attr("transform", (d) => `translate(${d.x}, ${d.y})` );
+        nodes.attr("transform", (d) => {
+            console.log(d);
+            `translate(${d.x}, ${d.y})`
+        } );
 
         // Update link positions
         links.attr("x1", (d) => d.source.x)
