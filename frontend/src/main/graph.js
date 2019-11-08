@@ -37,35 +37,6 @@ export function create_graph(el, data, config, handle_viz_events) {
                      "Imperial Tobacco": [graph_width * .25, graph_height * .75],
                      "Japan Tobacco": [graph_width*.75, graph_height*.75]};
 
-    // TODO: write an object or function that iterates over nodes and generates four lists each
-    //  with dif affiliations
-    // TODO: write a function that performs force simulations based on parameters instead of
-    //  hard coding 4 different force simulations
-
-    let PMInodes = [];
-    let BATnodes = [];
-    let ITnodes = [];
-    let JPnodes = [];
-
-    // eslint-disable-next-line no-unused-vars
-    function sortAffiliations(nodes) {
-        console.log(nodes)
-        for (let i = 0; i < nodes.length; i++) {
-            // console.log(nodes[i].affiliation);
-            if (nodes[i].affiliation == "Phillip Morris International") {
-                PMInodes.push(nodes[i]);
-            } else if (nodes[i].affiliation == "British American Tobacco") {
-                BATnodes.push(nodes[i]);
-            } else if (nodes[i].affiliation == "Imperial Tobacco") {
-                ITnodes.push(nodes[i]);
-            } else if (nodes[i].affiliation == "Japan Tobacco") {
-                JPnodes.push(nodes[i]);
-            } else {
-                console.log('error: datum has no affiliation');
-            }
-        }
-    }
-
     const force_simulation = d3.forceSimulation(data.nodes)
     force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(-5000))
@@ -74,17 +45,12 @@ export function create_graph(el, data, config, handle_viz_events) {
         .force("x", d3.forceX(graph_x_center).strength(1))
         .force("y", d3.forceY(graph_y_center).strength(1))
         .on("tick", render_simulation);  // what to do when the sim updates
-
-    sortAffiliations(force_simulation.nodes());
-
+    
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
         .append('svg')
             .attr("width", graph_width)
             .attr("height", graph_height);
-
-
-
 
     // Create links
     const links = svg
