@@ -203,7 +203,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         });
 
         // TODO: Fix this to pass in the node name
-        get_information(data, "DUNN,WL");
+        //get_information(data, "DUNN,WL");
     }
 
     function unfocus_node() {
@@ -259,11 +259,9 @@ export function get_information(data, name){
  * @param name: String
  */
 export function update_focused_node(el, data, config) {
-        console.log("entered update focused node");
         const name = config.search_person_name.toUpperCase();
         const svg = d3.select(el);
         const adj_data = data["adjacent_nodes"];
-        console.log(adj_data);
         svg.selectAll(".graph_node")
             .style("opacity", function(o) {
                 const other_name = o.name;
