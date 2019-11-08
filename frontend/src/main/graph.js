@@ -194,6 +194,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     function focus_node() {
         const node = d3.select(d3.event.target);
         const index = node.datum().index;
+        console.log(index);
 
         nodes.style("opacity", function(o) {
             return neigh(index, o.index, adjacent_nodes) ? 1 : 0;
@@ -261,17 +262,21 @@ export function get_information(data, name){
  */
 export function update_focused_node(el, data, config) {
         const name = config.search_person_name.toUpperCase();
-        console.log("entered update focused node")
+        console.log("entered update focused node");
+        const focus_node = d3.select(".graph_node");
+
+        console.log("here is the node: "+focus_node);
+        console.log(focus_node);
         // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
 
-        const adjacent_nodes = get_adj_list(data)
+        const adjacent_nodes = get_adj_list(data);
         const svg = d3.select(el);
-        console.log(svg.selectAll(".graph_node"));
+        //console.log(svg.selectAll(".graph_node"));
         //TODO: this currently set opacity for all nodes and edges to 0, need to change that for
     // TODO: only the irrelevant nodes
         svg.selectAll(".graph_node")
             .style("opacity", function(o) {
-            return neigh(name, o.index, adjacent_nodes) ? 1 : 0;
+            return neigh(focus_node.datum().index, o.index, adjacent_nodes) ? 1 : 0;
         });
         svg.selectAll(".graph_link")
             .style("opacity", function(o) {
