@@ -138,21 +138,29 @@ export function create_graph(el, data, config, handle_viz_events) {
             if (d["affiliation"] === "Phillip Morris International") {
                 d.x += centers["Phillip Morris International"][0];
                 d.y += centers["Phillip Morris International"][1];
+                // centers["Phillip Morris International"][0] = 0;
+                // centers["Phillip Morris International"][1] = 0;
                 return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "British American Tobacco") {
                 d.x += centers["British American Tobacco"][0];
                 d.y += centers["British American Tobacco"][1];
+                // centers["British American Tobacco"][0] = 0;
+                // centers["British American Tobacco"][1] = 0;
                 return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "Imperial Tobacco") {
                 d.x += centers["Imperial Tobacco"][0];
                 d.y += centers["Imperial Tobacco"][1];
+                // centers["Imperial Tobacco"][0] = 0;
+                // centers["Imperial Tobacco"][1] = 0;
                 return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "Japan Tobacco") {
                 d.x += centers["Japan Tobacco"][0];
                 d.y += centers["Japan Tobacco"][1];
+                // centers["Japan Tobacco"][0] = 0;
+                // centers["Japan Tobacco"][1] = 0;
                 return `translate(${d.x}, ${d.y})`
             }
         } );
