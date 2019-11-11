@@ -3,9 +3,10 @@ Contains helper function to get RAW_ORG_TO_CLEAN_ORG_DICT (convert raw org names
 """
 from pathlib import Path
 import json
+from name_disambiguation.config import DATA_PATH
 
 
-def get_clean_org_names(file_name=Path('..', 'data', 'name_disambiguation',
+def get_clean_org_names(file_name=Path(DATA_PATH, 'name_disambiguation',
                                        'clean_org_names_to_raw_org_names.json')):
     """
     Create dict that maps raw organization names to clean organization names
