@@ -51,3 +51,5 @@ def get_network_data(request):
         link['source'] = link['node1']
         link['target'] = link['node2']
     return JsonResponse(data)
+
+# TODO write function that takes an info request from the user, accesses relevant info, returns info
