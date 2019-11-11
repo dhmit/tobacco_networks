@@ -25,12 +25,13 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install pylint
+        python setup.py develop
     - name: Run pylint on backend/
       run: pylint backend/
     - name: Run pylint on analysis/
       run: pylint analysis/
-    - name: Run pylint on data_preprocessing/
-      run: pylint data_preprocessing/
+    - name: Run pylint on name_disambiguation/
+      run: pylint name_disambiguation/
 
 
   backend_tests:
@@ -44,6 +45,7 @@ jobs:
     - name: Install Python packages
       run: |
         pip install -r requirements.txt
+        python setup.py develop
     - name: Run Django tests
       run: |
         cd backend
@@ -60,13 +62,15 @@ jobs:
     - name: Install Python packages
       run: |
         pip install -r requirements.txt
+        python setup.py develop
+        
     - name: Run analysis tests
       run: |
         cd analysis
         python analysis.py
 
 
-  data_preprocessing_tests:
+  name_disambiguation_tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -77,9 +81,10 @@ jobs:
     - name: Install Python packages
       run: |
         pip install -r requirements.txt
+        python setup.py develop
     - name: Run analysis tests
       run: |
-        cd data_preprocessing
+        cd name_disambiguation
         python person.py
         python people_db.py
         python name_preprocessing.py
