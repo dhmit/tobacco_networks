@@ -48,7 +48,7 @@ class MainTests(TestCase):
                          middle="L",
                          most_likely_org="not calculated",
                          positions=json.dumps(Counter()),
-                         #aliases=json.dumps(Counter({"Dunn, WL": 2})),
+                         aliases=json.dumps(Counter({"DUNN, WL": 2})),
                          count=2
                          )
 
