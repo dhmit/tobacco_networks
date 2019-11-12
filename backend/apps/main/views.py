@@ -5,24 +5,15 @@ import json
 from pathlib import Path
 
 import random
+from collections import Counter
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from config.settings.base import BACKEND_DIR
-from .serializers import PersonSerializer, EdgeSerializer
+from .serializers import PersonInfoSerializer, EdgeSerializer
 from .models import load_network_json_data
-
-
-
-
-@api_view(['GET'])
-def list_people(request):
-    """
-    Return a list of all Person objects, serialized.
-    """
-    serializer = PersonSerializer(instance=load_network_json_data("nodes"), many=True)
-    return Response(serializer.data)
+from .models import Person
 
 
 @api_view(['GET'])
@@ -52,4 +43,19 @@ def get_network_data(request):
         link['target'] = link['node2']
     return JsonResponse(data)
 
-# TODO write function that takes an info request from the user, accesses relevant info, returns info
+
+@api_view(['GET'])
+def get_person_info(request):
+    dummy = Person(last="Lastname",
+                   first="Firstname",
+                   middle="Middlename",
+                   most_likely_org="Philip Morris",
+                   # convert Counter object into json string
+                   positions=json.dumps(Counter()),
+                   aliases=json.dumps([]),
+                   count=5
+                   )
+    serializer = PersonInfoSerializer(instance=load_network_json_data("nodes"), many=True)
+    return Response(serializer.data)
+
+

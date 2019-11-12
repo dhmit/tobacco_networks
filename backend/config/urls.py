@@ -36,4 +36,7 @@ urlpatterns = [
 
     # React views
     url('', render_react_view, {'component_name': 'MainView'}),
+
+    # Person_info views
+    url('api/person_info/', main_views.get_person_info),
 ]
