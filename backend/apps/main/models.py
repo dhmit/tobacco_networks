@@ -38,7 +38,7 @@ class DjangoPerson(models.Model):
     last = models.CharField(max_length=255)
     first = models.CharField(max_length=255)
     middle = models.CharField(max_length=255)
-    position = models.CharField(max_length=MAX_LENGTH)
+    most_likely_org = models.CharField(max_length=MAX_LENGTH)
     # positions & aliases are json strings that need to be parsed as Counter every time
     positions = models.TextField()
     aliases = models.TextField()
@@ -46,7 +46,7 @@ class DjangoPerson(models.Model):
 
     def __str__(self):
         s = f'{self.first} {self.middle} {self.last}'
-        s = s + ", Position: " + str(self.positions) + ", Aliases: " + \
+        s = s + ", Positions: " + str(self.positions) + ", Aliases: " + \
             str(self.aliases) + ", count: " + str(self.count)
         return s
 
@@ -167,7 +167,7 @@ def import_peopledb_to_person_model(file_path):
         p = DjangoPerson(last=person.last,
                          first=person.first,
                          middle=person.middle,
-                         position=person.position,
+                         most_likely_org=person.most_likely_org,
                          # convert Counter object into json string
                          positions=json.dumps(person.positions),
                          aliases=json.dumps(person.aliases),

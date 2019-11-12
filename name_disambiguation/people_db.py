@@ -161,7 +161,7 @@ class PeopleDatabase:
                     ):
                         print("\nSUMMARY")
                         for name in last_names_dict[last_name]:
-                            print("\n", name.count, name, Counter(name.aliases).most_common(100))
+                            print("\n", name.count, name, name.aliases.most_common(100))
                         print("\n")
                     break
 
