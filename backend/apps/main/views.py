@@ -11,8 +11,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from config.settings.base import BACKEND_DIR
-from .serializers import PersonInfoSerializer, EdgeSerializer
-from .models import load_network_json_data
+from .serializers import PersonInfoSerializer, EdgeSerializer, load_network_json_data
 from .models import Person
 
 
@@ -46,6 +45,7 @@ def get_network_data(request):
 
 @api_view(['GET'])
 def get_person_info(request):
+    print("HI!!!")
     dummy = Person(last="Lastname",
                    first="Firstname",
                    middle="Middlename",
@@ -55,7 +55,7 @@ def get_person_info(request):
                    aliases=json.dumps([]),
                    count=5
                    )
-    serializer = PersonInfoSerializer(instance=load_network_json_data("nodes"), many=True)
+    serializer = PersonInfoSerializer(instance=dummy, many=False)
     return Response(serializer.data)
 
 

@@ -103,7 +103,8 @@ class Document(models.Model):
     title = models.CharField(blank=True, max_length=MAX_LENGTH)
 
     authors = models.ManyToManyField(Person)
-    recipients = models.ManyToManyField(Person)
+    # recipients = models.ManyToManyField(Person) #they both need to be done, but they clash
+    # right now
 
     def __str__(self):
         return f'tid: {self.tid}, title: {self.title}, date: {self.date}'
