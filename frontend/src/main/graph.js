@@ -37,12 +37,21 @@ export function create_graph(el, data, config, handle_viz_events) {
                      "Imperial Tobacco": [graph_width * -.25, graph_height * .25],
                      "Japan Tobacco": [graph_width*.25, graph_height*.25]};
 
+    const centers2 = {"Phillip Morris International": [graph_width * .2, graph_height * .2],
+                     "British American Tobacco": [graph_width * .8, graph_height * .2],
+                     "Imperial Tobacco": [graph_width * .2, graph_height * .8],
+                     "Japan Tobacco": [graph_width*.8, graph_height*.8]};
+
     const force_simulation = d3.forceSimulation(data.nodes)
     force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(-5000))
         .force("center", d3.forceCenter(graph_x_center, graph_y_center))
-        .force("x", d3.forceX(graph_x_center).strength(1))
-        .force("y", d3.forceY(graph_y_center).strength(1))
+        .force('x', d3.forceX().x(function(d) {
+            return centers2[d.affiliation][0];
+        }).strength(3))
+        .force('y', d3.forceY().y(function(d) {
+            return centers2[d.affiliation][1];
+        }).strength(3))
         .on("tick", render_simulation);  // what to do when the sim updates
 
     // Setup the SVG that we're going to draw the graph into
@@ -136,29 +145,31 @@ export function create_graph(el, data, config, handle_viz_events) {
         // Update node positions
         nodes.attr("transform", (d) => {
             if (d["affiliation"] === "Phillip Morris International") {
-                d.x += centers["Phillip Morris International"][0];
-                d.y += centers["Phillip Morris International"][1];
+                // eslint-disable-next-line no-unused-vars
+                var x = d.x + (d.x - centers2["Phillip Morris International"][0]);
+                // eslint-disable-next-line no-unused-vars
+                var y = d.y + (d.y - centers2["Phillip Morris International"][1]);
                 // centers["Phillip Morris International"][0] = 0;
                 // centers["Phillip Morris International"][1] = 0;
                 return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "British American Tobacco") {
-                d.x += centers["British American Tobacco"][0];
-                d.y += centers["British American Tobacco"][1];
+                 x = d.x + (d.x- centers2["British American Tobacco"][0]);
+                 y = d.y + (d.y - centers2["British American Tobacco"][1]);
                 // centers["British American Tobacco"][0] = 0;
                 // centers["British American Tobacco"][1] = 0;
                 return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "Imperial Tobacco") {
-                d.x += centers["Imperial Tobacco"][0];
-                d.y += centers["Imperial Tobacco"][1];
+                 x = d.x + (d.x - centers2["Imperial Tobacco"][0]);
+                 y = d.y + (d.y - centers2["Imperial Tobacco"][1]);
                 // centers["Imperial Tobacco"][0] = 0;
                 // centers["Imperial Tobacco"][1] = 0;
                 return `translate(${d.x}, ${d.y})`
             }
             if (d["affiliation"] == "Japan Tobacco") {
-                d.x += centers["Japan Tobacco"][0];
-                d.y += centers["Japan Tobacco"][1];
+                 x = d.x + (d.x - centers2["Japan Tobacco"][0]);
+                 y = d.y + (d.y - centers2["Japan Tobacco"][1]);
                 // centers["Japan Tobacco"][0] = 0;
                 // centers["Japan Tobacco"][1] = 0;
                 return `translate(${d.x}, ${d.y})`
