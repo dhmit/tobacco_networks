@@ -48,7 +48,8 @@ class PersonInfoSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Person
-        fields = ["last", "first", "middle", "most_likely_org", "positions", "aliases", "count"]
+        fields = ["last", "first", "middle", "full_name", "most_likely_org", "positions",
+                  "aliases", "count"]
 
     def create(self, validated_data):
         """ We will not create new objects using this serializer """

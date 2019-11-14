@@ -45,17 +45,19 @@ def get_network_data(request):
 
 @api_view(['GET'])
 def get_person_info(request):
-    print("HI!!!")
-    dummy = Person(last="Lastname",
-                   first="Firstname",
-                   middle="Middlename",
-                   most_likely_org="Philip Morris",
+    dummy = Person(last="LAB",
+                    first="MIT",
+                    middle="DH",
+                    full_name="MIT DH LAB",
+                    most_likely_org="MIT YAY!!!!!",
                    # convert Counter object into json string
                    positions=json.dumps(Counter()),
                    aliases=json.dumps([]),
-                   count=5
+                   count=3
                    )
-    serializer = PersonInfoSerializer(instance=dummy, many=False)
+    dummy.save()
+    queryset = Person.objects.filter(full_name=request.query_params['full_name'])
+    serializer = PersonInfoSerializer(instance=queryset, many=True)
     return Response(serializer.data)
 
 
