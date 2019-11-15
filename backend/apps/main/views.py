@@ -45,17 +45,13 @@ def get_network_data(request):
 
 @api_view(['GET'])
 def get_person_info(request):
-    dummy = Person(last="LAB",
-                    first="MIT",
-                    middle="DH",
-                    full_name="MIT DH LAB",
-                    most_likely_org="MIT YAY!!!!!",
-                   # convert Counter object into json string
-                   positions=json.dumps(Counter()),
-                   aliases=json.dumps([]),
-                   count=3
-                   )
-    dummy.save()
+    """
+    Finds a person matching the full name requested by the user, serializes this person, and
+    returns the serialized person
+    :param request: request from the user;
+        request.query_params is a dict {'full name': FULL NAME OF RELEVANT PERSON}
+    :return: serialized person matching full name imbain request
+    """
     queryset = Person.objects.filter(full_name=request.query_params['full_name'])
     serializer = PersonInfoSerializer(instance=queryset, many=True)
     return Response(serializer.data)
