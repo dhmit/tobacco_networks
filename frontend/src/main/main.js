@@ -33,15 +33,13 @@ class Controls extends React.Component {
             const name = node.name;
             if (search_string.toLowerCase() === name.toLowerCase()) {
                 is_name = true;
-                console.log("validate input has entered focus")
                 this.props.handle_searchbar_query(search_string, 1);
             } else {
                 // TODO: tell the user the name isn't in the list
 
             }
         }
-        if (is_name == false){
-            console.log("validate input has entered unfocus")
+        if (is_name === false){
             this.props.handle_searchbar_query(search_string, 2);
         }
     }
@@ -266,14 +264,11 @@ class MainView extends React.Component {
         config.searchbar_value = search_string;
         this.setState({config: config});
 
-        console.log(this.state.config.viz_update_func);
-
     }
 
     update_searchbar_value(search_string) {
         const config = {...this.state.config};
         config.searchbar_value = search_string;
-        console.log("from update_searchbar_value: update detected")
         this.setState({config: config});
     }
 

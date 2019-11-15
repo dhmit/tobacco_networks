@@ -273,7 +273,6 @@ export function update_graph(el, data, config, action) {
         const name = config.search_person_name.toUpperCase();
         const svg = d3.select(el);
         const adj_data = data["adjacent_nodes"];
-        console.log("update_focused_node is called")
         svg.selectAll(".graph_node")
             .style("opacity", function (o) {
                 const other_name = o.name;
