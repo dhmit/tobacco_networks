@@ -30,14 +30,13 @@ class Person:
         count (int): number of times the person appeared in the data
     """
     def __init__(self, name_raw=None, last='', first='', middle='',       # pylint: disable=R0913
-                 most_likely_org='not calculated', positions=None, aliases=None, count=1):
+                 positions=None, aliases=None, count=1):
         """
         Returns a person object
         :param name_raw: raw string for the name (str)
         :param last: official parsed last name (if known) (str)
         :param first: official parsed first name (if known) (str)
         :param middle: official parsed middle name (if known) (str)
-        :param most_likely_org: most likely org (if known; default "not calculated") (str)
         :param positions: compilation of organizations/other information (if known) (Counter of str)
         :param aliases: Counter of raw strings that correspond to this person object (if known) (
         list of str)
@@ -67,7 +66,6 @@ class Person:
         self.last = last.upper()
         self.first = first.upper()
         self.middle = middle.upper()
-        self.most_likely_org = most_likely_org
         # remove periods and convert to upper case
         if isinstance(positions, Counter):
             self.positions = positions
@@ -102,7 +100,6 @@ class Person:
 
     def __lt__(self, other):
 
-
         return self.stemmed() < other.stemmed()
 
     def copy(self):
@@ -111,7 +108,6 @@ class Person:
         :return: a copied person object
         """
         return Person(last=self.last, first=self.first, middle=self.middle,
-                      most_likely_org=self.most_likely_org,
                       positions=copy.deepcopy(self.positions),
                       aliases=copy.deepcopy(self.aliases), count=self.count)
 
@@ -159,8 +155,8 @@ class Person:
 
         return " ".join(components)
 
-
-    def set_likely_position(self, official_org=True):
+    @property
+    def most_likely_position(self, official_org=True):
         """
         Calculates and sets most_likely_org as the organization with the highest number of count
         If official_org=True, returns official name of most common organization that is in
@@ -169,7 +165,7 @@ class Person:
         :return: None
         """
         if len(self.positions) == 0:
-            self.most_likely_org = 'no positions available'
+            return 'no positions available'
         else:
             likely_position = self.positions.most_common(1)[0][0]
             if official_org:
@@ -177,7 +173,12 @@ class Person:
                     if name[0] in RAW_ORG_TO_CLEAN_ORG_DICT and name[0] != '@skip@':
                         likely_position = RAW_ORG_TO_CLEAN_ORG_DICT[name[0]]
                         break
-            self.most_likely_org = likely_position
+            if likely_position == "@skip@":
+                likely_position = 'no positions available'
+                if len(self.positions) > 1:
+                    print(self.positions)
+
+            return likely_position
 
     @staticmethod
     def remove_privlog_info(name_raw):
@@ -312,7 +313,6 @@ class Person:
                 # this is a bit of an ugly hack to get the last (rather than the first) search hit
                 # for a string: we iterate over all matches and the last one gets stored in
                 # search_hit
-
 
                 for idx, search_hit in enumerate(re.finditer(r'\b' + raw_org + r'\b', name_raw)):
                     pass

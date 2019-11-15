@@ -1,0 +1,1213 @@
+{
+    "links": [
+        {
+            "docs": 168,
+            "node1": "T. Bakker",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 125,
+            "node1": "L. Ball",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 67,
+            "node1": "J. Burgard",
+            "node2": "R. Lewis",
+            "words": 0
+        },
+        {
+            "docs": 54,
+            "node1": "J. Burgard",
+            "node2": "R. Kinnee",
+            "words": 0
+        },
+        {
+            "docs": 37,
+            "node1": "J. Burgard",
+            "node2": "J. Groome",
+            "words": 0
+        },
+        {
+            "docs": 36,
+            "node1": "J. Burgard",
+            "node2": "C. Mccarty",
+            "words": 0
+        },
+        {
+            "docs": 35,
+            "node1": "J. Burgard",
+            "node2": "A. Walker",
+            "words": 0
+        },
+        {
+            "docs": 34,
+            "node1": "J. Burgard",
+            "node2": "D. Johnston",
+            "words": 0
+        },
+        {
+            "docs": 32,
+            "node1": "B. W.",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 30,
+            "node1": "J. Burgard",
+            "node2": "P. Cathrew",
+            "words": 0
+        },
+        {
+            "docs": 29,
+            "node1": "J. Burgard",
+            "node2": "H. Hughes",
+            "words": 0
+        },
+        {
+            "docs": 28,
+            "node1": "J. Burgard",
+            "node2": "W. Wright",
+            "words": 0
+        },
+        {
+            "docs": 18,
+            "node1": "J. Burgard",
+            "node2": "P. F. Cathrew",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "J. Burgard",
+            "node2": "P. Macadam",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "J. Broughton",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "J. Burgard",
+            "node2": "R. Pittman",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "J. Burgard",
+            "node2": "London",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "J. Burgard",
+            "node2": "C. Wehrley",
+            "words": 0
+        },
+        {
+            "docs": 14,
+            "node1": "J. Burgard",
+            "node2": "I. Hughes",
+            "words": 0
+        },
+        {
+            "docs": 14,
+            "node1": "J. Burgard",
+            "node2": "C. Muije",
+            "words": 0
+        },
+        {
+            "docs": 14,
+            "node1": "J. Burgard",
+            "node2": "K. Kelly",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "Ted Bates & co",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "J. Burgard",
+            "node2": "E. Wilson",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "J. Burgard",
+            "node2": "J. Nall",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "J. Burgard",
+            "node2": "J. W. Groome",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "J. Burgard",
+            "node2": "R. Johnson",
+            "words": 0
+        },
+        {
+            "docs": 11,
+            "node1": "J. Burgard",
+            "node2": "L. Lanham",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "J. Burgard",
+            "node2": "A. Foster",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "J. Burgard",
+            "node2": "R. Wright",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "J. Burgard",
+            "node2": "C. Domeck",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "J. Burgard",
+            "node2": "S. Green",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "H. Brooks",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "J. Burgard",
+            "node2": "R. Tamburro",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "J. Burgard",
+            "node2": "A. Flynn",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "J. Burgard",
+            "node2": "D. Doninger",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "J. Burgard",
+            "node2": "E. Finch",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "J. Burgard",
+            "node2": "J. Knoop",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "J. Burgard",
+            "node2": "Macadam-p Ltd",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "J. Burgard",
+            "node2": "R. Pellegrini",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "J. Burgard",
+            "node2": "H. Garrett",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "J. Burgard",
+            "node2": "H. Means",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "J. Burgard",
+            "node2": "R. Sanford",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "J. Burgard",
+            "node2": "G. Woodward",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "J. Burgard",
+            "node2": "J. Williams",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "J. Burgard",
+            "node2": "H. Maynor",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "J. Burgard",
+            "node2": "J. Hume",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "J. Burgard",
+            "node2": "J. Edens",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "J. Burgard",
+            "node2": "W. Ogburn",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Ted Bates",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "J. Burgard",
+            "node2": "J. Madsen",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "J. Burgard",
+            "node2": "G. Nolan",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "J. Burgard",
+            "node2": "J. Voss",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "J. Burgard",
+            "node2": "F. Judd",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "R. Brown",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "J. Burgard",
+            "node2": "R. Pinkham",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "J. Burgard",
+            "node2": "B. Henderson",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "J. Burgard",
+            "node2": "Wilson-j Wd&ho Wills",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "A. Yeaman",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "P. Aulbach",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "B. Cummins",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "T. Bassett",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "All Department and division Managers",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "J. Church",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "J. Honeycutt",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "K. Carbin",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "J. Ems",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "B. Broecker",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "Green-s Ltd",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "T. Slack",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "J. Dunford",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "W. Crouch",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "L. Mudd",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Blalock",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "A. Clarke",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "J. Burgard",
+            "node2": "P. Short",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "N. Brown",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "Ivor Wallace Hughes",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "Hughes",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "A. M. Foster",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "C. S. Muije",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "C. A. Wehrley",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "D. Christensen",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "N. Rhodes",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "B. Gawley",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "C. Teague",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "M. Mccurdy",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "G. Long",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "W. Breehl",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "A. J. Flynn",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "Hal T Hughes",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "Robert A Pittman",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "R. Heyward",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "P. Kelly",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Anders",
+            "node2": "J. Burgard",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "K. Flaherty",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "F. Gardner",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "O. MARY. J",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "M. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "L. Richards",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "J. Burgard",
+            "node2": "J. Warner",
+            "words": 0
+        }
+    ],
+    "name": "person_BURGARD,_J._(B&W_EXECUTIVE_VICE_PRESIDENT)",
+    "nodes": [
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 168,
+            "name": "T. Bakker",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 1180,
+            "name": "J. Burgard",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 125,
+            "name": "L. Ball",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 67,
+            "name": "R. Lewis",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 54,
+            "name": "R. Kinnee",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 37,
+            "name": "J. Groome",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 36,
+            "name": "C. Mccarty",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 35,
+            "name": "A. Walker",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 34,
+            "name": "D. Johnston",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 32,
+            "name": "B. W.",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 30,
+            "name": "P. Cathrew",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 29,
+            "name": "H. Hughes",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 28,
+            "name": "W. Wright",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 18,
+            "name": "P. F. Cathrew",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 16,
+            "name": "P. Macadam",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 16,
+            "name": "J. Broughton",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 16,
+            "name": "R. Pittman",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 16,
+            "name": "London",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 15,
+            "name": "C. Wehrley",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 14,
+            "name": "I. Hughes",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 14,
+            "name": "C. Muije",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 14,
+            "name": "K. Kelly",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 13,
+            "name": "Ted Bates & co",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 13,
+            "name": "E. Wilson",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 13,
+            "name": "J. Nall",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 12,
+            "name": "J. W. Groome",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 12,
+            "name": "R. Johnson",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 11,
+            "name": "L. Lanham",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 10,
+            "name": "A. Foster",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 10,
+            "name": "R. Wright",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 9,
+            "name": "C. Domeck",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 9,
+            "name": "S. Green",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 9,
+            "name": "H. Brooks",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 9,
+            "name": "R. Tamburro",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 8,
+            "name": "A. Flynn",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 8,
+            "name": "D. Doninger",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 7,
+            "name": "E. Finch",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 7,
+            "name": "J. Knoop",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 7,
+            "name": "Macadam-p Ltd",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 7,
+            "name": "R. Pellegrini",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 6,
+            "name": "H. Garrett",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 6,
+            "name": "H. Means",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 6,
+            "name": "R. Sanford",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 6,
+            "name": "G. Woodward",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 6,
+            "name": "J. Williams",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 5,
+            "name": "H. Maynor",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 5,
+            "name": "J. Hume",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 5,
+            "name": "J. Edens",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 5,
+            "name": "W. Ogburn",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 5,
+            "name": "Ted Bates",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 4,
+            "name": "J. Madsen",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 4,
+            "name": "G. Nolan",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 4,
+            "name": "J. Voss",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 4,
+            "name": "F. Judd",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 4,
+            "name": "R. Brown",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 4,
+            "name": "R. Pinkham",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 4,
+            "name": "B. Henderson",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 4,
+            "name": "Wilson-j Wd&ho Wills",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 3,
+            "name": "A. Yeaman",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "P. Aulbach",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "B. Cummins",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "T. Bassett",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 3,
+            "name": "All Department and division Managers",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "J. Church",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "J. Honeycutt",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "K. Carbin",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "J. Ems",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "B. Broecker",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 3,
+            "name": "Green-s Ltd",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 3,
+            "name": "T. Slack",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "J. Dunford",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "W. Crouch",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "L. Mudd",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "J. Blalock",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 3,
+            "name": "A. Clarke",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 3,
+            "name": "P. Short",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 3,
+            "name": "N. Brown",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "Ivor Wallace Hughes",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 2,
+            "name": "Hughes",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 2,
+            "name": "A. M. Foster",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "C. S. Muije",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "C. A. Wehrley",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "D. Christensen",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "N. Rhodes",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "B. Gawley",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 2,
+            "name": "C. Teague",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "M. Mccurdy",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "G. Long",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "W. Breehl",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "A. J. Flynn",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "Hal T Hughes",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "Robert A Pittman",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "R. Heyward",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "P. Kelly",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "J. Anders",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "K. Flaherty",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "F. Gardner",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "O. MARY. J",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "M. Reynolds",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "L. Richards",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2,
+            "name": "J. Warner",
+            "words": 0
+        }
+    ]
+}
