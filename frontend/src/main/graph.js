@@ -18,8 +18,8 @@ import * as d3 from 'd3';
  * @param handle_viz_events: function to pass visualization events back to react.
  */
 export function create_graph(el, data, config, handle_viz_events) {
-    const graph_width = config.width;
-    const graph_height = config.height;
+    let graph_width = config.width;
+    let graph_height = config.height;
 
     // Initialize the force simulation - see https://github.com/d3/d3-force
     // This creates the x and y values for the data, based on relationships here
@@ -31,13 +31,14 @@ export function create_graph(el, data, config, handle_viz_events) {
     const graph_x_center = graph_width / 2;
     const graph_y_center = graph_height / 2;
 
-    const centers = {"Phillip Morris International": [graph_width * .2, graph_height * .2],
+    let centers = {"Phillip Morris International": [graph_width * .2, graph_height * .2],
                      "British American Tobacco": [graph_width * .8, graph_height * .2],
                      "Imperial Tobacco": [graph_width * .2, graph_height * .8],
                      "Japan Tobacco": [graph_width*.8, graph_height*.8]};
 
     const force_simulation = d3.forceSimulation(data.nodes)
-    force_simulation.force("link", force_link)
+    function runForceSim() {
+        force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(-1000))
         .force("center", d3.forceCenter(graph_x_center, graph_y_center))
         .force('collision', d3.forceCollide().radius(30))
@@ -48,6 +49,8 @@ export function create_graph(el, data, config, handle_viz_events) {
             return centers[d.affiliation][1];
         }).strength(5))
         .on("tick", render_simulation);  // what to do when the sim updates
+    }
+    runForceSim();
 
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
@@ -167,19 +170,19 @@ export function create_graph(el, data, config, handle_viz_events) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
 
-        fix_nodes(d);
+        // fix_nodes(d);
     }
 
     // Preventing other nodes from moving while dragging one node
-    function fix_nodes(this_node) {
-        nodes.each(
-            function(node){
-            if (this_node != node){
-                node.fx = node.x;
-                node.fy = node.y;
-             }
-         });
-     }
+    // function fix_nodes(this_node) {
+    //     nodes.each(
+    //         function(node){
+    //         if (this_node != node){
+    //             node.fx = node.x;
+    //             node.fy = node.y;
+    //          }
+    //      });
+    //  }
 
     function drag_ended(d) {
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
@@ -223,6 +226,11 @@ export function create_graph(el, data, config, handle_viz_events) {
     function resize() {
         const width = window.innerWidth;
         const height = window.innerHeight;
+        centers = {"Phillip Morris International": [width * .2, height * .2],
+                     "British American Tobacco": [width * .8, height * .2],
+                     "Imperial Tobacco": [width * .2, height * .8],
+                     "Japan Tobacco": [width*.8, height*.8]};
+        runForceSim();
         svg.attr("width", width).attr("height", height);
         console.log(width,height);
         force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
