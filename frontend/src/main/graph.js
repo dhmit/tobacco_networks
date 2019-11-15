@@ -99,9 +99,18 @@ export function create_graph(el, data, config, handle_viz_events) {
             max_weight = node.weight;
         }
     }
-    const circle_color_scale = d3.scaleSequential(d3.interpolateBlues)
+    let circle_color_scale;
     const calc_circle_color = (d) => {
         const floor = .5;
+        if (d.affiliation === "Phillip Morris International") {
+            circle_color_scale  = d3.scaleSequential(d3.interpolateBlues)
+        } else if (d.affiliation === "British American Tobacco") {
+            circle_color_scale  = d3.scaleSequential(d3.interpolateReds)
+        } else if(d.affiliation === "Imperial Tobacco") {
+            circle_color_scale  = d3.scaleSequential(d3.interpolateGreens)
+        } else {
+            circle_color_scale  = d3.scaleSequential(d3.interpolateGreys)
+        }
         return circle_color_scale(floor + .5 * Math.pow(d.weight / max_weight, .5));
     };
     const calc_circle_radius = (d) => Math.max(Math.pow(d.weight, 1/3), 5);
