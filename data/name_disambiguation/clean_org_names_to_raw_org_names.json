@@ -6,18 +6,15 @@
     ],
     "@skip@": [
         "UNK",
-        "X",
         "INFERRED",
         "E-MAIL",
         "MEMORANDUM",
-        "2",
         "INC",
         "HANDWRITTEN NOTES",
         "HANDWRITTEN NOTE",
         "LETTER",
         "HANDWRITTEN NOTES OF COUNSEL",
         "CONTRACTOR",
-        "I",
         "DRAFT LETTER"
     ],
     "Affinity Management Group": [

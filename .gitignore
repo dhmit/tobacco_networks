@@ -166,3 +166,13 @@ package-lock.json
 
 
 data/name_disambiguation/tobacco_names_raw\.json
+
+data/name_disambiguation/test_peopledb\.pickle
+
+data/network_generation/network_1970s\.pickle
+
+data/network_generation/people_db_1970s\.pickle
+
+data/documents/docs_1970s_all\.csv
+
+
