@@ -49,12 +49,17 @@ class Controls extends React.Component {
                         placeholder={"Type a name here"}
                         onChange={(e) => this.validate_input(e)}
                     />
-                    {/*<label>Color is blue</label>*/}
                 </div>
-                <div id="info_button">
-                    <a onClick={this.props.toggle_show_table}>
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                    </a>
+                <div className="col-6">
+                    <div className="form-check float-right">
+                        <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
+                        <label>Check to add foci</label>
+                    </div>
+                    <div id="info_button">
+                        <a onClick={this.props.toggle_show_table}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                        </a>
+                    </div>
                 </div>
             </div>
         );
@@ -63,6 +68,7 @@ class Controls extends React.Component {
 
 
 Controls.propTypes = {
+    toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
     searchbar_value: PropTypes.string.isRequired,
     update_searchbar_value: PropTypes.func.isRequired,
@@ -175,7 +181,6 @@ Info.propTypes ={
     docs: PropTypes.number,
     words: PropTypes.number,
     affiliation: PropTypes.string,
-    show_info_panel: PropTypes.bool,
     toggle_show_table: PropTypes.func,
 };
 
@@ -244,6 +249,10 @@ class MainView extends React.Component {
         }
     }
 
+    toggle_checkbox() {
+
+    }
+
     /**
      * Handles search bar update
      *
@@ -271,7 +280,6 @@ class MainView extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
-        console.log('calling toggle show table!');
         this.setState({show_info_panel: !this.state.show_info_panel});
     }
 
