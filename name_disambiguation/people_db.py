@@ -9,8 +9,9 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from IPython import embed
 from nameparser.config import CONSTANTS  # pylint: disable=C0411
-from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
-from person import Person
+from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
+from name_disambiguation.person import Person
+from name_disambiguation.config import DATA_PATH
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
@@ -103,7 +104,7 @@ class PeopleDatabase:
             loaded_db = pickle.load(infile)
             self.people = loaded_db.people
 
-    def create_positions_csv(self, out_file=Path('..', 'data', 'name_disambiguation',
+    def create_positions_csv(self, out_file=Path(DATA_PATH, 'name_disambiguation',
                                                  'all_organizations.csv')):
         """
         Makes a Counter of all positions appearing in db,
@@ -284,10 +285,10 @@ class TestPeopleDB(unittest.TestCase):
         """
         Test if pickling works
         """
-        self.people_db.store_to_disk(Path('..', 'data', 'name_disambiguation',
+        self.people_db.store_to_disk(Path(DATA_PATH, 'name_disambiguation',
                                           'test_peopledb.pickle'))
         loaded_db = PeopleDatabase()
-        loaded_db.load_from_disk(Path('..', 'data', 'name_disambiguation',
+        loaded_db.load_from_disk(Path(DATA_PATH, 'name_disambiguation',
                                       'test_peopledb.pickle'))
         self.assertEqual(self.people_db, loaded_db)
 
