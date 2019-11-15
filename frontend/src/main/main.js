@@ -263,11 +263,11 @@ class MainView extends React.Component {
         } else {
             config.viz_update_func = 'unfocus_node';
         }
-
+        config.searchbar_value = search_string;
         this.setState({config: config});
 
         console.log(this.state.config.viz_update_func);
-        this.update_searchbar_value(search_string);
+
     }
 
     update_searchbar_value(search_string) {
