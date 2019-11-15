@@ -249,6 +249,7 @@ class MainView extends React.Component {
         config.search_person_name = search_string;
         console.log("search_string was updated");
         config.viz_update_func = 'focus_node';
+        config.searchbar_value = search_string;
         this.setState({config: config})
     }
 
