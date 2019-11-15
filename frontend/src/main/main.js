@@ -9,7 +9,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { getCookie } from '../common'
 import * as d3 from 'd3';
-import { create_graph, update_focused_node } from './graph.js'
+import { create_graph, update_graph} from './graph.js'
 import './main.css';
 
 
@@ -27,16 +27,22 @@ class Controls extends React.Component {
         const search_string = e.target.value;
         this.props.update_searchbar_value(search_string);
 
-
         const nodes = this.props.nodes;
+        let is_name = false;
         for (const node of nodes) {
             const name = node.name;
             if (search_string.toLowerCase() === name.toLowerCase()) {
-                this.props.handle_searchbar_query(search_string);
+                is_name = true;
+                console.log("validate input has entered focus")
+                this.props.handle_searchbar_query(search_string, 1);
             } else {
-            // probably do something like tell the user the name isn't in the list
-            //return;
+                // TODO: tell the user the name isn't in the list
+
             }
+        }
+        if (is_name == false){
+            console.log("validate input has entered unfocus")
+            this.props.handle_searchbar_query(search_string, 2);
         }
     }
 
@@ -53,6 +59,7 @@ class Controls extends React.Component {
                     />
                     {/*<label>Color is blue</label>*/}
                 </div>
+
                 <div id="info_button">
                     <a onClick={this.props.toggle_show_table}>
                         <FontAwesomeIcon icon={faInfoCircle} />
@@ -94,19 +101,23 @@ class Viz extends React.Component {
 
     componentDidUpdate() {
         // D3 Code to update the chart
-
         if (this.props.config.viz_update_func === undefined) {
             return;
         }
-
-        let update_func;
+        let update_func, action;
         if (this.props.config.viz_update_func === 'focus_node') {
-            update_func = update_focused_node;
+            update_func = update_graph;
+            action = 'focus';
+        }
+        else if (this.props.config.viz_update_func === 'unfocus_node') {
+            update_func = update_graph;
+            action = 'unfocus';
         }
         update_func(
             this._graphRoot.current,
             this.props.data,
             this.props.config,
+            action,
         );
     }
 
@@ -233,7 +244,7 @@ class MainView extends React.Component {
             this.setState({person: data.name});
             this.setState({docs: data.docs});
             this.setState({words: data.words});
-            if (this.state.show_info_panel == false) {
+            if (this.state.show_info_panel === false) {
                 this.setState({show_info_panel: true});
             }
         }
@@ -244,12 +255,19 @@ class MainView extends React.Component {
      *
      * @param event_name: String
      */
-    handle_searchbar_query(search_string) {
+    handle_searchbar_query(search_string, action) {
         const config = {... this.state.config};
         config.search_person_name = search_string;
-        console.log("search_string was updated");
-        config.viz_update_func = 'focus_node';
-        this.setState({config: config})
+        if (action === 1) {
+            config.viz_update_func = 'focus_node';
+        } else {
+            config.viz_update_func = 'unfocus_node';
+        }
+
+        this.setState({config: config});
+
+        console.log(this.state.config.viz_update_func);
+        this.update_searchbar_value(search_string);
     }
 
     update_searchbar_value(search_string) {
@@ -284,7 +302,8 @@ class MainView extends React.Component {
                     <Controls  // this is its own row
                         person_to_highlight={this.state.config.person_to_highlight}
                         handle_searchbar_query={
-                            (search_string) => this.handle_searchbar_query(search_string)
+                            (search_string, action) => this.handle_searchbar_query(search_string,
+                                action)
                         }
                         update_searchbar_value={
                             (search_string) => this.update_searchbar_value(search_string)
