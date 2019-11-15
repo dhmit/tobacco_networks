@@ -1,0 +1,3277 @@
+{
+    "links": [
+        {
+            "docs": 6225,
+            "node1": "William D Hobbs",
+            "node2": "T. E. Miller",
+            "words": 0
+        },
+        {
+            "docs": 1877,
+            "node1": "Marketing Dept",
+            "node2": "William Esty",
+            "words": 0
+        },
+        {
+            "docs": 1623,
+            "node1": "William Esty",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 1495,
+            "node1": "Sydney Jim Green",
+            "node2": "F. Haslam",
+            "words": 0
+        },
+        {
+            "docs": 1407,
+            "node1": "Dai R Davies",
+            "node2": "Sam R Evelyn",
+            "words": 0
+        },
+        {
+            "docs": 1350,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Henry C Roemer",
+            "words": 0
+        },
+        {
+            "docs": 1322,
+            "node1": "N. H. Chester",
+            "node2": "Charles R Mckeever",
+            "words": 0
+        },
+        {
+            "docs": 1321,
+            "node1": "Sydney Jim Green",
+            "node2": "Norman E Willis",
+            "words": 0
+        },
+        {
+            "docs": 1267,
+            "node1": "D. P. Johnson",
+            "node2": "John L Mckenzie",
+            "words": 0
+        },
+        {
+            "docs": 1253,
+            "node1": "Dancer Fitzgerald",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 1152,
+            "node1": "W. G. Lloyd",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 1151,
+            "node1": "F. A. Lowman",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 1074,
+            "node1": "Alexander White Spears",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 1055,
+            "node1": "T. E. Miller",
+            "node2": "William S Smith",
+            "words": 0
+        },
+        {
+            "docs": 1045,
+            "node1": "Frank E Resnik",
+            "node2": "Robert B Seligman",
+            "words": 0
+        },
+        {
+            "docs": 1037,
+            "node1": "H. Cullman",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 1035,
+            "node1": "Curtis H pres Judge",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 1033,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Jodl",
+            "words": 0
+        },
+        {
+            "docs": 1022,
+            "node1": "William W Shinn",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 1003,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Intl",
+            "words": 0
+        },
+        {
+            "docs": 969,
+            "node1": "W. G. Longest",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 927,
+            "node1": "Henry C Roemer",
+            "node2": "William W Shinn",
+            "words": 0
+        },
+        {
+            "docs": 926,
+            "node1": "William Ullman Gardner",
+            "node2": "Hockett",
+            "words": 0
+        },
+        {
+            "docs": 917,
+            "node1": "Donald H Piehl",
+            "node2": "A. Rodgman",
+            "words": 0
+        },
+        {
+            "docs": 877,
+            "node1": "R. A. Fenner",
+            "node2": "F. A. Lowman",
+            "words": 0
+        },
+        {
+            "docs": 868,
+            "node1": "Robert H Cundiff",
+            "node2": "Anders H Laurene",
+            "words": 0
+        },
+        {
+            "docs": 856,
+            "node1": "Charles Ian Ayres",
+            "node2": "Sydney Jim Green",
+            "words": 0
+        },
+        {
+            "docs": 856,
+            "node1": "U. Ende",
+            "node2": "Sydney Jim Green",
+            "words": 0
+        },
+        {
+            "docs": 855,
+            "node1": "R. A. Fenner",
+            "node2": "W. G. Lloyd",
+            "words": 0
+        },
+        {
+            "docs": 852,
+            "node1": "H. Cullman",
+            "node2": "R. A. Fenner",
+            "words": 0
+        },
+        {
+            "docs": 847,
+            "node1": "William Ullman Gardner",
+            "node2": "Sommers",
+            "words": 0
+        },
+        {
+            "docs": 838,
+            "node1": "M. Senkus",
+            "node2": "William L Steele",
+            "words": 0
+        },
+        {
+            "docs": 832,
+            "node1": "U. Ende",
+            "node2": "H. ALEC. Morini",
+            "words": 0
+        },
+        {
+            "docs": 826,
+            "node1": "Robert H Cundiff",
+            "node2": "T. E. Sandefur",
+            "words": 0
+        },
+        {
+            "docs": 822,
+            "node1": "Ivor Wallace Hughes",
+            "node2": "William L Steele",
+            "words": 0
+        },
+        {
+            "docs": 821,
+            "node1": "Thomas F Ahrensfeld",
+            "node2": "William W Shinn",
+            "words": 0
+        },
+        {
+            "docs": 811,
+            "node1": "N. W. Glover",
+            "node2": "T. E. Sandefur",
+            "words": 0
+        },
+        {
+            "docs": 809,
+            "node1": "Marketing Dept",
+            "node2": "Dancer Fitzgerald",
+            "words": 0
+        },
+        {
+            "docs": 807,
+            "node1": "R. A. Fenner",
+            "node2": "W. G. Longest",
+            "words": 0
+        },
+        {
+            "docs": 803,
+            "node1": "Intl",
+            "node2": "Intl",
+            "words": 0
+        },
+        {
+            "docs": 798,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Edwin J Jacob",
+            "words": 0
+        },
+        {
+            "docs": 792,
+            "node1": "R. Sells",
+            "node2": "John D Woods",
+            "words": 0
+        },
+        {
+            "docs": 786,
+            "node1": "M. Senkus",
+            "node2": "Mary Evelyn Stowe",
+            "words": 0
+        },
+        {
+            "docs": 780,
+            "node1": "U. Ende",
+            "node2": "Brian E Hearnshaw",
+            "words": 0
+        },
+        {
+            "docs": 751,
+            "node1": "Shook Hardy",
+            "node2": "Henry C Roemer",
+            "words": 0
+        },
+        {
+            "docs": 734,
+            "node1": "William Thomas Hoyt",
+            "node2": "Leonard S Zahn",
+            "words": 0
+        },
+        {
+            "docs": 720,
+            "node1": "William Esty",
+            "node2": "Raymond B Hooker",
+            "words": 0
+        },
+        {
+            "docs": 710,
+            "node1": "Preston Hildebrand. Leake",
+            "node2": "William L Steele",
+            "words": 0
+        },
+        {
+            "docs": 708,
+            "node1": "Richard N Thomson",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 706,
+            "node1": "William Esty",
+            "node2": "Jack O Watson",
+            "words": 0
+        },
+        {
+            "docs": 685,
+            "node1": "Sam R Evelyn",
+            "node2": "Sydney Jim Green",
+            "words": 0
+        },
+        {
+            "docs": 684,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Jacob Medinger",
+            "words": 0
+        },
+        {
+            "docs": 682,
+            "node1": "Dominick J Mazzitelli",
+            "node2": "J. Tylicki",
+            "words": 0
+        },
+        {
+            "docs": 666,
+            "node1": "William Ullman Gardner",
+            "node2": "Stone",
+            "words": 0
+        },
+        {
+            "docs": 665,
+            "node1": "L. Crouse",
+            "node2": "Samuel O'brien Jones",
+            "words": 0
+        },
+        {
+            "docs": 660,
+            "node1": "Dominick J Mazzitelli",
+            "node2": "Robert B Seligman",
+            "words": 0
+        },
+        {
+            "docs": 659,
+            "node1": "Alexander White Spears",
+            "node2": "William L Steele",
+            "words": 0
+        },
+        {
+            "docs": 653,
+            "node1": "Thomas Stefan Osdene",
+            "node2": "Robert B Seligman",
+            "words": 0
+        },
+        {
+            "docs": 632,
+            "node1": "J. DUDLEY. Backhurst",
+            "node2": "Douglas Jeremy Wood",
+            "words": 0
+        },
+        {
+            "docs": 622,
+            "node1": "Preston Hildebrand. Leake",
+            "node2": "Julian B Mccarthy",
+            "words": 0
+        },
+        {
+            "docs": 620,
+            "node1": "J. DUDLEY. Backhurst",
+            "node2": "David Geoff Felton",
+            "words": 0
+        },
+        {
+            "docs": 605,
+            "node1": "T. E. Sandefur",
+            "node2": "Craig C Standen",
+            "words": 0
+        },
+        {
+            "docs": 603,
+            "node1": "J. Greer",
+            "node2": "J. Ross",
+            "words": 0
+        },
+        {
+            "docs": 602,
+            "node1": "Robert H Cundiff",
+            "node2": "D. P. Johnson",
+            "words": 0
+        },
+        {
+            "docs": 602,
+            "node1": "A. Rodgman",
+            "node2": "Edward A Vassallo",
+            "words": 0
+        },
+        {
+            "docs": 599,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "A. Rodgman",
+            "words": 0
+        },
+        {
+            "docs": 598,
+            "node1": "A. Rodgman",
+            "node2": "M. Senkus",
+            "words": 0
+        },
+        {
+            "docs": 597,
+            "node1": "J. Osmalov",
+            "node2": "F. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 597,
+            "node1": "Leo F Meyer",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 592,
+            "node1": "Samuel O'brien Jones",
+            "node2": "R. Rodgers",
+            "words": 0
+        },
+        {
+            "docs": 591,
+            "node1": "Clifford Henry Goldsmith",
+            "node2": "H. Wakeham",
+            "words": 0
+        },
+        {
+            "docs": 591,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Samuel B Witt",
+            "words": 0
+        },
+        {
+            "docs": 590,
+            "node1": "Jay A Giles",
+            "node2": "A. Rodgman",
+            "words": 0
+        },
+        {
+            "docs": 588,
+            "node1": "Anders H Laurene",
+            "node2": "A. Rodgman",
+            "words": 0
+        },
+        {
+            "docs": 583,
+            "node1": "William Thomas Hoyt",
+            "node2": "Leonard Zahn & assoc",
+            "words": 0
+        },
+        {
+            "docs": 579,
+            "node1": "H. Maxwell",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 575,
+            "node1": "Donald H Piehl",
+            "node2": "Mary Evelyn Stowe",
+            "words": 0
+        },
+        {
+            "docs": 575,
+            "node1": "Anders H Laurene",
+            "node2": "M. Senkus",
+            "words": 0
+        },
+        {
+            "docs": 574,
+            "node1": "William Esty",
+            "node2": "N. W. Glover",
+            "words": 0
+        },
+        {
+            "docs": 574,
+            "node1": "Sydney Jim Green",
+            "node2": "P. Sheehy",
+            "words": 0
+        },
+        {
+            "docs": 569,
+            "node1": "R. R. Haldimann",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 568,
+            "node1": "R. A. Fenner",
+            "node2": "R. R. Haldimann",
+            "words": 0
+        },
+        {
+            "docs": 568,
+            "node1": "Charles Ian Ayres",
+            "node2": "J. DUDLEY. Backhurst",
+            "words": 0
+        },
+        {
+            "docs": 567,
+            "node1": "Sydney Jim Green",
+            "node2": "Douglas Jeremy Wood",
+            "words": 0
+        },
+        {
+            "docs": 563,
+            "node1": "David Geoff Felton",
+            "node2": "Ivor Wallace Hughes",
+            "words": 0
+        },
+        {
+            "docs": 558,
+            "node1": "M. Senkus",
+            "node2": "M. Senkus",
+            "words": 0
+        },
+        {
+            "docs": 549,
+            "node1": "Cyril F Hetsko",
+            "node2": "William W Shinn",
+            "words": 0
+        },
+        {
+            "docs": 548,
+            "node1": "Robert H Cundiff",
+            "node2": "T. H. Eskew",
+            "words": 0
+        },
+        {
+            "docs": 548,
+            "node1": "Robert H Cundiff",
+            "node2": "R. Rodgers",
+            "words": 0
+        },
+        {
+            "docs": 548,
+            "node1": "G. B. Granger",
+            "node2": "R. V. Hall",
+            "words": 0
+        },
+        {
+            "docs": 546,
+            "node1": "A. Holtzman",
+            "node2": "Robert B Seligman",
+            "words": 0
+        },
+        {
+            "docs": 546,
+            "node1": "Joseph Frederick Cullman",
+            "node2": "William B Lewis",
+            "words": 0
+        },
+        {
+            "docs": 540,
+            "node1": "Intl",
+            "node2": "Nabisco",
+            "words": 0
+        },
+        {
+            "docs": 531,
+            "node1": "William L Steele",
+            "node2": "H. Wakeham",
+            "words": 0
+        },
+        {
+            "docs": 530,
+            "node1": "Jodl",
+            "node2": "Rjri",
+            "words": 0
+        },
+        {
+            "docs": 525,
+            "node1": "Walter F Gannon",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 521,
+            "node1": "Thomas F Ahrensfeld",
+            "node2": "Shook Hardy",
+            "words": 0
+        },
+        {
+            "docs": 520,
+            "node1": "Shook Hardy",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 510,
+            "node1": "G. B. Granger",
+            "node2": "T. E. Sandefur",
+            "words": 0
+        },
+        {
+            "docs": 509,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Max H Crohn",
+            "words": 0
+        },
+        {
+            "docs": 509,
+            "node1": "J. C. Leffingwell",
+            "node2": "M. Senkus",
+            "words": 0
+        },
+        {
+            "docs": 508,
+            "node1": "Leaf & blends Comm",
+            "node2": "Robert H Cundiff",
+            "words": 0
+        },
+        {
+            "docs": 508,
+            "node1": "Max H Crohn",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 505,
+            "node1": "Rhenda H Bolin",
+            "node2": "Frank Gerhardt Colby",
+            "words": 0
+        },
+        {
+            "docs": 501,
+            "node1": "William Ullman Gardner",
+            "node2": "D. Stone",
+            "words": 0
+        },
+        {
+            "docs": 495,
+            "node1": "M. Senkus",
+            "node2": "Edward A Vassallo",
+            "words": 0
+        },
+        {
+            "docs": 494,
+            "node1": "G. J. Brandt",
+            "node2": "G. ESLER. Inskeep",
+            "words": 0
+        },
+        {
+            "docs": 491,
+            "node1": "Douglas A Cummins",
+            "node2": "J. T. Winebrenner",
+            "words": 0
+        },
+        {
+            "docs": 491,
+            "node1": "Robert H Cundiff",
+            "node2": "Charles A Tucker",
+            "words": 0
+        },
+        {
+            "docs": 491,
+            "node1": "J. ROBERT. Ave",
+            "node2": "Richard E Smith",
+            "words": 0
+        },
+        {
+            "docs": 490,
+            "node1": "P. Atkins",
+            "node2": "B. Bandy",
+            "words": 0
+        },
+        {
+            "docs": 486,
+            "node1": "N. W. Glover",
+            "node2": "C. W. Perry",
+            "words": 0
+        },
+        {
+            "docs": 486,
+            "node1": "Griffith E Harlow",
+            "node2": "Joseph H Sherrill",
+            "words": 0
+        },
+        {
+            "docs": 484,
+            "node1": "Arnold W Cronshaw",
+            "node2": "W. H. Ward",
+            "words": 0
+        },
+        {
+            "docs": 482,
+            "node1": "N. W. Glover",
+            "node2": "J. T. Winebrenner",
+            "words": 0
+        },
+        {
+            "docs": 482,
+            "node1": "J. ROBERT. Ave",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 482,
+            "node1": "Robert A Sanford",
+            "node2": "Vance A Smith",
+            "words": 0
+        },
+        {
+            "docs": 480,
+            "node1": "William Ullman Gardner",
+            "node2": "Robert Casad Hockett",
+            "words": 0
+        },
+        {
+            "docs": 480,
+            "node1": "N. W. Glover",
+            "node2": "S. A. Mackinnon",
+            "words": 0
+        },
+        {
+            "docs": 479,
+            "node1": "John H Hager",
+            "node2": "Robert Karl Heimann",
+            "words": 0
+        },
+        {
+            "docs": 476,
+            "node1": "Horace R Kornegay",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 476,
+            "node1": "D. P. Johnson",
+            "node2": "R. Rodgers",
+            "words": 0
+        },
+        {
+            "docs": 473,
+            "node1": "Sydney Jim Green",
+            "node2": "Ivor Wallace Hughes",
+            "words": 0
+        },
+        {
+            "docs": 470,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "F. ALAN. Rodgman",
+            "words": 0
+        },
+        {
+            "docs": 469,
+            "node1": "Walter F Gannon",
+            "node2": "Robert B Seligman",
+            "words": 0
+        },
+        {
+            "docs": 469,
+            "node1": "J. Mold",
+            "node2": "J. Ross",
+            "words": 0
+        },
+        {
+            "docs": 468,
+            "node1": "W. P. Hanes",
+            "node2": "R. Rodgers",
+            "words": 0
+        },
+        {
+            "docs": 467,
+            "node1": "R. Fagan",
+            "node2": "H. Wakeham",
+            "words": 0
+        },
+        {
+            "docs": 464,
+            "node1": "William Esty",
+            "node2": "S. C. Wooten",
+            "words": 0
+        },
+        {
+            "docs": 464,
+            "node1": "B. W.",
+            "node2": "B. W.",
+            "words": 0
+        },
+        {
+            "docs": 463,
+            "node1": "William Wannamaker Bates",
+            "node2": "William L Steele",
+            "words": 0
+        },
+        {
+            "docs": 460,
+            "node1": "J. D. Barnhill",
+            "node2": "T. H. Eskew",
+            "words": 0
+        },
+        {
+            "docs": 460,
+            "node1": "G. B. Granger",
+            "node2": "S. C. Wooten",
+            "words": 0
+        },
+        {
+            "docs": 459,
+            "node1": "David Ross Hardy",
+            "node2": "Henry C Roemer",
+            "words": 0
+        },
+        {
+            "docs": 459,
+            "node1": "Sydney Jim Green",
+            "node2": "Peter James Nicholl",
+            "words": 0
+        },
+        {
+            "docs": 458,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Lrd",
+            "words": 0
+        },
+        {
+            "docs": 457,
+            "node1": "M. Hausermann",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 456,
+            "node1": "Robert A Emken",
+            "node2": "C. A. Mitchell",
+            "words": 0
+        },
+        {
+            "docs": 455,
+            "node1": "G. J. Brandt",
+            "node2": "W. B. Cridlin",
+            "words": 0
+        },
+        {
+            "docs": 452,
+            "node1": "Distribution",
+            "node2": "E. M. Taylor",
+            "words": 0
+        },
+        {
+            "docs": 451,
+            "node1": "Lougee-vb-iii",
+            "node2": "Sprinkle-rs-iii",
+            "words": 0
+        },
+        {
+            "docs": 448,
+            "node1": "L. Meyer",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 448,
+            "node1": "N. W. Glover",
+            "node2": "M. G. Mcallister",
+            "words": 0
+        },
+        {
+            "docs": 448,
+            "node1": "W. M. Kelman",
+            "node2": "R. Rodgers",
+            "words": 0
+        },
+        {
+            "docs": 447,
+            "node1": "Sam R Evelyn",
+            "node2": "Ivor Wallace Hughes",
+            "words": 0
+        },
+        {
+            "docs": 447,
+            "node1": "David Geoff Felton",
+            "node2": "R. S. Wade",
+            "words": 0
+        },
+        {
+            "docs": 447,
+            "node1": "C. Bowra",
+            "node2": "Sydney Jim Green",
+            "words": 0
+        },
+        {
+            "docs": 444,
+            "node1": "J. R. Jackson-ca",
+            "node2": "Charles R Mckeever",
+            "words": 0
+        },
+        {
+            "docs": 443,
+            "node1": "W. BRIAN. Fordyce",
+            "node2": "F. Haslam",
+            "words": 0
+        },
+        {
+            "docs": 439,
+            "node1": "Paul A Eichorn",
+            "node2": "Robert B Seligman",
+            "words": 0
+        },
+        {
+            "docs": 436,
+            "node1": "William Esty",
+            "node2": "J. T. Winebrenner",
+            "words": 0
+        },
+        {
+            "docs": 435,
+            "node1": "Gardner",
+            "node2": "D. Stone",
+            "words": 0
+        },
+        {
+            "docs": 435,
+            "node1": "T. E. Sandefur",
+            "node2": "J. T. Winebrenner",
+            "words": 0
+        },
+        {
+            "docs": 434,
+            "node1": "Lawrence W Hall",
+            "node2": "Joseph H Sherrill",
+            "words": 0
+        },
+        {
+            "docs": 432,
+            "node1": "T. P. Haller",
+            "node2": "E. Monahan",
+            "words": 0
+        },
+        {
+            "docs": 432,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "W. Dembach",
+            "words": 0
+        },
+        {
+            "docs": 426,
+            "node1": "R. A. Merricks",
+            "node2": "A. G. Moore",
+            "words": 0
+        },
+        {
+            "docs": 426,
+            "node1": "C. W. Fitzgerald",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 426,
+            "node1": "C. R. Edwards",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 424,
+            "node1": "A. G. Moore",
+            "node2": "Grant M Stewart",
+            "words": 0
+        },
+        {
+            "docs": 424,
+            "node1": "R. E. Anderson",
+            "node2": "T. E. Sandefur",
+            "words": 0
+        },
+        {
+            "docs": 424,
+            "node1": "G. B. Granger",
+            "node2": "Tatham Laird",
+            "words": 0
+        },
+        {
+            "docs": 423,
+            "node1": "Sam R Evelyn",
+            "node2": "David Geoff Felton",
+            "words": 0
+        },
+        {
+            "docs": 422,
+            "node1": "Shook Hardy",
+            "node2": "Cyril F Hetsko",
+            "words": 0
+        },
+        {
+            "docs": 421,
+            "node1": "William Ullman Gardner",
+            "node2": "Jacobson",
+            "words": 0
+        },
+        {
+            "docs": 421,
+            "node1": "P. E. Atkins",
+            "node2": "Bruce A Bandy",
+            "words": 0
+        },
+        {
+            "docs": 420,
+            "node1": "David Ross Hardy",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 420,
+            "node1": "Jodl",
+            "node2": "Nabisco",
+            "words": 0
+        },
+        {
+            "docs": 418,
+            "node1": "Robert H Cundiff",
+            "node2": "Samuel O'brien Jones",
+            "words": 0
+        },
+        {
+            "docs": 418,
+            "node1": "R. E. Anderson",
+            "node2": "Morgan V Hunter",
+            "words": 0
+        },
+        {
+            "docs": 417,
+            "node1": "William Thomas Hoyt",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 415,
+            "node1": "F. Reynolds",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 415,
+            "node1": "James Whiteford Drummond",
+            "node2": "Douglas Jeremy Wood",
+            "words": 0
+        },
+        {
+            "docs": 414,
+            "node1": "E. Monahan",
+            "node2": "Thomas L Ogburn",
+            "words": 0
+        },
+        {
+            "docs": 413,
+            "node1": "Bowling",
+            "node2": "W. Kloepfer",
+            "words": 0
+        },
+        {
+            "docs": 413,
+            "node1": "T. Goodale",
+            "node2": "Dominick J Mazzitelli",
+            "words": 0
+        },
+        {
+            "docs": 412,
+            "node1": "Robert H Cundiff",
+            "node2": "J. H. Winder",
+            "words": 0
+        },
+        {
+            "docs": 411,
+            "node1": "Robert Karl Heimann",
+            "node2": "Lougee-vb-iii",
+            "words": 0
+        },
+        {
+            "docs": 409,
+            "node1": "Leo F Meyer",
+            "node2": "Robert B Seligman",
+            "words": 0
+        },
+        {
+            "docs": 408,
+            "node1": "A. Holtzman",
+            "node2": "H. Wakeham",
+            "words": 0
+        },
+        {
+            "docs": 407,
+            "node1": "J. Groome",
+            "node2": "W. Schermerhorn",
+            "words": 0
+        },
+        {
+            "docs": 406,
+            "node1": "S. Kates",
+            "node2": "F. Mckeown",
+            "words": 0
+        },
+        {
+            "docs": 405,
+            "node1": "Charles Ian Ayres",
+            "node2": "Derek H Beese",
+            "words": 0
+        },
+        {
+            "docs": 403,
+            "node1": "Blalock",
+            "node2": "W. Kloepfer",
+            "words": 0
+        },
+        {
+            "docs": 403,
+            "node1": "R. A. Fenner",
+            "node2": "H. Maxwell",
+            "words": 0
+        },
+        {
+            "docs": 403,
+            "node1": "G. B. Granger",
+            "node2": "M. G. Mcallister",
+            "words": 0
+        },
+        {
+            "docs": 403,
+            "node1": "U. Hackenberg",
+            "node2": "Thomas Stefan Osdene",
+            "words": 0
+        },
+        {
+            "docs": 400,
+            "node1": "William Esty",
+            "node2": "T. E. Sandefur",
+            "words": 0
+        },
+        {
+            "docs": 396,
+            "node1": "Robert H Cundiff",
+            "node2": "G. B. Whitaker",
+            "words": 0
+        },
+        {
+            "docs": 396,
+            "node1": "M. Falconetti",
+            "node2": "D. W. Tredennick",
+            "words": 0
+        },
+        {
+            "docs": 394,
+            "node1": "J. Ross",
+            "node2": "P. Thayer",
+            "words": 0
+        },
+        {
+            "docs": 390,
+            "node1": "Joseph Frederick Cullman",
+            "node2": "G. Weissman",
+            "words": 0
+        },
+        {
+            "docs": 389,
+            "node1": "E. Pepples",
+            "node2": "William W Shinn",
+            "words": 0
+        },
+        {
+            "docs": 388,
+            "node1": "R. E. Grizzel",
+            "node2": "W. G. Longest",
+            "words": 0
+        },
+        {
+            "docs": 385,
+            "node1": "J. D. Barnhill",
+            "node2": "Anders H Laurene",
+            "words": 0
+        },
+        {
+            "docs": 384,
+            "node1": "Samuel O'brien Jones",
+            "node2": "Mrd",
+            "words": 0
+        },
+        {
+            "docs": 384,
+            "node1": "J. L. Dodd",
+            "node2": "J. S. Self",
+            "words": 0
+        },
+        {
+            "docs": 383,
+            "node1": "T. E. Miller",
+            "node2": "Joseph H Sherrill",
+            "words": 0
+        },
+        {
+            "docs": 380,
+            "node1": "J. L. Dodd",
+            "node2": "V. Lopez",
+            "words": 0
+        },
+        {
+            "docs": 379,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Haus Neuerburg Gmbh",
+            "words": 0
+        },
+        {
+            "docs": 378,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Imperial Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 376,
+            "node1": "Robert H Cundiff",
+            "node2": "Jim F Hind",
+            "words": 0
+        },
+        {
+            "docs": 376,
+            "node1": "H. ALEC. Morini",
+            "node2": "Vance A Smith",
+            "words": 0
+        },
+        {
+            "docs": 375,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "R. Jodl",
+            "words": 0
+        },
+        {
+            "docs": 375,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "M. Senkus",
+            "words": 0
+        },
+        {
+            "docs": 375,
+            "node1": "L. Pollack",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 373,
+            "node1": "Robert H Cundiff",
+            "node2": "N. W. Glover",
+            "words": 0
+        },
+        {
+            "docs": 372,
+            "node1": "J. D. Barnhill",
+            "node2": "T. E. Sandefur",
+            "words": 0
+        },
+        {
+            "docs": 372,
+            "node1": "Robert H Cundiff",
+            "node2": "W. P. Hanes",
+            "words": 0
+        },
+        {
+            "docs": 370,
+            "node1": "William D Hobbs",
+            "node2": "M. Senkus",
+            "words": 0
+        },
+        {
+            "docs": 370,
+            "node1": "C. W. Fitzgerald",
+            "node2": "N. W. Glover",
+            "words": 0
+        },
+        {
+            "docs": 368,
+            "node1": "Frederick J Schultz",
+            "node2": "Richard E Smith",
+            "words": 0
+        },
+        {
+            "docs": 366,
+            "node1": "M. G. Mcallister",
+            "node2": "Craig C Standen",
+            "words": 0
+        },
+        {
+            "docs": 366,
+            "node1": "William D Hobbs",
+            "node2": "Anders H Laurene",
+            "words": 0
+        },
+        {
+            "docs": 365,
+            "node1": "J. R. Costello",
+            "node2": "J. F. Pool",
+            "words": 0
+        },
+        {
+            "docs": 364,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Charles W Nystrom",
+            "words": 0
+        },
+        {
+            "docs": 364,
+            "node1": "Robert H Cundiff",
+            "node2": "C. W. Fitzgerald",
+            "words": 0
+        },
+        {
+            "docs": 362,
+            "node1": "G. ESLER. Inskeep",
+            "node2": "H. K. Kothe",
+            "words": 0
+        },
+        {
+            "docs": 362,
+            "node1": "Robert B Seligman",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 362,
+            "node1": "G. B. Granger",
+            "node2": "S. A. Mackinnon",
+            "words": 0
+        },
+        {
+            "docs": 361,
+            "node1": "Cyril F Hetsko",
+            "node2": "Henry Henry Ramm",
+            "words": 0
+        },
+        {
+            "docs": 361,
+            "node1": "G. B. Granger",
+            "node2": "Jack O Watson",
+            "words": 0
+        },
+        {
+            "docs": 360,
+            "node1": "Robert A Emken",
+            "node2": "C. J. Sink",
+            "words": 0
+        },
+        {
+            "docs": 358,
+            "node1": "J. R. Chumney-rd",
+            "node2": "Hc/regional Tobacco growth regulator com Smith",
+            "words": 0
+        },
+        {
+            "docs": 358,
+            "node1": "G. A. Mason",
+            "node2": "Craig C Standen",
+            "words": 0
+        },
+        {
+            "docs": 358,
+            "node1": "R. E. Anderson",
+            "node2": "J. D. Barnhill",
+            "words": 0
+        },
+        {
+            "docs": 358,
+            "node1": "T. I.",
+            "node2": "Comm of counsel",
+            "words": 0
+        },
+        {
+            "docs": 358,
+            "node1": "G. B. Granger",
+            "node2": "Dan F Pearson",
+            "words": 0
+        },
+        {
+            "docs": 357,
+            "node1": "David Ross Hardy",
+            "node2": "Cyril F Hetsko",
+            "words": 0
+        },
+        {
+            "docs": 357,
+            "node1": "Joseph H Sherrill",
+            "node2": "Haywood C Smith",
+            "words": 0
+        },
+        {
+            "docs": 356,
+            "node1": "T. P. Pettigrew",
+            "node2": "Hc/regional Tobacco growth regulator com Smith",
+            "words": 0
+        },
+        {
+            "docs": 356,
+            "node1": "T. E. Miller",
+            "node2": "R. G. Page",
+            "words": 0
+        },
+        {
+            "docs": 356,
+            "node1": "T. I.",
+            "node2": "M. Senkus",
+            "words": 0
+        },
+        {
+            "docs": 355,
+            "node1": "Douglas A Cummins",
+            "node2": "Lawrence W Hall",
+            "words": 0
+        },
+        {
+            "docs": 354,
+            "node1": "Thomas Stefan Osdene",
+            "node2": "X. X. Ulrich",
+            "words": 0
+        },
+        {
+            "docs": 354,
+            "node1": "Ted Bates",
+            "node2": "F. Mckeown",
+            "words": 0
+        },
+        {
+            "docs": 352,
+            "node1": "William Esty",
+            "node2": "C. L. Sharp",
+            "words": 0
+        },
+        {
+            "docs": 351,
+            "node1": "W. BRIAN. Fordyce",
+            "node2": "Sydney Jim Green",
+            "words": 0
+        },
+        {
+            "docs": 351,
+            "node1": "Bates",
+            "node2": "F. Mckeown",
+            "words": 0
+        },
+        {
+            "docs": 350,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Shook Hardy",
+            "words": 0
+        },
+        {
+            "docs": 349,
+            "node1": "C. R. Blake",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 348,
+            "node1": "Thomas Stefan Osdene",
+            "node2": "U. >. Xx ulrich <hackenberg",
+            "words": 0
+        },
+        {
+            "docs": 347,
+            "node1": "Thomas F Ahrensfeld",
+            "node2": "William Thomas Hoyt",
+            "words": 0
+        },
+        {
+            "docs": 346,
+            "node1": "William Esty",
+            "node2": "A. P. Ritchy",
+            "words": 0
+        },
+        {
+            "docs": 346,
+            "node1": "Jim F Hind",
+            "node2": "Craig C Standen",
+            "words": 0
+        },
+        {
+            "docs": 346,
+            "node1": "G. B. Granger",
+            "node2": "A. A. Lyon",
+            "words": 0
+        },
+        {
+            "docs": 346,
+            "node1": "G. B. Granger",
+            "node2": "W. R. Whiteman",
+            "words": 0
+        },
+        {
+            "docs": 346,
+            "node1": "G. B. Granger",
+            "node2": "G. H. [JERRY]. Long",
+            "words": 0
+        },
+        {
+            "docs": 345,
+            "node1": "Robert B Seligman",
+            "node2": "H. Wakeham",
+            "words": 0
+        },
+        {
+            "docs": 345,
+            "node1": "Curtis H pres Judge",
+            "node2": "Alexander White Spears",
+            "words": 0
+        },
+        {
+            "docs": 344,
+            "node1": "Donald K Hoel",
+            "node2": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "docs": 344,
+            "node1": "William Esty",
+            "node2": "P. R. Ray",
+            "words": 0
+        },
+        {
+            "docs": 344,
+            "node1": "David Edward Conway",
+            "node2": "F. Haslam",
+            "words": 0
+        },
+        {
+            "docs": 339,
+            "node1": "G. B. Granger",
+            "node2": "Ogilvy Mather",
+            "words": 0
+        },
+        {
+            "docs": 338,
+            "node1": "Frederick P Haas",
+            "node2": "William W Shinn",
+            "words": 0
+        },
+        {
+            "docs": 338,
+            "node1": "G. B. Granger",
+            "node2": "S. Serle",
+            "words": 0
+        },
+        {
+            "docs": 338,
+            "node1": "M. Hausermann",
+            "node2": "Thomas Stefan Osdene",
+            "words": 0
+        },
+        {
+            "docs": 337,
+            "node1": "Douglas A Cummins",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 337,
+            "node1": "G. B. Granger",
+            "node2": "J. L. Smotherman",
+            "words": 0
+        },
+        {
+            "docs": 336,
+            "node1": "Jacobson",
+            "node2": "D. Stone",
+            "words": 0
+        },
+        {
+            "docs": 336,
+            "node1": "J. B. Glenn",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 335,
+            "node1": "Thomas T Goodale",
+            "node2": "Robert B Seligman",
+            "words": 0
+        },
+        {
+            "docs": 334,
+            "node1": "William Ullman Gardner",
+            "node2": "Sheldon Charles Sommers",
+            "words": 0
+        },
+        {
+            "docs": 334,
+            "node1": "G. B. Granger",
+            "node2": "Craig C Standen",
+            "words": 0
+        },
+        {
+            "docs": 334,
+            "node1": "C. W. Fitzgerald",
+            "node2": "Craig C Standen",
+            "words": 0
+        },
+        {
+            "docs": 334,
+            "node1": "Sydney Jim Green",
+            "node2": "Keith D Kilburn",
+            "words": 0
+        },
+        {
+            "docs": 333,
+            "node1": "William Thomas Hoyt",
+            "node2": "Henry C Roemer",
+            "words": 0
+        },
+        {
+            "docs": 333,
+            "node1": "J. Vonwyss",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 332,
+            "node1": "Jerry L Clawson",
+            "node2": "E. Monahan",
+            "words": 0
+        },
+        {
+            "docs": 332,
+            "node1": "D. P. Johnson",
+            "node2": "Anders H Laurene",
+            "words": 0
+        },
+        {
+            "docs": 332,
+            "node1": "F. HUNDALL. Christopher",
+            "node2": "R. Rodgers",
+            "words": 0
+        },
+        {
+            "docs": 332,
+            "node1": "G. B. Granger",
+            "node2": "K. B. Hedrick",
+            "words": 0
+        },
+        {
+            "docs": 330,
+            "node1": "Robert B Seligman",
+            "node2": "Richard N Thomson",
+            "words": 0
+        },
+        {
+            "docs": 329,
+            "node1": "R. A. Fenner",
+            "node2": "M. Hausermann",
+            "words": 0
+        },
+        {
+            "docs": 329,
+            "node1": "E. Monahan",
+            "node2": "Joseph H Sherrill",
+            "words": 0
+        },
+        {
+            "docs": 329,
+            "node1": "Sydney Jim Green",
+            "node2": "Robert A Sanford",
+            "words": 0
+        },
+        {
+            "docs": 328,
+            "node1": "Henry Henry Ramm",
+            "node2": "Henry C Roemer",
+            "words": 0
+        },
+        {
+            "docs": 328,
+            "node1": "N. W. Glover",
+            "node2": "Craig C Standen",
+            "words": 0
+        },
+        {
+            "docs": 328,
+            "node1": "G. Ashburn",
+            "node2": "A. G. Moore",
+            "words": 0
+        },
+        {
+            "docs": 328,
+            "node1": "Robert H Cundiff",
+            "node2": "William D Hobbs",
+            "words": 0
+        },
+        {
+            "docs": 326,
+            "node1": "R. B. Beasley",
+            "node2": "William Esty",
+            "words": 0
+        },
+        {
+            "docs": 326,
+            "node1": "M. Falconetti",
+            "node2": "C. W. Perry",
+            "words": 0
+        },
+        {
+            "docs": 326,
+            "node1": "J. DUDLEY. Backhurst",
+            "node2": "F. Haslam",
+            "words": 0
+        },
+        {
+            "docs": 325,
+            "node1": "Sydney Jim Green",
+            "node2": "R. C. Walmisley",
+            "words": 0
+        },
+        {
+            "docs": 323,
+            "node1": "Sydney Jim Green",
+            "node2": "Philip L Short",
+            "words": 0
+        },
+        {
+            "docs": 322,
+            "node1": "G. J. Ahearn",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 320,
+            "node1": "Frank Gerhardt Colby",
+            "node2": "Donald K Hoel",
+            "words": 0
+        },
+        {
+            "docs": 320,
+            "node1": "S. A. Mackinnon",
+            "node2": "T. E. Sandefur",
+            "words": 0
+        },
+        {
+            "docs": 320,
+            "node1": "Ivor Wallace Hughes",
+            "node2": "Vance A Smith",
+            "words": 0
+        },
+        {
+            "docs": 319,
+            "node1": "Thomas Stefan Osdene",
+            "node2": "H. Wakeham",
+            "words": 0
+        },
+        {
+            "docs": 318,
+            "node1": "Sommers",
+            "node2": "D. Stone",
+            "words": 0
+        },
+        {
+            "docs": 318,
+            "node1": "William Esty",
+            "node2": "M. LAIRD. Gann",
+            "words": 0
+        },
+        {
+            "docs": 317,
+            "node1": "Carlos E Salguero",
+            "node2": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "docs": 316,
+            "node1": "J. Greer",
+            "node2": "J. Mold",
+            "words": 0
+        },
+        {
+            "docs": 316,
+            "node1": "C. G. Pheil",
+            "node2": "Edward A Vassallo",
+            "words": 0
+        },
+        {
+            "docs": 315,
+            "node1": "J. L. Davidow",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 314,
+            "node1": "M. Hausermann",
+            "node2": "H. Wakeham",
+            "words": 0
+        },
+        {
+            "docs": 314,
+            "node1": "R. L. Dilworth",
+            "node2": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "docs": 313,
+            "node1": "J. D. Barnhill",
+            "node2": "D. P. Johnson",
+            "words": 0
+        },
+        {
+            "docs": 313,
+            "node1": "E. Monahan",
+            "node2": "S. C. Wooten",
+            "words": 0
+        }
+    ],
+    "name": "top_300_edges",
+    "nodes": [
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 7289,
+            "name": "William D Hobbs",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 8019,
+            "name": "T. E. Miller",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 2686,
+            "name": "Marketing Dept",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 8486,
+            "name": "William Esty",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 12353,
+            "name": "G. B. Granger",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 9395,
+            "name": "Sydney Jim Green",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 2608,
+            "name": "F. Haslam",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 1407,
+            "name": "Dai R Davies",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 2962,
+            "name": "Sam R Evelyn",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 10973,
+            "name": "Frank Gerhardt Colby",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 4148,
+            "name": "Henry C Roemer",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 1322,
+            "name": "N. H. Chester",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 1766,
+            "name": "Charles R Mckeever",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 1321,
+            "name": "Norman E Willis",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 2990,
+            "name": "D. P. Johnson",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1267,
+            "name": "John L Mckenzie",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 2062,
+            "name": "Dancer Fitzgerald",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 2007,
+            "name": "W. G. Lloyd",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 9619,
+            "name": "J. E. Wickham",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 2028,
+            "name": "F. A. Lowman",
+            "words": 0
+        },
+        {
+            "affiliation": "Lorillard",
+            "docs": 2078,
+            "name": "Alexander White Spears",
+            "words": 0
+        },
+        {
+            "affiliation": "Lorillard",
+            "docs": 6165,
+            "name": "Arthur Joseph Stevens",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1055,
+            "name": "William S Smith",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1045,
+            "name": "Frank E Resnik",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 5593,
+            "name": "Robert B Seligman",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1889,
+            "name": "H. Cullman",
+            "words": 0
+        },
+        {
+            "affiliation": "Lorillard",
+            "docs": 1380,
+            "name": "Curtis H pres Judge",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1983,
+            "name": "Jodl",
+            "words": 0
+        },
+        {
+            "affiliation": "Tobacco Institute",
+            "docs": 4046,
+            "name": "William W Shinn",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 3149,
+            "name": "Intl",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 2164,
+            "name": "W. G. Longest",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 4175,
+            "name": "William Ullman Gardner",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 926,
+            "name": "Hockett",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1492,
+            "name": "Donald H Piehl",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 3894,
+            "name": "A. Rodgman",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 4691,
+            "name": "R. A. Fenner",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 7430,
+            "name": "Robert H Cundiff",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 3114,
+            "name": "Anders H Laurene",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 1829,
+            "name": "Charles Ian Ayres",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 2468,
+            "name": "U. Ende",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 1165,
+            "name": "Sommers",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 6018,
+            "name": "M. Senkus",
+            "words": 0
+        },
+        {
+            "affiliation": "Tobacco Institute",
+            "docs": 4023,
+            "name": "William L Steele",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 1208,
+            "name": "H. ALEC. Morini",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 4703,
+            "name": "T. E. Sandefur",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 2625,
+            "name": "Ivor Wallace Hughes",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1689,
+            "name": "Thomas F Ahrensfeld",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 4352,
+            "name": "N. W. Glover",
+            "words": 0
+        },
+        {
+            "affiliation": "Jacob & Medinger",
+            "docs": 798,
+            "name": "Edwin J Jacob",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 792,
+            "name": "R. Sells",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 792,
+            "name": "John D Woods",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1361,
+            "name": "Mary Evelyn Stowe",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 780,
+            "name": "Brian E Hearnshaw",
+            "words": 0
+        },
+        {
+            "affiliation": "DR, HARDY DR, OTTMAN, MITCHELL & BACO",
+            "docs": 2564,
+            "name": "Shook Hardy",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 2414,
+            "name": "William Thomas Hoyt",
+            "words": 0
+        },
+        {
+            "affiliation": "COUNCIL FOR TOBACCO RESEARCH",
+            "docs": 734,
+            "name": "Leonard S Zahn",
+            "words": 0
+        },
+        {
+            "affiliation": "JR",
+            "docs": 720,
+            "name": "Raymond B Hooker",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 1332,
+            "name": "Preston Hildebrand. Leake",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1038,
+            "name": "Richard N Thomson",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1067,
+            "name": "Jack O Watson",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 684,
+            "name": "Jacob Medinger",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1755,
+            "name": "Dominick J Mazzitelli",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 682,
+            "name": "J. Tylicki",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 666,
+            "name": "Stone",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 665,
+            "name": "L. Crouse",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 2059,
+            "name": "Samuel O'brien Jones",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 2415,
+            "name": "Thomas Stefan Osdene",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 2146,
+            "name": "J. DUDLEY. Backhurst",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 1614,
+            "name": "Douglas Jeremy Wood",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 622,
+            "name": "Julian B Mccarthy",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 2053,
+            "name": "David Geoff Felton",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 2671,
+            "name": "Craig C Standen",
+            "words": 0
+        },
+        {
+            "affiliation": "Tobacco Institute",
+            "docs": 919,
+            "name": "J. Greer",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 1466,
+            "name": "J. Ross",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1413,
+            "name": "Edward A Vassallo",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 597,
+            "name": "J. Osmalov",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1012,
+            "name": "F. Reynolds",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1006,
+            "name": "Leo F Meyer",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 2864,
+            "name": "R. Rodgers",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 591,
+            "name": "Clifford Henry Goldsmith",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 2975,
+            "name": "H. Wakeham",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 591,
+            "name": "Samuel B Witt",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 590,
+            "name": "Jay A Giles",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 583,
+            "name": "Leonard Zahn & assoc",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 982,
+            "name": "H. Maxwell",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 574,
+            "name": "P. Sheehy",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 1137,
+            "name": "R. R. Haldimann",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 1689,
+            "name": "Cyril F Hetsko",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1008,
+            "name": "T. H. Eskew",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 548,
+            "name": "R. V. Hall",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 954,
+            "name": "A. Holtzman",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 936,
+            "name": "Joseph Frederick Cullman",
+            "words": 0
+        },
+        {
+            "affiliation": "American Cancer Society",
+            "docs": 546,
+            "name": "William B Lewis",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 960,
+            "name": "Nabisco",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 530,
+            "name": "Rjri",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 994,
+            "name": "Walter F Gannon",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1017,
+            "name": "Max H Crohn",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 509,
+            "name": "J. C. Leffingwell",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 508,
+            "name": "Leaf & blends Comm",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 505,
+            "name": "Rhenda H Bolin",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 1590,
+            "name": "D. Stone",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 949,
+            "name": "G. J. Brandt",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 856,
+            "name": "G. ESLER. Inskeep",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 1183,
+            "name": "Douglas A Cummins",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 1844,
+            "name": "J. T. Winebrenner",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 491,
+            "name": "Charles A Tucker",
+            "words": 0
+        },
+        {
+            "affiliation": "Lorillard",
+            "docs": 973,
+            "name": "J. ROBERT. Ave",
+            "words": 0
+        },
+        {
+            "affiliation": "Lorillard",
+            "docs": 859,
+            "name": "Richard E Smith",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 490,
+            "name": "P. Atkins",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 490,
+            "name": "B. Bandy",
+            "words": 0
+        },
+        {
+            "affiliation": "JR",
+            "docs": 812,
+            "name": "C. W. Perry",
+            "words": 0
+        },
+        {
+            "affiliation": "@internal_organization@",
+            "docs": 486,
+            "name": "Griffith E Harlow",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1989,
+            "name": "Joseph H Sherrill",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 484,
+            "name": "Arnold W Cronshaw",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 484,
+            "name": "W. H. Ward",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 811,
+            "name": "Robert A Sanford",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 1178,
+            "name": "Vance A Smith",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 480,
+            "name": "Robert Casad Hockett",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1162,
+            "name": "S. A. Mackinnon",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 479,
+            "name": "John H Hager",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 890,
+            "name": "Robert Karl Heimann",
+            "words": 0
+        },
+        {
+            "affiliation": "Tobacco Institute",
+            "docs": 476,
+            "name": "Horace R Kornegay",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 470,
+            "name": "F. ALAN. Rodgman",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 785,
+            "name": "J. Mold",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 840,
+            "name": "W. P. Hanes",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 467,
+            "name": "R. Fagan",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1237,
+            "name": "S. C. Wooten",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 928,
+            "name": "B. W.",
+            "words": 0
+        },
+        {
+            "affiliation": "Tobacco Institute",
+            "docs": 463,
+            "name": "William Wannamaker Bates",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1888,
+            "name": "J. D. Barnhill",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 1236,
+            "name": "David Ross Hardy",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 459,
+            "name": "Peter James Nicholl",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 458,
+            "name": "Lrd",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1438,
+            "name": "M. Hausermann",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 816,
+            "name": "Robert A Emken",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 456,
+            "name": "C. A. Mitchell",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 455,
+            "name": "W. B. Cridlin",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 452,
+            "name": "Distribution",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 452,
+            "name": "E. M. Taylor",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 862,
+            "name": "Lougee-vb-iii",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 451,
+            "name": "Sprinkle-rs-iii",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 448,
+            "name": "L. Meyer",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 1217,
+            "name": "M. G. Mcallister",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 448,
+            "name": "W. M. Kelman",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 447,
+            "name": "R. S. Wade",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 447,
+            "name": "C. Bowra",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 444,
+            "name": "J. R. Jackson-ca",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 794,
+            "name": "W. BRIAN. Fordyce",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 439,
+            "name": "Paul A Eichorn",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 435,
+            "name": "Gardner",
+            "words": 0
+        },
+        {
+            "affiliation": "JR",
+            "docs": 789,
+            "name": "Lawrence W Hall",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 432,
+            "name": "T. P. Haller",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 1820,
+            "name": "E. Monahan",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 432,
+            "name": "W. Dembach",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 426,
+            "name": "R. A. Merricks",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 1178,
+            "name": "A. G. Moore",
+            "words": 0
+        },
+        {
+            "affiliation": "JR",
+            "docs": 1494,
+            "name": "C. W. Fitzgerald",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 426,
+            "name": "C. R. Edwards",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 424,
+            "name": "Grant M Stewart",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 1200,
+            "name": "R. E. Anderson",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 424,
+            "name": "Tatham Laird",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 757,
+            "name": "Jacobson",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 421,
+            "name": "P. E. Atkins",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 421,
+            "name": "Bruce A Bandy",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 418,
+            "name": "Morgan V Hunter",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 415,
+            "name": "James Whiteford Drummond",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 414,
+            "name": "Thomas L Ogburn",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 413,
+            "name": "Bowling",
+            "words": 0
+        },
+        {
+            "affiliation": "Tobacco Institute",
+            "docs": 816,
+            "name": "W. Kloepfer",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 413,
+            "name": "T. Goodale",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 412,
+            "name": "J. H. Winder",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 407,
+            "name": "J. Groome",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 407,
+            "name": "W. Schermerhorn",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 406,
+            "name": "S. Kates",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 1111,
+            "name": "F. Mckeown",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 405,
+            "name": "Derek H Beese",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 403,
+            "name": "Blalock",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 403,
+            "name": "U. Hackenberg",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 396,
+            "name": "G. B. Whitaker",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 722,
+            "name": "M. Falconetti",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 396,
+            "name": "D. W. Tredennick",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 394,
+            "name": "P. Thayer",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 390,
+            "name": "G. Weissman",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 389,
+            "name": "E. Pepples",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 388,
+            "name": "R. E. Grizzel",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 384,
+            "name": "Mrd",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 764,
+            "name": "J. L. Dodd",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 384,
+            "name": "J. S. Self",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 380,
+            "name": "V. Lopez",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 379,
+            "name": "Haus Neuerburg Gmbh",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 378,
+            "name": "Imperial Tobacco",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 722,
+            "name": "Jim F Hind",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 375,
+            "name": "R. Jodl",
+            "words": 0
+        },
+        {
+            "affiliation": "Lorillard",
+            "docs": 375,
+            "name": "L. Pollack",
+            "words": 0
+        },
+        {
+            "affiliation": "Lorillard",
+            "docs": 368,
+            "name": "Frederick J Schultz",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 365,
+            "name": "J. R. Costello",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 365,
+            "name": "J. F. Pool",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 364,
+            "name": "Charles W Nystrom",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 362,
+            "name": "H. K. Kothe",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 689,
+            "name": "Henry Henry Ramm",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 360,
+            "name": "C. J. Sink",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 358,
+            "name": "J. R. Chumney-rd",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 714,
+            "name": "Hc/regional Tobacco growth regulator com Smith",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 358,
+            "name": "G. A. Mason",
+            "words": 0
+        },
+        {
+            "affiliation": "Tobacco Institute",
+            "docs": 714,
+            "name": "T. I.",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 358,
+            "name": "Comm of counsel",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 358,
+            "name": "Dan F Pearson",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 357,
+            "name": "Haywood C Smith",
+            "words": 0
+        },
+        {
+            "affiliation": "American Tobacco",
+            "docs": 356,
+            "name": "T. P. Pettigrew",
+            "words": 0
+        },
+        {
+            "affiliation": "III",
+            "docs": 356,
+            "name": "R. G. Page",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 354,
+            "name": "X. X. Ulrich",
+            "words": 0
+        },
+        {
+            "affiliation": "Brown & Williamson",
+            "docs": 354,
+            "name": "Ted Bates",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 352,
+            "name": "C. L. Sharp",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 351,
+            "name": "Bates",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 349,
+            "name": "C. R. Blake",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 348,
+            "name": "U. >. Xx ulrich <hackenberg",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 346,
+            "name": "A. P. Ritchy",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 346,
+            "name": "A. A. Lyon",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 346,
+            "name": "W. R. Whiteman",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 346,
+            "name": "G. H. [JERRY]. Long",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 664,
+            "name": "Donald K Hoel",
+            "words": 0
+        },
+        {
+            "affiliation": "JR",
+            "docs": 344,
+            "name": "P. R. Ray",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 344,
+            "name": "David Edward Conway",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 339,
+            "name": "Ogilvy Mather",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 338,
+            "name": "Frederick P Haas",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 338,
+            "name": "S. Serle",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 337,
+            "name": "J. L. Smotherman",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 336,
+            "name": "J. B. Glenn",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 335,
+            "name": "Thomas T Goodale",
+            "words": 0
+        },
+        {
+            "affiliation": "Council for Tobacco Research",
+            "docs": 334,
+            "name": "Sheldon Charles Sommers",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 334,
+            "name": "Keith D Kilburn",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 333,
+            "name": "J. Vonwyss",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 332,
+            "name": "Jerry L Clawson",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 332,
+            "name": "F. HUNDALL. Christopher",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 332,
+            "name": "K. B. Hedrick",
+            "words": 0
+        },
+        {
+            "affiliation": "R.J. Reynolds",
+            "docs": 328,
+            "name": "G. Ashburn",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 326,
+            "name": "R. B. Beasley",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 325,
+            "name": "R. C. Walmisley",
+            "words": 0
+        },
+        {
+            "affiliation": "British American Tobacco",
+            "docs": 323,
+            "name": "Philip L Short",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 322,
+            "name": "G. J. Ahearn",
+            "words": 0
+        },
+        {
+            "affiliation": "JR",
+            "docs": 318,
+            "name": "M. LAIRD. Gann",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 317,
+            "name": "Carlos E Salguero",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 316,
+            "name": "C. G. Pheil",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 315,
+            "name": "J. L. Davidow",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 314,
+            "name": "R. L. Dilworth",
+            "words": 0
+        }
+    ]
+}
