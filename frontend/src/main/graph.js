@@ -258,30 +258,45 @@ export function get_information(data, name){
  * @param data: data
  * @param name: String
  */
-export function update_focused_node(el, data, config) {
+export function update_graph(el, data, config, action) {
+    if (action === 'focus') {
+        update_focused_node(el, data, config);
+    } else {
+        //function update_unfocus_node (el, data, config) {
+        const svg = d3.select(el);
+        svg.selectAll(".graph_node").style("opacity", 1);
+        svg.selectAll(".graph_link").style("opacity", 1);
+
+    }
+
+    function update_focused_node(el, data, config) {
         const name = config.search_person_name.toUpperCase();
         const svg = d3.select(el);
         const adj_data = data["adjacent_nodes"];
+        console.log("update_focused_node is called")
         svg.selectAll(".graph_node")
-            .style("opacity", function(o) {
+            .style("opacity", function (o) {
                 const other_name = o.name;
-                if (other_name+"-"+name in adj_data){
+                if (other_name + "-" + name in adj_data) {
                     return 1;
-                }
-                else if (other_name == name){
+                } else if (other_name === name) {
                     return 1;
                 }
                 return 0;
-        });
+            });
         svg.selectAll(".graph_link")
-            .style("opacity", function(o) {
+            .style("opacity", function (o) {
                 const source = o.source.name;
                 const target = o.target.name;
 
-                if (name == source || name == target){
+                if (name === source || name === target) {
                     return 1;
                 }
                 return 0;
-        });
+            });
+
+    }
 
 }
+
+
