@@ -238,13 +238,6 @@ export function create_graph(el, data, config, handle_viz_events) {
     }
 }
 
-/**
- * Change the color of each of the rectangles in the graph, slowly.
- *
- * @param el: Node
- * @param data: object[]
- * @param config: object
- */
 
 /**
  * Returns information of the given id
