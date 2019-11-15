@@ -47,7 +47,7 @@ class Controls extends React.Component {
     render() {
         return (
             <div className="row">
-                <div className="col-6">
+                <div className="col-4">
                     <input className="form-control"
                         type="text"
                         maxLength="20" size="20"
@@ -57,7 +57,8 @@ class Controls extends React.Component {
                     />
                     {/*<label>Color is blue</label>*/}
                 </div>
-
+                <button className="button">Search</button>
+                <button className="button">Clear</button>
                 <div id="info_button">
                     <a onClick={this.props.toggle_show_table}>
                         <FontAwesomeIcon icon={faInfoCircle} />
