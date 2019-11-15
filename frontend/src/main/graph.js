@@ -230,6 +230,7 @@ export function create_graph(el, data, config, handle_viz_events) {
                      "British American Tobacco": [width * .8, height * .2],
                      "Imperial Tobacco": [width * .2, height * .8],
                      "Japan Tobacco": [width*.8, height*.8]};
+        force_simulation.alphaTarget(0.3).restart();
         runForceSim();
         svg.attr("width", width).attr("height", height);
         console.log(width,height);
