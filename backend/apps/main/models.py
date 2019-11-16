@@ -8,6 +8,8 @@ import pandas as pd
 import pickle
 from collections import Counter
 
+from config.settings.base import BACKEND_DIR
+
 MAX_LENGTH = 250
 
 
