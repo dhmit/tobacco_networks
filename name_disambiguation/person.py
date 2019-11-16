@@ -60,7 +60,7 @@ class Person:
             if name_raw is None:
                 aliases = Counter()
             else:
-                aliases = Counter([name_raw.upper()])
+                aliases = Counter({name_raw.upper(): count})
 
         # set last, first, middle, position, positions: all converted to upper case
         # set aliases and count

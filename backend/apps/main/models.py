@@ -38,6 +38,7 @@ class DjangoPerson(models.Model):
     last = models.CharField(max_length=255)
     first = models.CharField(max_length=255)
     middle = models.CharField(max_length=255)
+    full_name = models.CharField(max_length=255, default=None, unique=True)
     most_likely_org = models.CharField(max_length=MAX_LENGTH)
     # positions & aliases are json strings that need to be parsed as Counter every time
     positions = models.TextField()
@@ -146,7 +147,8 @@ def import_csv_to_document_model(csv_path):
         # for each raw name, search in Person model by aliases
         # add connection to authors (ManyToManyField)
         for name in parsed_au:
-            person = DjangoPerson.objects.filter(aliases__contains=name)
+            # Currently this throws exception if it does not find exactly 1 matching object
+            person = DjangoPerson.objects.get(aliases__contains=name)
             d.authors.add(person)
 
         parsed_rc = []
@@ -155,7 +157,23 @@ def import_csv_to_document_model(csv_path):
         elif row['rc']:
             parsed_rc = parse_column_person(row['rc'])
         for name in parsed_rc:
-            person = DjangoPerson.objects.filter(aliases__contains=name)
+            # Currently this throws exception if it does not find exactly 1 matching object
+            try:
+                # TODO: figure out why can't search for f'"{name}"' [currently if you search
+                #  "Dunn WL", could potentially match someone like "Pete-Dunn WLA"]
+                person = DjangoPerson.objects.get(aliases__contains=f'"{name}"')
+            except DjangoPerson.DoesNotExist:
+                person_original = Person(name_raw=name)
+                person = DjangoPerson(last=person_original.last,
+                                      first=person_original.first,
+                                      middle=person.middle,
+                                      full_name=f'{person.first} {person.middle} {person.last}',
+                                      most_likely_org=person.most_likely_org,
+                                      # convert Counter object into json string
+                                      positions=json.dumps(person.positions),
+                                      aliases=json.dumps(person.aliases),
+                                      count=person.count
+                                      )
             d.recipients.add(person)
 
 
@@ -167,6 +185,7 @@ def import_peopledb_to_person_model(file_path):
         p = DjangoPerson(last=person.last,
                          first=person.first,
                          middle=person.middle,
+                         full_name=f'{person.first} {person.middle} {person.last}',
                          most_likely_org=person.most_likely_org,
                          # convert Counter object into json string
                          positions=json.dumps(person.positions),
