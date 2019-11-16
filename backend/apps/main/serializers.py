@@ -9,22 +9,6 @@ from pathlib import Path
 from .models import Person
 
 
-# class PersonSerializer(serializers.Serializer): #this was a dummy to help serialize network info
-#     """
-#     Serializer for the Person model
-#     """
-#     pk = serializers.IntegerField(read_only=True)  # pylint: disable=C0103
-#     name = serializers.CharField(read_only=True)
-#     docs = serializers.IntegerField(read_only=True)
-#     words = serializers.IntegerField(read_only=True)
-#
-#     def create(self, validated_data):
-#         """ We will not create new objects using this serializer """
-#
-#     def update(self, instance, validated_data):
-#         """ We will not update data using this serializer """
-
-
 class EdgeSerializer(serializers.Serializer):
     """
     Serializer for the Edge model
@@ -56,17 +40,6 @@ class PersonInfoSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """ We will not update data using this serializer """
-
-# class Person: #this was just a dummy to help serialize the network info
-#     """
-#     Python class for representing people in the data;
-#     probably to be eventually replaced with a Django model
-#     """
-#     def __init__(self, pk: int, name: str, docs: int, words: int):
-#         self.pk = pk  # pylint: disable=C0103
-#         self.name = name
-#         self.docs = docs
-#         self.words = words
 
 
 class Edge:

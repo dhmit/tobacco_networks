@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 
 import random
-from collections import Counter
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view

@@ -7,9 +7,6 @@ from django.db import models
 import pandas as pd
 import pickle
 from collections import Counter
-# from django.db import models
-
-from config.settings.base import BACKEND_DIR
 
 MAX_LENGTH = 250
 
