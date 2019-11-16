@@ -8,8 +8,6 @@ import pandas as pd
 import pickle
 from collections import Counter
 
-from config.settings.base import BACKEND_DIR
-
 MAX_LENGTH = 250
 
 
@@ -161,7 +159,6 @@ def import_csv_to_document_model(csv_path):
 def parse_column_person(column_name):
     """
     Splits individual names by semicolon or bar (|)
-
     :param column_name: list, taken from csv with doc info
     :return: list, names of people in column
     """
@@ -194,4 +191,3 @@ if __name__ == '__main__':
     import_peopledb_to_person_model(Path('..', 'data', 'name_disambiguation', 'names_db_10.pickle'))
     import_csv_to_document_model(Path('..', 'data', 'name_disambiguation', 'dunn_docs.csv'))
     Document.objects.all()
-
