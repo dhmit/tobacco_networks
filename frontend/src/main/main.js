@@ -156,6 +156,11 @@ class Info extends React.Component {
                             <th scope="row">Words</th>
                             <td>{this.props.words > 0 ? this.props.words : 0}</td>
                         </tr>
+                        <tr>
+                            <th scope="row">Affiliation</th>
+                            <td>{this.props.affiliation.length > 0 ? this.props.affiliation :
+                                ""}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -169,6 +174,7 @@ Info.propTypes ={
     person: PropTypes.string,
     docs: PropTypes.number,
     words: PropTypes.number,
+    affiliation: PropTypes.string,
     show_info_panel: PropTypes.bool,
     toggle_show_table: PropTypes.func,
 };
@@ -195,6 +201,7 @@ class MainView extends React.Component {
             person: "",
             docs: 0,
             words: 0,
+            affiliation: "",
             show_info_panel: false,
         };
         this.csrftoken = getCookie('csrftoken');
@@ -230,6 +237,7 @@ class MainView extends React.Component {
             this.setState({person: data.name});
             this.setState({docs: data.docs});
             this.setState({words: data.words});
+            this.setState({affiliation: data.affiliation})
             if (this.state.show_info_panel == false) {
                 this.setState({show_info_panel: true});
             }
@@ -303,6 +311,7 @@ class MainView extends React.Component {
                                 person={this.state.person}
                                 docs={this.state.docs}
                                 words={this.state.words}
+                                affiliation={this.state.affiliation}
                                 show_info_panel={this.state.show_info_panel}
                                 toggle_show_table={() => this.toggle_show_table()}
                             />
