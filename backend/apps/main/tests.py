@@ -29,7 +29,6 @@ class MainTests(TestCase):
         self.test_peopledb_pickle = Path(DATA_PATH, 'django', 'test_peopledb.pickle')
         test_peopledb.store_to_disk(self.test_peopledb_pickle)
 
-        # TODO: write test for importing docs csv
         self.test_docs_csv = Path(DATA_PATH, "django", "test_import_docs.csv")
 
     def test_import_peopledb_to_person_model(self):
@@ -60,7 +59,6 @@ class MainTests(TestCase):
                                  })),
                                  count=8
                                  )
-        print(DjangoPerson.objects.get(aliases__contains="DUNN"))
 
     def test_import_csv_to_document_model(self):
         import_peopledb_to_person_model(self.test_peopledb_pickle)
@@ -83,8 +81,8 @@ class MainTests(TestCase):
                              title="letter1"
                              )
         self.assertEqual(len(Document.objects.filter(authors__last="DUNN").all()), 2)
-        self.assertEqual(len(Document.objects.filter(authors__last="TEAGUE").all()), 1)
-        self.assertEqual(len(Document.objects.filter(authors__last="TEMKO").all()), 0)
+        self.assertEqual(len(Document.objects.filter(authors__full_name="C E TEAGUE").all()), 1)
+        self.assertEqual(len(Document.objects.filter(authors__full_name="S L TEMKO").all()), 0)
 
         self.assertEqual(len(Document.objects.filter(recipients__last="DUNN").all()), 0)
         self.assertEqual(len(Document.objects.filter(recipients__last="TEAGUE").all()), 1)

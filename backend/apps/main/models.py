@@ -161,7 +161,8 @@ def import_csv_to_document_model(csv_path):
             try:
                 # TODO: figure out why can't search for f'"{name}"' [currently if you search
                 #  "Dunn WL", could potentially match someone like "Pete-Dunn WLA"]
-                person = DjangoPerson.objects.get(aliases__contains=f'"{name}"')
+                person = DjangoPerson.objects.get(aliases__contains=f'{name}')
+                # person = DjangoPerson.objects.get(aliases__regex=r'\"' + '{name}' + r'\"')
             except DjangoPerson.DoesNotExist:
                 person_original = Person(name_raw=name)
                 person = DjangoPerson(last=person_original.last,
@@ -174,6 +175,7 @@ def import_csv_to_document_model(csv_path):
                                       aliases=json.dumps(person.aliases),
                                       count=person.count
                                       )
+                person.save()
             d.recipients.add(person)
 
 
