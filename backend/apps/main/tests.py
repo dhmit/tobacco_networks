@@ -32,7 +32,7 @@ class MainTests(TestCase):
         self.test_docs_csv = Path(DATA_PATH, "django", "test_import_docs.csv")
 
     def test_import_peopledb_to_person_model(self):
-        # tests import_peopledb_to_person_model() in models.py
+        # Tests import_peopledb_to_person_model() in models.py
         # imports peopledb from test pickle file & create corresponding DjangoPerson database
         import_peopledb_to_person_model(self.test_peopledb_pickle)
 
@@ -65,9 +65,12 @@ class MainTests(TestCase):
                                  )
 
     def test_import_csv_to_document_model(self):
+        # Tests import_csv_to_document_model() in models.py
+        # First create DjangoPerson database from the test pickle file
         import_peopledb_to_person_model(self.test_peopledb_pickle)
+        # Then create Document database from the test csv file
         import_csv_to_document_model(self.test_docs_csv)
-        print(Document.objects.all())
+        # Test if the correct Document objects are stored
         Document.objects.get(au="TEMKO SL",
                              au_org="",
                              au_person="Dunn, WL; TEAGUE CE JR",
@@ -84,6 +87,7 @@ class MainTests(TestCase):
                              tid="0x12sss",
                              title="letter1"
                              )
+        # Test if the authors & recipients ManyToManyField are stored correctly
         self.assertEqual(len(Document.objects.filter(authors__last="DUNN").all()), 2)
         self.assertEqual(len(Document.objects.filter(authors__full_name="C E TEAGUE").all()), 1)
         self.assertEqual(len(Document.objects.filter(authors__full_name="S L TEMKO").all()), 0)
@@ -92,4 +96,37 @@ class MainTests(TestCase):
         self.assertEqual(len(Document.objects.filter(recipients__last="TEAGUE").all()), 1)
         self.assertEqual(len(Document.objects.filter(recipients__last="TEMKO").all()), 1)
 
+    def test_import_csv_to_document_model_2(self):
+        # Tests when the authors/recipients do not exist in the current DjangoPerson database,
+        # the correct DjangoPerson objects are created & the authors/recipients are stored correctly
+        import_csv_to_document_model(self.test_docs_csv)
+        self.assertEqual(len(Document.objects.filter(authors__last="DUNN").all()), 2)
+        self.assertEqual(len(Document.objects.filter(authors__full_name="C E TEAGUE").all()), 1)
+        self.assertEqual(len(Document.objects.filter(authors__full_name="S L TEMKO").all()), 0)
+        self.assertEqual(len(Document.objects.filter(recipients__last="DUNN").all()), 0)
+        self.assertEqual(len(Document.objects.filter(recipients__last="TEAGUE").all()), 1)
+        self.assertEqual(len(Document.objects.filter(recipients__last="TEMKO").all()), 1)
+
+        print(DjangoPerson.objects.all())
+        DjangoPerson.objects.get(last="DUNN", first="W", middle="L",
+                                 full_name="W L DUNN",
+                                 most_likely_org="not calculated",
+                                 positions=json.dumps(Counter()),
+                                 aliases=json.dumps(Counter(["DUNN, WL"])),
+                                 count=1
+                                 )
+        DjangoPerson.objects.get(last="TEAGUE", first="C", middle="E",
+                                 full_name="C E TEAGUE",
+                                 most_likely_org="not calculated",
+                                 positions=json.dumps(Counter(["JR"])),
+                                 aliases=json.dumps(Counter(["TEAGUE CE JR"])),
+                                 count=1
+                                 )
+        DjangoPerson.objects.get(last="TEMKO", first="S", middle="L",
+                                 full_name="S L TEMKO",
+                                 most_likely_org="not calculated",
+                                 positions=json.dumps(Counter()),
+                                 aliases=json.dumps(Counter(["TEMKO SL"])),
+                                 count=1
+                                 )
 

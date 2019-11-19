@@ -163,9 +163,12 @@ def import_csv_to_document_model(csv_path):
             try:
                 # TODO: search for '"{name}"' [to include quotation marks in the search;
                 #  currently if you search "Dunn WL", could match someone like "Pete-Dunn WLA"]
-                person = DjangoPerson.objects.get(aliases__contains=f'{parsed_name}')
+                name_with_quotes = f'\"{parsed_name}\"'
+                person = DjangoPerson.objects.get(aliases__contains=name_with_quotes)
+                print(person)
             # If no such DjangoPerson exists, create a new DjangoPerson from the parsed name and
             # store it in the database
+            # TODO: currently after creating new DjangoPerson objects, there is no attempt to merge
             except DjangoPerson.DoesNotExist:
                 person_original = Person(name_raw=parsed_name)
                 person = DjangoPerson(last=person_original.last,
@@ -191,13 +194,13 @@ def import_csv_to_document_model(csv_path):
         # Document model's authors (ManyToManyField)
         for name in parsed_au:
             # Currently this throws exception if it does not find exactly 1 matching object
-            person = match_djangoperson_from_name(name)
+            person = match_djangoperson_from_name(name.upper())
             doc.authors.add(person)
 
         # for each raw recipient name, get the corresponding DjangoPerson object & add to the
         # Document model's recipients (ManyToManyField)
         for name in parsed_rc:
-            person = match_djangoperson_from_name(name)
+            person = match_djangoperson_from_name(name.upper())
             doc.recipients.add(person)
 
 
