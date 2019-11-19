@@ -23,22 +23,21 @@ class DjangoPerson(models.Model):
         last: CharField, last name
         first: CharField, first name
         middle: CharField, middle name
+        full_name: CharField, '<first> <middle> <last>', is a unique field
         most_likely_org: CharField, org that appeared most times for the person
         positions: TextField, string json representation of positions Counter (all related
-        annotations on the person). DO NOT DIRECTLY ACCESS (use property positions_counter)
+        annotations on the person). Use property positions_counter() to access!!
         aliases: TextField, string json representation of aliases Counter
-        (all raw strings used to refer to this person). DO NOT DIRECTLY ACCESS (use property
-        aliases_counter)
+        (all raw strings used to refer to this person). Use property aliases_counter() to access!!
         count: IntegerField, number of documents the person appeared in
     Properties:
         positions_counter: Counter of related annotations on the person
         aliases_counter: Counter of all raw strings used to refer to this person
     """
-    # Maybe should be blank = True??
-    last = models.CharField(max_length=255)
-    first = models.CharField(max_length=255)
-    middle = models.CharField(max_length=255)
-    full_name = models.CharField(max_length=255, default=None, unique=True)
+    last = models.CharField(max_length=MAX_LENGTH)
+    first = models.CharField(max_length=MAX_LENGTH)
+    middle = models.CharField(max_length=MAX_LENGTH)
+    full_name = models.CharField(max_length=MAX_LENGTH, unique=True)
     most_likely_org = models.CharField(max_length=MAX_LENGTH)
     # positions & aliases are json strings that need to be parsed as Counter every time
     positions = models.TextField()
@@ -68,7 +67,6 @@ class DjangoPerson(models.Model):
 
 class Document(models.Model):
     """Django database to represent Person objects
-    # TODO: check if the field descriptions are correct
     Fields:
         au: CharField, author(s)
         au_org: CharField, author organizations
@@ -82,12 +80,13 @@ class Document(models.Model):
         rc: CharField, recipient(s)
         rc_org: CharField, recipient organizations
         rc_person: CharField, recipient(s)
-        text: TextField, text of the document (is it full text??)
+        text: TextField, text of the document
         tid: CharField, document ID
         title: CharField, title of the document
 
-        authors: ManyToManyField, connect Document and its authors' Person objects in Django
-        recipients: ManyToManyField, connect Document and its recipients' Person objects in Django
+        authors: ManyToManyField, connect Document and its authors' DjangoPerson objects in database
+        recipients: ManyToManyField, connect Document and its recipients' DjangoPerson objects in
+        database
     """
     au = models.CharField(blank=True, max_length=MAX_LENGTH)
     au_org = models.CharField(blank=True, max_length=MAX_LENGTH)
@@ -116,9 +115,11 @@ def import_csv_to_document_model(csv_path):
     """
     Reads csv of docs and create Document model
     :param csv_path: Path to csv file
-    :return:
+    :return: None
     """
+    # Read csv into dataframe
     df = pd.read_csv(csv_path).fillna('')
+    # For each row, create & save the appropriate Document object
     for _, row in df.iterrows():
         d = Document(au=row['au'],
                      au_org=row['au_org'],
@@ -139,32 +140,29 @@ def import_csv_to_document_model(csv_path):
         d.save()
 
         # for au/au_person, and rc/rc_person, parse it into list of individual raw names
+        # assumes that names are either in 'au_person'/'rc_person or 'au'/'rc', but not both (if
+        # 'au_person')
         parsed_au = []
         if row['au_person']:
             parsed_au = parse_column_person(row['au_person'])
         elif row['au']:
             parsed_au = parse_column_person(row['au'])
-        # for each raw name, search in Person model by aliases
-        # add connection to authors (ManyToManyField)
-        for name in parsed_au:
-            # Currently this throws exception if it does not find exactly 1 matching object
-            person = DjangoPerson.objects.get(aliases__contains=name)
-            d.authors.add(person)
 
         parsed_rc = []
         if row['rc_person']:
             parsed_rc = parse_column_person(row['rc_person'])
         elif row['rc']:
             parsed_rc = parse_column_person(row['rc'])
-        for name in parsed_rc:
+
+        def match_djangoperson_from_parsed_name(parsed_name):
             # Currently this throws exception if it does not find exactly 1 matching object
             try:
-                # TODO: figure out why can't search for f'"{name}"' [currently if you search
-                #  "Dunn WL", could potentially match someone like "Pete-Dunn WLA"]
-                person = DjangoPerson.objects.get(aliases__contains=f'{name}')
+                # TODO: search for '"{name}"' [to include quotation marks in the search;
+                #  currently if you search "Dunn WL", could match someone like "Pete-Dunn WLA"]
+                person = DjangoPerson.objects.get(aliases__contains=f'{parsed_name}')
                 # person = DjangoPerson.objects.get(aliases__regex=r'\"' + '{name}' + r'\"')
             except DjangoPerson.DoesNotExist:
-                person_original = Person(name_raw=name)
+                person_original = Person(name_raw=parsed_name)
                 person = DjangoPerson(last=person_original.last,
                                       first=person_original.first,
                                       middle=person.middle,
@@ -176,7 +174,23 @@ def import_csv_to_document_model(csv_path):
                                       count=person.count
                                       )
                 person.save()
+            except DjangoPerson.MultipleObjectsReturned:
+                person = DjangoPerson.objects.filter(aliases__contains=f'{parsed_name}')[0]
+                print("Matched multiple DjangoPerson objects! Currently uses the first match")
+            return person
+
+        # for each raw name, search in Person model by aliases
+        # add connection to authors (ManyToManyField)
+        for name in parsed_au:
+            # Currently this throws exception if it does not find exactly 1 matching object
+            person = match_djangoperson_from_parsed_name(name)
+            d.authors.add(person)
+
+        for name in parsed_rc:
+            person = match_djangoperson_from_parsed_name(name)
             d.recipients.add(person)
+
+        d.save()
 
 
 def import_peopledb_to_person_model(file_path):
