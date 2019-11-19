@@ -28,11 +28,15 @@ class MainTests(TestCase):
         # store it as a picke file
         self.test_peopledb_pickle = Path(DATA_PATH, 'django', 'test_peopledb.pickle')
         test_peopledb.store_to_disk(self.test_peopledb_pickle)
-
+        # file path to test csv file for docs
         self.test_docs_csv = Path(DATA_PATH, "django", "test_import_docs.csv")
 
     def test_import_peopledb_to_person_model(self):
+        # tests import_peopledb_to_person_model() in models.py
+        # imports peopledb from test pickle file & create corresponding DjangoPerson database
         import_peopledb_to_person_model(self.test_peopledb_pickle)
+
+        # tests if the correct DjangoPerson objects are stored (by searching for them)
         # TODO: (maybe want to fix this) since aliases is a string, the order matters when you
         #  try to compare aliases Counters -- should we alphabetize when we json.dumps?
         DjangoPerson.objects.get(last="DUNN", first="WILLIAM", middle="L",

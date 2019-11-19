@@ -3,12 +3,11 @@ Models for the Rereading app.
 """
 import json
 from pathlib import Path
-from django.db import models
-import pandas as pd
 import pickle
 from collections import Counter
+import pandas as pd
+from django.db import models
 from name_disambiguation.person import Person
-from name_disambiguation.people_db import PeopleDatabase
 from name_disambiguation.name_preprocessing import parse_column_person
 from name_disambiguation.config import DATA_PATH
 
@@ -45,10 +44,8 @@ class DjangoPerson(models.Model):
     count = models.IntegerField()
 
     def __str__(self):
-        s = f'{self.first} {self.middle} {self.last}'
-        s = s + ", Positions: " + str(self.positions) + ", Aliases: " + \
+        return self.full_name + ", Positions: " + str(self.positions) + ", Aliases: " + \
             str(self.aliases) + ", count: " + str(self.count)
-        return s
 
     @property
     def positions_counter(self):
@@ -88,16 +85,16 @@ class Document(models.Model):
         recipients: ManyToManyField, connect Document and its recipients' DjangoPerson objects in
         database
     """
-    au = models.CharField(blank=True, max_length=MAX_LENGTH)
+    au = models.CharField(blank=True, max_length=MAX_LENGTH)        # pylint: disable=C0103
     au_org = models.CharField(blank=True, max_length=MAX_LENGTH)
     au_person = models.CharField(blank=True, max_length=MAX_LENGTH)
-    cc = models.CharField(blank=True, max_length=MAX_LENGTH)
+    cc = models.CharField(blank=True, max_length=MAX_LENGTH)        # pylint: disable=C0103
     cc_org = models.CharField(blank=True, max_length=MAX_LENGTH)
     collection = models.CharField(blank=True, max_length=MAX_LENGTH)
     date = models.CharField(blank=True, max_length=MAX_LENGTH)
     doc_type = models.CharField(blank=True, max_length=MAX_LENGTH)
     pages = models.IntegerField(blank=True)
-    rc = models.CharField(blank=True, max_length=MAX_LENGTH)
+    rc = models.CharField(blank=True, max_length=MAX_LENGTH)        # pylint: disable=C0103
     rc_org = models.CharField(blank=True, max_length=MAX_LENGTH)
     rc_person = models.CharField(blank=True, max_length=MAX_LENGTH)
     text = models.TextField(blank=True)
@@ -118,30 +115,32 @@ def import_csv_to_document_model(csv_path):
     :return: None
     """
     # Read csv into dataframe
-    df = pd.read_csv(csv_path).fillna('')
+    docs = pd.read_csv(csv_path).fillna('')
     # For each row, create & save the appropriate Document object
-    for _, row in df.iterrows():
-        d = Document(au=row['au'],
-                     au_org=row['au_org'],
-                     au_person=row['au_person'],
-                     cc=row['cc'],
-                     cc_org=row['cc_org'],
-                     collection=row['collection'],
-                     date=row['date'],
-                     doc_type=row['doc_type'],
-                     pages=int(row['pages']),
-                     rc=row['rc'],
-                     rc_org=row['rc_org'],
-                     rc_person=row['rc_person'],
-                     text=row['text'],
-                     tid=row['tid'],
-                     title=row['title']
-                     )
-        d.save()
+    for _, row in docs.iterrows():
+        doc = Document(au=row['au'],
+                       au_org=row['au_org'],
+                       au_person=row['au_person'],
+                       cc=row['cc'],
+                       cc_org=row['cc_org'],
+                       collection=row['collection'],
+                       date=row['date'],
+                       doc_type=row['doc_type'],
+                       pages=int(row['pages']),
+                       rc=row['rc'],
+                       rc_org=row['rc_org'],
+                       rc_person=row['rc_person'],
+                       text=row['text'],
+                       tid=row['tid'],
+                       title=row['title'])
+        doc.save()
 
         # for au/au_person, and rc/rc_person, parse it into list of individual raw names
-        # assumes that names are either in 'au_person'/'rc_person or 'au'/'rc', but not both (if
-        # 'au_person')
+        # assumes that names are either in 'au_person'/'rc_person or 'au'/'rc', but not both (
+        # this is mostly true)
+        # (if 'au_person' is not empty, then it only parses info from 'au_person'; otherwise,
+        # parses 'au'; usually 'au_person' has more reliable information, 'au' may have erroneous
+        # info. Same for rc)
         parsed_au = []
         if row['au_person']:
             parsed_au = parse_column_person(row['au_person'])
@@ -154,61 +153,77 @@ def import_csv_to_document_model(csv_path):
         elif row['rc']:
             parsed_rc = parse_column_person(row['rc'])
 
-        def match_djangoperson_from_parsed_name(parsed_name):
-            # Currently this throws exception if it does not find exactly 1 matching object
+        def match_djangoperson_from_name(parsed_name):
+            """
+            Returns DjangoPerson object that contains parsed_name as an alias
+            :param parsed_name: str, a parsed alias
+            :return: DjangoPerson object
+            """
+            # Searches in database the DjangoPerson object whose aliases contain parsed_name
             try:
                 # TODO: search for '"{name}"' [to include quotation marks in the search;
                 #  currently if you search "Dunn WL", could match someone like "Pete-Dunn WLA"]
                 person = DjangoPerson.objects.get(aliases__contains=f'{parsed_name}')
-                # person = DjangoPerson.objects.get(aliases__regex=r'\"' + '{name}' + r'\"')
+            # If no such DjangoPerson exists, create a new DjangoPerson from the parsed name and
+            # store it in the database
             except DjangoPerson.DoesNotExist:
                 person_original = Person(name_raw=parsed_name)
                 person = DjangoPerson(last=person_original.last,
                                       first=person_original.first,
-                                      middle=person.middle,
-                                      full_name=f'{person.first} {person.middle} {person.last}',
-                                      most_likely_org=person.most_likely_org,
+                                      middle=person_original.middle,
+                                      full_name=f'{person_original.first} '
+                                                f'{person_original.middle} {person_original.last}',
+                                      most_likely_org=person_original.most_likely_org,
                                       # convert Counter object into json string
-                                      positions=json.dumps(person.positions),
-                                      aliases=json.dumps(person.aliases),
-                                      count=person.count
+                                      positions=json.dumps(person_original.positions),
+                                      aliases=json.dumps(person_original.aliases),
+                                      count=person_original.count
                                       )
                 person.save()
+            # If multiple DjangoPerson objects are matched, return the first match and print out
+            # message
             except DjangoPerson.MultipleObjectsReturned:
                 person = DjangoPerson.objects.filter(aliases__contains=f'{parsed_name}')[0]
                 print("Matched multiple DjangoPerson objects! Currently uses the first match")
             return person
 
-        # for each raw name, search in Person model by aliases
-        # add connection to authors (ManyToManyField)
+        # for each raw author name, get the corresponding DjangoPerson object & add to the
+        # Document model's authors (ManyToManyField)
         for name in parsed_au:
             # Currently this throws exception if it does not find exactly 1 matching object
-            person = match_djangoperson_from_parsed_name(name)
-            d.authors.add(person)
+            person = match_djangoperson_from_name(name)
+            doc.authors.add(person)
 
+        # for each raw recipient name, get the corresponding DjangoPerson object & add to the
+        # Document model's recipients (ManyToManyField)
         for name in parsed_rc:
-            person = match_djangoperson_from_parsed_name(name)
-            d.recipients.add(person)
-
-        d.save()
+            person = match_djangoperson_from_name(name)
+            doc.recipients.add(person)
 
 
 def import_peopledb_to_person_model(file_path):
+    """
+    Import PeopleDatabase object from pickle file & store the corresponding DjangoPerson
+    objects into database
+    :param file_path: Path, file path to pickle file of PeopleDatabase
+    :return:
+    """
+    # Load pickle file
     with open(str(file_path), 'rb') as infile:
-        db = pickle.load(infile)
+        peopledb = pickle.load(infile)
 
-    for person in db.people:
-        p = DjangoPerson(last=person.last,
-                         first=person.first,
-                         middle=person.middle,
-                         full_name=f'{person.first} {person.middle} {person.last}',
-                         most_likely_org=person.most_likely_org,
-                         # convert Counter object into json string
-                         positions=json.dumps(person.positions),
-                         aliases=json.dumps(person.aliases),
-                         count=person.count
-                         )
-        p.save()
+    # For each Person in the PeopleDatabase, create the corresponding DjangoPerson & store
+    for person in peopledb.people:
+        person = DjangoPerson(last=person.last,
+                              first=person.first,
+                              middle=person.middle,
+                              full_name=f'{person.first} {person.middle} {person.last}',
+                              most_likely_org=person.most_likely_org,
+                              # convert Counter object into json string
+                              positions=json.dumps(person.positions),
+                              aliases=json.dumps(person.aliases),
+                              count=person.count)
+        person.save()
 
 
 # TODO update this / write interface between this and django models
