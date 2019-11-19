@@ -10,6 +10,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { getCookie } from '../common'
 import { create_graph, update_focused_node } from './graph.js'
 import './main.css';
+import {update_clustering} from "./graph";
 
 
 /***************************************************************************************************
@@ -52,7 +53,8 @@ class Controls extends React.Component {
                 </div>
                 <div className="col-6">
                     <div className="form-check float-right">
-                        <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
+                        <input type="checkbox" className="form-check-input"
+                            onChange={this.props.toggle_checkbox}/>
                         <label>Check to add foci</label>
                     </div>
                     <div id="info_button">
@@ -105,6 +107,8 @@ class Viz extends React.Component {
         let update_func;
         if (this.props.config.viz_update_func === 'focus_node') {
             update_func = update_focused_node;
+        } else if (this.props.config.viz_update_func === "cluster_nodes") {
+            update_func = update_clustering;
         }
         update_func(
             this._graphRoot.current,
@@ -208,6 +212,7 @@ class MainView extends React.Component {
             words: 0,
             affiliation: "",
             show_info_panel: false,
+            cluster_nodes: false,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -249,7 +254,12 @@ class MainView extends React.Component {
         }
     }
 
-    toggle_checkbox() {
+    toggle_checkbox(cluster_bool) {
+        this.setState({cluster_nodes: !this.state.cluster_nodes});
+        const config = {... this.state.config};
+        config.cluster_nodes = cluster_bool;
+        config.viz_update_func = 'cluster_nodes';
+        this.setState({config: config});
 
     }
 
@@ -300,7 +310,9 @@ class MainView extends React.Component {
                         update_searchbar_value={
                             (search_string) => this.update_searchbar_value(search_string)
                         }
+                        toggle_checkbox={(cluster_bool) => this.toggle_checkbox(cluster_bool)}
                         toggle_show_table={() => this.toggle_show_table()}
+                        cluster_nodes={this.state.cluster_nodes}
                         nodes={this.state.data.nodes}
                         searchbar_value={this.state.config.searchbar_value}
                     />

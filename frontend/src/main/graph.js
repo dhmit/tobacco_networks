@@ -263,6 +263,11 @@ export function get_information(data, name){
     return name_info;
 }
 
+// eslint-disable-next-line no-unused-vars
+export function update_clustering(el, data, config) {
+
+}
+
 /**
  * Updates visualization according to what the user searches
  *
