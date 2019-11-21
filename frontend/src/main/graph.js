@@ -83,9 +83,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         .enter()
             .append("g")
             .attr("class", "graph_node")
-            .attr('id', (d) => d.name);  // TODO: replace this with a fixed key
-    // rather than
-    // name
+            .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
 
     nodes  // bind event handlers for nodes
         .call(
@@ -193,7 +191,6 @@ export function create_graph(el, data, config, handle_viz_events) {
     function focus_node() {
         const node = d3.select(d3.event.target);
         const index = node.datum().index;
-        console.log(index);
 
         nodes.style("opacity", function(o) {
             return neigh(index, o.index, adjacent_nodes) ? 1 : 0;
@@ -202,8 +199,6 @@ export function create_graph(el, data, config, handle_viz_events) {
             return o.source.index === index || o.target.index === index ? 1 : 0;
         });
 
-        // TODO: Fix this to pass in the node name
-        //get_information(data, "DUNN,WL");
     }
 
     function unfocus_node() {
