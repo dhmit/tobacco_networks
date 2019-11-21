@@ -3,10 +3,9 @@ Serializers take models or other data structures and present them
 in ways that can be transported across the backend/frontend divide, or
 allow the frontend to suggest changes to the backend/database.
 """
-# import json
-# from pathlib import Path
+import json
+from pathlib import Path
 from rest_framework import serializers
-# from config.settings.base import BACKEND_DIR
 from .models import Person
 
 
@@ -56,36 +55,39 @@ class Edge:
         self.words = words
 
 
-# def load_network_json_data(return_type: str):
-#     """
-#     Loads test json data for initial prototyping
-#     :param return_type: string, determines which list needs to be determined, has the
-#     precondition that it either must be 'nodes' or 'edges'
-#     :return: list, contains all of the edges or all of the nodes (people at this point in time)
-#     from network_test_data.json
-#     """
-#     if return_type not in ['nodes', 'edges']:
-#         raise ValueError("Specified return type needs to be nodes or edges")
-#
-#     json_path = Path(BACKEND_DIR, 'data', 'network_test_data.json')
-#     with open(json_path) as json_file:
-#         data = json.load(json_file)
-#     if return_type == "edges":
-#         edges = []
-#         for edges_dict in data['links']:
-#             pk = int(edges_dict.get('id'))  # pylint: disable=C0103
-#             node1 = edges_dict.get('node1')
-#             node2 = edges_dict.get('node2')
-#             docs = edges_dict.get('docs')
-#             words = int(edges_dict.get('words'))
-#             edges.append(Edge(pk, node1, node2, docs, words))
-#         return edges
-#     else:
-#         people = []
-#         for person_dict in data['nodes']:
-#             pk = int(person_dict.get('id'))  # pylint: disable=C0103
-#             name = person_dict.get('name')
-#             docs = person_dict.get('docs')
-#             words = int(person_dict.get('words'))
-#             people.append(Person(pk, name, docs, words))
-#         return people
+def load_network_json_data(return_type: str):
+    """
+    Loads test json data for initial prototyping
+    :param return_type: string, determines which list needs to be determined, has the
+    precondition that it either must be 'nodes' or 'edges'
+    :return: list, contains all of the edges or all of the nodes (people at this point in time)
+    from network_test_data.json
+    """
+    if return_type not in ['nodes', 'edges']:
+        raise ValueError("Specified return type needs to be nodes or edges")
+
+    json_path = Path('/Users/kimba/Documents/GitHub/tobacco_networks/backend', 'data',
+                     'network_test_data.json')
+    with open(json_path) as json_file:
+        data = json.load(json_file)
+    if return_type == "edges":
+        edges = []
+        for edges_dict in data['links']:
+            pk = int(edges_dict.get('id'))  # pylint: disable=C0103
+            node1 = edges_dict.get('node1')
+            node2 = edges_dict.get('node2')
+            docs = edges_dict.get('docs')
+            words = int(edges_dict.get('words'))
+            edges.append(Edge(pk, node1, node2, docs, words))
+        return edges
+    else:
+        people = []
+        for person_dict in data['nodes']:
+            pk = int(person_dict.get('id'))  # pylint: disable=C0103
+            name = person_dict.get('name')
+            docs = person_dict.get('docs')
+            words = int(person_dict.get('words'))
+            people.append(Person(pk, name, docs, words))
+        return people
+
+
