@@ -22,9 +22,9 @@ class Controls extends React.Component {
         super(props);
     }
 
-    validate_input_and_maybe_search() {
+    validate_input(e) {
         // Check if the person we're searching for actually exists
-        const search_string = this.props.searchbar_value;
+        const search_string = e.target.value;
         this.props.update_searchbar_value(search_string);
 
         const nodes = this.props.nodes;
@@ -33,20 +33,15 @@ class Controls extends React.Component {
             const name = node.name;
             if (search_string.toLowerCase() === name.toLowerCase()) {
                 is_name = true;
-                this.props.handle_searchbar_query(search_string, true);
+                this.props.handle_searchbar_query(search_string, 1);
             } else {
                 // TODO: tell the user the name isn't in the list
 
             }
         }
-        if (is_name === false) {
-            this.props.handle_searchbar_query(search_string, false);
+        if (is_name === false){
+            this.props.handle_searchbar_query(search_string, 2);
         }
-    }
-
-    update_searchstring(e){
-        let search_string = e.target.value;
-        this.props.update_searchbar_value(search_string);
     }
 
     render() {
@@ -57,18 +52,13 @@ class Controls extends React.Component {
                         type="text"
                         maxLength="20" size="20"
                         value={this.props.searchbar_value}
-                        onChange={(e) => this.update_searchstring(e)}
                         placeholder={"Type a name here"}
+                        onChange={(e) => this.validate_input(e)}
                     />
+                    {/*<label>Color is blue</label>*/}
                 </div>
-                <button
-                    className="button"
-                    onClick={() => this.validate_input_and_maybe_search()}
-                >Search</button>
-                <button
-                    className="button"
-                    onClick={() => this.props.update_searchbar_value("")}
-                >Clear</button>
+                <button className="button">Search</button>
+                <button className="button">Clear</button>
                 <div id="info_button">
                     <a onClick={this.props.toggle_show_table}>
                         <FontAwesomeIcon icon={faInfoCircle} />
@@ -84,7 +74,6 @@ Controls.propTypes = {
     toggle_show_table: PropTypes.func,
     searchbar_value: PropTypes.string.isRequired,
     update_searchbar_value: PropTypes.func.isRequired,
-    empty_searchbar_value: PropTypes.func.isRequired,
     handle_searchbar_query: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
 };
@@ -276,7 +265,7 @@ class MainView extends React.Component {
     handle_searchbar_query(search_string, action) {
         const config = {... this.state.config};
         config.search_person_name = search_string;
-        if (action === true) {
+        if (action === 1) {
             config.viz_update_func = 'focus_node';
         } else {
             config.viz_update_func = 'unfocus_node';
