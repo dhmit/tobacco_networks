@@ -49,6 +49,11 @@ class Controls extends React.Component {
         this.props.update_searchbar_value(search_string);
     }
 
+    clear_searchbar(){
+        this.props.update_searchbar_value("");
+        this.props.handle_searchbar_query("", false);
+    }
+
     render() {
         return (
             <div className="row">
@@ -67,7 +72,8 @@ class Controls extends React.Component {
                 >Search</button>
                 <button
                     className="button"
-                    onClick={() => this.props.update_searchbar_value("")}
+                    onClick={() => this.clear_searchbar()}
+
                 >Clear</button>
                 <div id="info_button">
                     <a onClick={this.props.toggle_show_table}>
