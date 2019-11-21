@@ -41,19 +41,27 @@ export function create_graph(el, data, config, handle_viz_events) {
     // by adding nodes to the svg and updating their position in render_simulation
     const force_link = d3.forceLink(data.links)
                          .id((d) => d.name)  // which data field to use as id for links
-                         .distance(50)
-                         .strength(1);
+                         .distance(50);
     const graph_x_center = graph_width / 2;
     const graph_y_center = graph_height / 2;
 
+    const centers = {"Phillip Morris International": [graph_width * .2, graph_height * .2],
+                     "British American Tobacco": [graph_width * .8, graph_height * .2],
+                     "Imperial Tobacco": [graph_width * .2, graph_height * .8],
+                     "Japan Tobacco": [graph_width*.8, graph_height*.8]};
+
     const force_simulation = d3.forceSimulation(data.nodes)
     force_simulation.force("link", force_link)
-        .force("charge", d3.forceManyBody().strength(-5000))
+        .force("charge", d3.forceManyBody().strength(-1000))
         .force("center", d3.forceCenter(graph_x_center, graph_y_center))
-        .force("x", d3.forceX(graph_x_center).strength(1))
-        .force("y", d3.forceY(graph_y_center).strength(1))
+        .force('collision', d3.forceCollide().radius(30))
+        .force('x', d3.forceX().x(function(d) {
+            return centers[d.affiliation][0];
+        }).strength(5))
+        .force('y', d3.forceY().y(function(d) {
+            return centers[d.affiliation][1];
+        }).strength(5))
         .on("tick", render_simulation);  // what to do when the sim updates
-
 
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
@@ -144,7 +152,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     // This function is called whenever the simulation updates
     function render_simulation() {
         // Update node positions
-        nodes.attr("transform", (d) => `translate(${d.x}, ${d.y})` );
+        nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
 
         // Update link positions
         links.attr("x1", (d) => d.source.x)

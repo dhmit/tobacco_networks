@@ -46,6 +46,9 @@ def get_network_data(request):
         node['x'] = random.random()*500
         node['y'] = random.random()*500
         node['weight'] = node['docs']
+        node['affiliation'] = random.choice(['Phillip Morris International', 'British American '
+                                                                             'Tobacco',
+                                             'Japan Tobacco', 'Imperial Tobacco'])
     links = data['links']
     adjacent_nodes = {}
     for link in links:
