@@ -8,19 +8,6 @@ import * as d3 from 'd3';
 // so turning off standard eslint indent rules just for this file
 /* eslint indent: 0 */
 
-export function get_adj_list(data){
-    const adjacent_nodes = {};
-    for (const link of data.links) {
-        adjacent_nodes[link.source.index + "-" + link.target.index] = true;
-        adjacent_nodes[link.target.index + "-" + link.source.index] = true;
-    }
-    return adjacent_nodes;
-}
-
-export function neigh(a, b, adjacent_nodes) {
-        return a === b || adjacent_nodes[a + "-" + b];
-    }
-
 /**
  * Create a graph using d3
  *
@@ -31,6 +18,7 @@ export function neigh(a, b, adjacent_nodes) {
  * @param handle_viz_events: function to pass visualization events back to react.
  */
 export function create_graph(el, data, config, handle_viz_events) {
+    const adj_data = data["adjacent_nodes"];
     const graph_width = config.width;
     const graph_height = config.height;
 
@@ -192,20 +180,28 @@ export function create_graph(el, data, config, handle_viz_events) {
         nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
     }
 
-    // Setup adjacencies (maybe refactor this...)
-    const adjacent_nodes = get_adj_list(data);
-
     function focus_node() {
         const node = d3.select(d3.event.target);
-        const index = node.datum().index;
+        const name = node["_groups"][0][0]["__data__"]["name"];
 
         nodes.style("opacity", function(o) {
-            return neigh(index, o.index, adjacent_nodes) ? 1 : 0;
-        });
-        links.style("opacity", function(o) {
-            return o.source.index === index || o.target.index === index ? 1 : 0;
+            const other_name = o.name;
+                if (other_name + "-" + name in adj_data) {
+                    return 1;
+                } else if (other_name === name) {
+                    return 1;
+                }
+                return 0;
         });
 
+        links.style("opacity", function(o) {
+            const source = o.source.name;
+            const target = o.target.name;
+            if (name === source || name === target) {
+                return 1;
+            }
+            return 0;
+        });
     }
 
     function unfocus_node() {
@@ -294,9 +290,6 @@ export function update_graph(el, data, config, action) {
                 }
                 return 0;
             });
-
     }
 
 }
-
-
