@@ -89,5 +89,3 @@ def load_network_json_data(return_type: str):
             words = int(person_dict.get('words'))
             people.append(Person(pk, name, docs, words))
         return people
-
-

@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from collections import Counter
 from rest_framework.response import Response
-from .serializers import PersonInfoSerializer, EdgeSerializer , load_network_json_data
+from .serializers import PersonInfoSerializer, EdgeSerializer, load_network_json_data
 from .models import Person
 
 
@@ -27,7 +27,8 @@ def get_network_data(request):
     """
     Temporary view to get network test data json
     """
-    json_path = Path('/Users/kimba/Documents/GitHub/tobacco_networks/backend', 'data', 'network_test_data.json')
+    json_path = Path('/Users/kimba/Documents/GitHub/tobacco_networks/backend', 'data',
+                     'network_test_data.json')
     with open(json_path) as json_file:
         data = json.load(json_file)
     nodes = data['nodes']
@@ -52,5 +53,19 @@ def get_person_info(request):
     :return: serialized person matching full name imbain request
     """
     queryset = Person.objects.filter(full_name=request.query_params['full_name'])
-    serializer = PersonInfoSerializer(instance=queryset, many=True)
-    return Response(serializer.data)
+    if not list(queryset):
+        full_name = request.query_params['full_name']
+        new = Person(
+            last="",
+            first="",
+            middle="",
+            full_name=full_name + " not available.",
+            most_likely_org="",
+            positions=json.dumps(Counter()),
+            aliases=json.dumps(Counter()),
+            count=0)
+        serializer = PersonInfoSerializer(instance=new, many=False)
+        return Response(serializer.data)
+    else:
+        serializer = PersonInfoSerializer(instance=queryset, many=True)
+        return Response(serializer.data)

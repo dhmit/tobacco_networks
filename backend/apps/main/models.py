@@ -33,7 +33,7 @@ class Person(models.Model):
     last = models.CharField(max_length=255)
     first = models.CharField(max_length=255)
     middle = models.CharField(max_length=255)
-    full_name = models.CharField(max_length=255)
+    full_name = models.CharField(max_length=255, unique=True)
     most_likely_org = models.CharField(max_length=MAX_LENGTH)
     # positions & aliases are json strings that need to be parsed as Counter every time
     positions = models.TextField()
