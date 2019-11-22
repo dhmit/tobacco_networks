@@ -8,7 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { getCookie } from '../common'
-import { create_graph, update_focused_node } from './graph.js'
+import * as d3 from 'd3';
+import { create_graph, update_graph} from './graph.js'
 import './main.css';
 
 
@@ -21,36 +22,52 @@ class Controls extends React.Component {
         super(props);
     }
 
-    validate_input(e) {
+    validate_input_and_maybe_search() {
         // Check if the person we're searching for actually exists
-        const search_string = e.target.value;
+        const search_string = this.props.searchbar_value;
         this.props.update_searchbar_value(search_string);
 
         const nodes = this.props.nodes;
+        let is_name = false;
         for (const node of nodes) {
             const name = node.name;
             if (search_string.toLowerCase() === name.toLowerCase()) {
-                this.props.handle_searchbar_query(search_string);
+                is_name = true;
+                this.props.handle_searchbar_query(search_string, true);
+                break;
             } else {
-                // probably do something like tell the user the name isn't in the list
-                return;
+                // TODO: tell the user the name isn't in the list
+
             }
+        }
+        if (is_name === false) {
+            this.props.handle_searchbar_query(search_string, false);
         }
     }
 
     render() {
         return (
             <div className="row">
-                <div className="col-6">
+                <div className="col-4">
                     <input className="form-control"
                         type="text"
                         maxLength="20" size="20"
                         value={this.props.searchbar_value}
+                        onChange={(e) => this.props.update_searchbar_value(e.target.value)}
                         placeholder={"Type a name here"}
-                        onChange={(e) => this.validate_input(e)}
                     />
-                    {/*<label>Color is blue</label>*/}
                 </div>
+                <button
+                    className="button"
+                    onClick={() => this.validate_input_and_maybe_search()}
+                >Search</button>
+                <button
+                    className="button"
+                    onClick={() => {
+                        this.props.update_searchbar_value("");
+                        this.props.handle_searchbar_query("", false);
+                    }}
+                >Clear</button>
                 <div id="info_button">
                     <a onClick={this.props.toggle_show_table}>
                         <FontAwesomeIcon icon={faInfoCircle} />
@@ -87,23 +104,28 @@ class Viz extends React.Component {
             this.props.config,
             this.props.handle_viz_events,
         );
+        window.d3 = d3;
     }
 
     componentDidUpdate() {
         // D3 Code to update the chart
-
         if (this.props.config.viz_update_func === undefined) {
             return;
         }
-
-        let update_func;
+        let update_func, action;
         if (this.props.config.viz_update_func === 'focus_node') {
-            update_func = update_focused_node;
+            update_func = update_graph;
+            action = 'focus';
+        }
+        else if (this.props.config.viz_update_func === 'unfocus_node') {
+            update_func = update_graph;
+            action = 'unfocus';
         }
         update_func(
             this._graphRoot.current,
             this.props.data,
             this.props.config,
+            action,
         );
     }
 
@@ -237,8 +259,8 @@ class MainView extends React.Component {
             this.setState({person: data.name});
             this.setState({docs: data.docs});
             this.setState({words: data.words});
-            this.setState({affiliation: data.affiliation})
-            if (this.state.show_info_panel == false) {
+            this.setState({affiliation: data.affiliation});
+            if (this.state.show_info_panel === false) {
                 this.setState({show_info_panel: true});
             }
         }
@@ -249,11 +271,17 @@ class MainView extends React.Component {
      *
      * @param event_name: String
      */
-    handle_searchbar_query(search_string) {
+    handle_searchbar_query(search_string, action) {
         const config = {... this.state.config};
         config.search_person_name = search_string;
-        config.viz_update_func = 'focus_node';
-        this.setState({config: config})
+        if (action === true) {
+            config.viz_update_func = 'focus_node';
+        } else {
+            config.viz_update_func = 'unfocus_node';
+        }
+        config.searchbar_value = search_string;
+        this.setState({config: config});
+
     }
 
     update_searchbar_value(search_string) {
@@ -287,7 +315,8 @@ class MainView extends React.Component {
                     <Controls  // this is its own row
                         person_to_highlight={this.state.config.person_to_highlight}
                         handle_searchbar_query={
-                            (search_string) => this.handle_searchbar_query(search_string)
+                            (search_string, action) => this.handle_searchbar_query(search_string,
+                                action)
                         }
                         update_searchbar_value={
                             (search_string) => this.update_searchbar_value(search_string)

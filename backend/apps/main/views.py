@@ -50,7 +50,14 @@ def get_network_data(request):
                                                                              'Tobacco',
                                              'Japan Tobacco', 'Imperial Tobacco'])
     links = data['links']
+    adjacent_nodes = {}
     for link in links:
         link['source'] = link['node1']
         link['target'] = link['node2']
+        adjacent_nodes[link['node1'] + "-" + link['node2']] = True
+        adjacent_nodes[link['node2'] + "-" + link['node1']] = True
+    data["adjacent_nodes"] = adjacent_nodes
+
+    # TODO: Need to add adjacent_nodes and add False value : talk to rest of group about this
+
     return JsonResponse(data)
