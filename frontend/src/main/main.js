@@ -123,7 +123,7 @@ class Viz extends React.Component {
         let update_func, action;
         if (this.props.config.viz_update_func === "cluster_nodes") {
             update_func = update_graph;
-            action = 'unfocus';
+            action = 'cluster_nodes';
         }
         else if (this.props.config.viz_update_func === 'unfocus_node') {
             update_func = update_graph;

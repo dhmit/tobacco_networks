@@ -226,8 +226,8 @@ export function create_graph(el, data, config, handle_viz_events) {
         let force_simulation = initialize_force_sim(config, data);
         force_simulation.alphaTarget(0.3).restart();
         force_simulation.alphaTarget(0);
-        force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
-        render_simulation(); // not sure if this makes a difference
+        //force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
+        //render_simulation(); // not sure if this makes a difference
     }
     d3.select(window).on("resize", resize);
 
@@ -331,15 +331,13 @@ export function get_information(data, name){
 export function update_graph(el, data, config, action) {
     if (action === 'focus') {
         update_focused_node(el, data, config);
+    } else if (action === "cluster_nodes") {
+        initialize_force_sim(config, data);
     } else {
         //function update_unfocus_node (el, data, config) {
         const svg = d3.select(el);
         svg.selectAll(".graph_node").style("opacity", 1);
         svg.selectAll(".graph_link").style("opacity", 1);
-    }
-
-    if (config.cluster_nodes) {
-        initialize_force_sim(config, data);
     }
 
     function update_focused_node(el, data, config) {
