@@ -1,5 +1,6 @@
 """
-Models for the Rereading app.
+Models for tobacco networks: DjangoPerson (represent a person & associated information)
+& Document (represent a document & associated information & its author/recipient DjangoPerson).
 """
 import json
 from pathlib import Path
@@ -9,9 +10,7 @@ import pandas as pd
 from django.db import models
 from name_disambiguation.person import Person
 from name_disambiguation.name_preprocessing import parse_column_person
-from name_disambiguation.config import DATA_PATH
-
-from config.settings.base import BACKEND_DIR
+from name_disambiguation.config import BACKEND_PATH
 
 MAX_LENGTH = 250
 
@@ -160,12 +159,11 @@ def import_csv_to_document_model(csv_path):
             :return: DjangoPerson object
             """
             # Searches in database the DjangoPerson object whose aliases contain parsed_name
+            name_with_quotes = f'\"{parsed_name}'
             try:
                 # TODO: search for '"{name}"' [to include quotation marks in the search;
                 #  currently if you search "Dunn WL", could match someone like "Pete-Dunn WLA"]
-                name_with_quotes = f'\"{parsed_name}\"'
                 person = DjangoPerson.objects.get(aliases__contains=name_with_quotes)
-                print(person)
             # If no such DjangoPerson exists, create a new DjangoPerson from the parsed name and
             # store it in the database
             # TODO: currently after creating new DjangoPerson objects, there is no attempt to merge
@@ -186,7 +184,7 @@ def import_csv_to_document_model(csv_path):
             # If multiple DjangoPerson objects are matched, return the first match and print out
             # message
             except DjangoPerson.MultipleObjectsReturned:
-                person = DjangoPerson.objects.filter(aliases__contains=f'{parsed_name}')[0]
+                person = DjangoPerson.objects.filter(aliases__contains=name_with_quotes)[0]
                 print("Matched multiple DjangoPerson objects! Currently uses the first match")
             return person
 
@@ -194,14 +192,14 @@ def import_csv_to_document_model(csv_path):
         # Document model's authors (ManyToManyField)
         for name in parsed_au:
             # Currently this throws exception if it does not find exactly 1 matching object
-            person = match_djangoperson_from_name(name.upper())
-            doc.authors.add(person)
+            matched_person = match_djangoperson_from_name(name.upper())
+            doc.authors.add(matched_person)
 
         # for each raw recipient name, get the corresponding DjangoPerson object & add to the
         # Document model's recipients (ManyToManyField)
         for name in parsed_rc:
-            person = match_djangoperson_from_name(name.upper())
-            doc.recipients.add(person)
+            matched_person = match_djangoperson_from_name(name.upper())
+            doc.recipients.add(matched_person)
 
 
 def import_peopledb_to_person_model(file_path):
@@ -268,7 +266,7 @@ def load_network_json_data(return_type: str):
     if return_type not in ['nodes', 'edges']:
         raise ValueError("Specified return type needs to be nodes or edges")
 
-    json_path = Path(BACKEND_DIR, 'data', 'network_test_data.json')
+    json_path = Path(BACKEND_PATH, 'data', 'network_test_data.json')
     with open(json_path) as json_file:
         data = json.load(json_file)
     if return_type == "edges":
@@ -293,8 +291,4 @@ def load_network_json_data(return_type: str):
 
 
 if __name__ == '__main__':
-    peopledb_path = DATA_PATH / 'name_disambiguation' / 'names_db_10.pickle'
-    docs_path = DATA_PATH / 'name_disambiguation' / 'dunn_docs.csv'
-    import_peopledb_to_person_model(peopledb_path)
-    import_csv_to_document_model(docs_path)
-    Document.objects.all()
+    pass

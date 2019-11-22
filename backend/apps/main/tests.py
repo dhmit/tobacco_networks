@@ -2,19 +2,22 @@
 Tests for the main app.
 """
 
-from django.test import TestCase
 import json
 from pathlib import Path
 from collections import Counter
+from django.test import TestCase
 from name_disambiguation.people_db import PeopleDatabase
-from name_disambiguation.name_preprocessing import parse_column_person
 from name_disambiguation.config import DATA_PATH
-from apps.main.models import DjangoPerson
-from apps.main.models import Document
-from apps.main.models import import_peopledb_to_person_model
-from apps.main.models import import_csv_to_document_model
+from .models import DjangoPerson
+from .models import Document
+from .models import import_peopledb_to_person_model
+from .models import import_csv_to_document_model
 
-class MainTests(TestCase):
+
+class ModelsTests(TestCase):
+    """
+    Tests import methods in models.py
+    """
     def setUp(self):
         # create a small PeopleDatabase for testing
         test_peopledb = PeopleDatabase()
@@ -22,6 +25,7 @@ class MainTests(TestCase):
         test_peopledb.add_person_raw("Dunn, William L", 4)
         test_peopledb.add_person_raw("TEAGUE CE JR", 3)
         test_peopledb.add_person_raw("TEMKO SL, COVINGTON AND BURLING", 5)
+        test_peopledb.add_person_raw("TEMKO SL, COVINGTON BURLING", 3)
         test_peopledb.add_person_raw("TEMKO SL, COVINGTON BURLING", 3)
         # merge duplicate people
         test_peopledb.merge_duplicates(print_merge_results_for_name=None)
@@ -31,9 +35,12 @@ class MainTests(TestCase):
         # file path to test csv file for docs
         self.test_docs_csv = Path(DATA_PATH, "django", "test_import_docs.csv")
 
-    def test_import_peopledb_to_person_model(self):
-        # Tests import_peopledb_to_person_model() in models.py
-        # imports peopledb from test pickle file & create corresponding DjangoPerson database
+    def test_import_peopledb_to_person(self):
+        """
+        Tests import_peopledb_to_person_model() in models.py
+        imports peopledb from test pickle file & create corresponding DjangoPerson database
+        :return:
+        """
         import_peopledb_to_person_model(self.test_peopledb_pickle)
 
         # tests if the correct DjangoPerson objects are stored (by searching for them)
@@ -64,8 +71,11 @@ class MainTests(TestCase):
                                  count=8
                                  )
 
-    def test_import_csv_to_document_model(self):
-        # Tests import_csv_to_document_model() in models.py
+    def test_import_csv_to_document(self):
+        """
+        Tests import_csv_to_document_model() in models.py
+        :return:
+        """
         # First create DjangoPerson database from the test pickle file
         import_peopledb_to_person_model(self.test_peopledb_pickle)
         # Then create Document database from the test csv file
@@ -96,9 +106,13 @@ class MainTests(TestCase):
         self.assertEqual(len(Document.objects.filter(recipients__last="TEAGUE").all()), 1)
         self.assertEqual(len(Document.objects.filter(recipients__last="TEMKO").all()), 1)
 
-    def test_import_csv_to_document_model_2(self):
-        # Tests when the authors/recipients do not exist in the current DjangoPerson database,
-        # the correct DjangoPerson objects are created & the authors/recipients are stored correctly
+    def test_import_csv_to_document_2(self):
+        """
+        Tests import_csv_to_document_model() in models.py:
+        Tests when the authors/recipients do not exist in the current DjangoPerson database,
+        the correct DjangoPerson objects are created & the authors/recipients are stored correctly
+        :return:
+        """
         import_csv_to_document_model(self.test_docs_csv)
         self.assertEqual(len(Document.objects.filter(authors__last="DUNN").all()), 2)
         self.assertEqual(len(Document.objects.filter(authors__full_name="C E TEAGUE").all()), 1)
@@ -107,7 +121,6 @@ class MainTests(TestCase):
         self.assertEqual(len(Document.objects.filter(recipients__last="TEAGUE").all()), 1)
         self.assertEqual(len(Document.objects.filter(recipients__last="TEMKO").all()), 1)
 
-        print(DjangoPerson.objects.all())
         DjangoPerson.objects.get(last="DUNN", first="W", middle="L",
                                  full_name="W L DUNN",
                                  most_likely_org="not calculated",
@@ -129,4 +142,3 @@ class MainTests(TestCase):
                                  aliases=json.dumps(Counter(["TEMKO SL"])),
                                  count=1
                                  )
-
