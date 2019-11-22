@@ -138,6 +138,7 @@ class Viz extends React.Component {
             action = 'unfocus';
         }
         else if (this.props.config.viz_update_func === 'create_graph') {
+            document.getElementById('graph_root').innerHTML = '';
             update_func = create_graph;
         }
 
@@ -152,7 +153,7 @@ class Viz extends React.Component {
 
     render() {
         return (
-            <div className="col-12 p-0 m-0" ref={this._graphRoot}>
+            <div className="col-12 p-0 m-0" ref={this._graphRoot} id='graph_root'>
 
             </div>
         )

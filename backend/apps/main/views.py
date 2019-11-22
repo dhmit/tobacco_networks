@@ -52,8 +52,6 @@ def get_network_data(request):
     else:
         json_filename = 'network_test_data.json'
 
-    print("Loading ", json_filename, request.GET)
-
     json_path = Path(BACKEND_DIR, 'data', json_filename)
     with open(json_path) as json_file:
         data = json.load(json_file)
