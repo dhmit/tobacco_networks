@@ -61,7 +61,7 @@ class Controls extends React.Component {
                     <div className="form-check float-right">
                         <input type="checkbox" className="form-check-input"
                             onChange={this.props.toggle_checkbox}/>
-                        <label>Check to add foci</label>
+                        <label>Check to cluster</label>
                     </div>
                     <div id="info_button">
                         <a onClick={this.props.toggle_show_table}>
