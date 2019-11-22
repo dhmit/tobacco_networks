@@ -212,7 +212,7 @@ class MainView extends React.Component {
             words: 0,
             affiliation: "",
             show_info_panel: false,
-            cluster_nodes: false,
+            cluster_nodes: true,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -254,10 +254,10 @@ class MainView extends React.Component {
         }
     }
 
-    toggle_checkbox(cluster_bool) {
+    toggle_checkbox() {
         this.setState({cluster_nodes: !this.state.cluster_nodes});
         const config = {... this.state.config};
-        config.cluster_nodes = cluster_bool;
+        config.cluster_nodes = this.state.cluster_nodes;
         config.viz_update_func = 'cluster_nodes';
         this.setState({config: config});
 
@@ -310,7 +310,7 @@ class MainView extends React.Component {
                         update_searchbar_value={
                             (search_string) => this.update_searchbar_value(search_string)
                         }
-                        toggle_checkbox={(cluster_bool) => this.toggle_checkbox(cluster_bool)}
+                        toggle_checkbox={() => this.toggle_checkbox()}
                         toggle_show_table={() => this.toggle_show_table()}
                         cluster_nodes={this.state.cluster_nodes}
                         nodes={this.state.data.nodes}
