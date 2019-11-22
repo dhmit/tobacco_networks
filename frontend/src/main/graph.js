@@ -8,6 +8,19 @@ import * as d3 from 'd3';
 // so turning off standard eslint indent rules just for this file
 /* eslint indent: 0 */
 
+export function get_adj_list(data){
+    const adjacent_nodes = {};
+    for (const link of data.links) {
+        adjacent_nodes[link.source.index + "-" + link.target.index] = true;
+        adjacent_nodes[link.target.index + "-" + link.source.index] = true;
+    }
+    return adjacent_nodes;
+}
+
+export function neigh(a, b, adjacent_nodes) {
+        return a === b || adjacent_nodes[a + "-" + b];
+    }
+
 /**
  * Create a graph using d3
  *
@@ -174,21 +187,14 @@ export function create_graph(el, data, config, handle_viz_events) {
     }
 
     // Setup adjacencies (maybe refactor this...)
-    const adjacent_nodes = {};
-    for (const link of data.links) {
-        adjacent_nodes[link.source.index + "-" + link.target.index] = true;
-        adjacent_nodes[link.target.index + "-" + link.source.index] = true;
-    }
-    function neigh(a, b) {
-        return a === b || adjacent_nodes[a + "-" + b];
-    }
+    const adjacent_nodes = get_adj_list(data);
 
     function focus_node() {
         const node = d3.select(d3.event.target);
         const index = node.datum().index;
 
         nodes.style("opacity", function(o) {
-            return neigh(index, o.index) ? 1 : 0;
+            return neigh(index, o.index, adjacent_nodes) ? 1 : 0;
         });
         links.style("opacity", function(o) {
             return o.source.index === index || o.target.index === index ? 1 : 0;
@@ -220,6 +226,8 @@ export function create_graph(el, data, config, handle_viz_events) {
         let force_simulation = initialize_force_sim(config, data);
         force_simulation.alphaTarget(0.3).restart();
         force_simulation.alphaTarget(0);
+        force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
+        render_simulation(); // not sure if this makes a difference
     }
     d3.select(window).on("resize", resize);
 
@@ -304,7 +312,6 @@ export function get_information(data, name){
     name = name.toUpperCase();
     const data_nodes = data["nodes"];
     let name_info = {};
-
     for(const indx in data_nodes){
         const current_name = data_nodes[indx];
         if (current_name["name"]  == name){
@@ -326,44 +333,44 @@ export function update_clustering(el, data, config) {
  * @param data: data
  * @param name: String
  */
-export function update_focused_node(el, data, config) {
+export function update_graph(el, data, config, action) {
+    if (action === 'focus') {
+        update_focused_node(el, data, config);
+    } else {
+        //function update_unfocus_node (el, data, config) {
+        const svg = d3.select(el);
+        svg.selectAll(".graph_node").style("opacity", 1);
+        svg.selectAll(".graph_link").style("opacity", 1);
+
+    }
+
+    function update_focused_node(el, data, config) {
         const name = config.search_person_name.toUpperCase();
-        console.log("entered update focused node")
-        // then for each node check if node is a neighbor; if yes set opacity to 1, if not set to 0
-        const neigh = []
-        const data_edges = data["links"];
-
-        for (const indx in data_edges){
-            const other_name_1 = data_edges[indx]["node1"].toUpperCase();
-            const other_name_2 = data_edges[indx]["node2"].toUpperCase();
-            if( other_name_1 != other_name_2) {
-                if (other_name_1 == name) {
-                    neigh.push(other_name_2);
+        const svg = d3.select(el);
+        const adj_data = data["adjacent_nodes"];
+        svg.selectAll(".graph_node")
+            .style("opacity", function (o) {
+                const other_name = o.name;
+                if (other_name + "-" + name in adj_data) {
+                    return 1;
+                } else if (other_name === name) {
+                    return 1;
                 }
-                else if(other_name_2 == name) {
-                    neigh.push(other_name_1);
+                return 0;
+            });
+        svg.selectAll(".graph_link")
+            .style("opacity", function (o) {
+                const source = o.source.name;
+                const target = o.target.name;
+
+                if (name === source || name === target) {
+                    return 1;
                 }
-            }
-        }
-        // TODO: Fix selector
+                return 0;
+            });
 
-        // need to fix the selector
-        const node = d3.select("#"+name);
-        console.log(node);
+    }
 
-        /*
-        console.log(node);
-        const index = node.datum().index;
-        const nodes = d3.selectAll(".graph_node");
-
-        nodes.style("opacity", function(o) {
-            if ( o in neigh) {
-                return o.source.index ? 1:0;
-            }
-        });
-        const links = d3.selectAll(".graph_link");
-        links.style("opacity", function(o) {
-            return o.source.index === index || o.target.index === index ? 1 : 0;
-        });
-        */
 }
+
+
