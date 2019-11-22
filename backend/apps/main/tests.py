@@ -8,10 +8,10 @@ from collections import Counter
 from django.test import TestCase
 from name_disambiguation.people_db import PeopleDatabase
 from name_disambiguation.config import DATA_PATH
-from .models import DjangoPerson
-from .models import Document
-from .models import import_peopledb_to_person_model
-from .models import import_csv_to_document_model
+from apps.main.models import DjangoPerson
+from apps.main.models import Document
+from apps.main.models import import_peopledb_to_person_model
+from apps.main.models import import_csv_to_document_model
 
 
 class ModelsTests(TestCase):
