@@ -26,35 +26,16 @@ export function create_graph(el, data, config, handle_viz_events) {
     // This creates the x and y values for the data, based on relationships here
     // n.b. this doesn't actually render the sim - we do that below
     // by adding nodes to the svg and updating their position in render_simulation
-    const force_link = d3.forceLink(data.links)
-                         .id((d) => d.name)  // which data field to use as id for links
-                         .distance(50);
-    const graph_x_center = graph_width / 2;
-    const graph_y_center = graph_height / 2;
 
-    const centers = {"Phillip Morris International": [graph_width * .2, graph_height * .2],
-                     "British American Tobacco": [graph_width * .8, graph_height * .2],
-                     "Imperial Tobacco": [graph_width * .2, graph_height * .8],
-                     "Japan Tobacco": [graph_width*.8, graph_height*.8]};
 
-    const force_simulation = d3.forceSimulation(data.nodes)
-    force_simulation.force("link", force_link)
-        .force("charge", d3.forceManyBody().strength(-1000))
-        .force("center", d3.forceCenter(graph_x_center, graph_y_center))
-        .force('collision', d3.forceCollide().radius(30))
-        .force('x', d3.forceX().x(function(d) {
-            return centers[d.affiliation][0];
-        }).strength(5))
-        .force('y', d3.forceY().y(function(d) {
-            return centers[d.affiliation][1];
-        }).strength(5))
-        .on("tick", render_simulation);  // what to do when the sim updates
+    let force_simulation = initialize_force_sim(config, data);
 
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
         .append('svg')
             .attr("width", graph_width)
-            .attr("height", graph_height);
+            .attr("height", graph_height)
+            .attr("id", "svg_id");
 
     // Create links
     const links = svg
@@ -100,9 +81,18 @@ export function create_graph(el, data, config, handle_viz_events) {
             max_weight = node.weight;
         }
     }
-    const circle_color_scale = d3.scaleSequential(d3.interpolateBlues)
+    let circle_color_scale;
     const calc_circle_color = (d) => {
         const floor = .5;
+        if (d.affiliation === "Phillip Morris International") {
+            circle_color_scale  = d3.scaleSequential(d3.interpolateBlues)
+        } else if (d.affiliation === "British American Tobacco") {
+            circle_color_scale  = d3.scaleSequential(d3.interpolateReds)
+        } else if(d.affiliation === "Imperial Tobacco") {
+            circle_color_scale  = d3.scaleSequential(d3.interpolateGreens)
+        } else {
+            circle_color_scale  = d3.scaleSequential(d3.interpolateGreys)
+        }
         return circle_color_scale(floor + .5 * Math.pow(d.weight / max_weight, .5));
     };
     const calc_circle_radius = (d) => Math.max(Math.pow(d.weight, 1/3), 5);
@@ -111,7 +101,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     nodes
         .append("circle")
             .attr("r", (d) => calc_circle_radius(d))
-            .attr("fill", (d) => calc_circle_color(d))
+            .attr("fill", (d) => calc_circle_color(d));
 
     // Setup labels
     const calc_label_pos = (d, i, nodes) => {
@@ -130,13 +120,15 @@ export function create_graph(el, data, config, handle_viz_events) {
             .style("fill", "#555")
             .style("font-family", "Arial")
             .style("font-size", 12)
-            .attr("transform", (d, i, n) => calc_label_pos(d, i, n));
+            .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
+                .style("pointer-events", "none");
 
     /*
      * Event handlers
      */
     // Update the position of all svg elements according to the force sim
     // This function is called whenever the simulation updates
+    // eslint-disable-next-line no-unused-vars
     function render_simulation() {
         // Update node positions
         nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
@@ -146,6 +138,8 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("y1", (d) => d.source.y)
             .attr("x2", (d) => d.target.x)
             .attr("y2", (d) => d.target.y);
+        config.nodes = nodes;
+        config.links = links;
     }
 
     function drag_started(d) {
@@ -159,19 +153,19 @@ export function create_graph(el, data, config, handle_viz_events) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
 
-        fix_nodes(d);
+        // fix_nodes(d);
     }
 
     // Preventing other nodes from moving while dragging one node
-    function fix_nodes(this_node) {
-        nodes.each(
-            function(node){
-            if (this_node != node){
-                node.fx = node.x;
-                node.fy = node.y;
-             }
-         });
-     }
+    // function fix_nodes(this_node) {
+    //     nodes.each(
+    //         function(node){
+    //         if (this_node != node){
+    //             node.fx = node.x;
+    //             node.fy = node.y;
+    //          }
+    //      });
+    //  }
 
     function drag_ended(d) {
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
@@ -202,31 +196,113 @@ export function create_graph(el, data, config, handle_viz_events) {
             }
             return 0;
         });
+        config.nodes = nodes;
+        config.links = links;
+        // TODO: Fix this to pass in the node name
+        get_information(data, "DUNN,WL");
     }
 
     function unfocus_node() {
         nodes.style("opacity", 1);
         links.style("opacity", 1);
+        config.nodes = nodes;
+        config.links = links;
     }
-
-    d3.select(window).on("resize", resize);
-
     function resize() {
         const width = window.innerWidth;
         const height = window.innerHeight;
+
         svg.attr("width", width).attr("height", height);
-        force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
-        render_simulation(); // not sure if this makes a difference
+        config.width = width;
+        config.height = height;
+        let force_simulation = initialize_force_sim(config, data);
+        force_simulation.alphaTarget(0.3).restart();
+        force_simulation.alphaTarget(0);
     }
+    d3.select(window).on("resize", resize);
+
+    config.svg = svg;
+    config.nodes = nodes;
+    config.links = links;
 }
 
-/**
- * Change the color of each of the rectangles in the graph, slowly.
- *
- * @param el: Node
- * @param data: object[]
- * @param config: object
- */
+function initialize_force_sim(config, data) {
+    const graph_width = config.width;
+    const graph_height = config.height;
+
+    let centers;
+    let link_strength;
+    let cluster_strength;
+    let charge_strength;
+    let radius_distance;
+    if (config.cluster_nodes) {
+        centers = {
+            "Phillip Morris International": [graph_width * .2, graph_height * .2],
+            "British American Tobacco": [graph_width * .8, graph_height * .2],
+            "Imperial Tobacco": [graph_width * .2, graph_height * .8],
+            "Japan Tobacco": [graph_width * .8, graph_height * .8]
+        };
+        link_strength = 0;
+        charge_strength = -1000;
+        cluster_strength = 5;
+        radius_distance = 30;
+    } else {
+        centers = {
+            "Phillip Morris International": [graph_width/2, graph_height/2],
+            "British American Tobacco": [graph_width/2, graph_height/2],
+            "Imperial Tobacco": [graph_width/2, graph_height/2],
+            "Japan Tobacco": [graph_width/2, graph_height/2]
+        };
+        link_strength = 1;
+        charge_strength = -5000;
+        cluster_strength = 3;
+        radius_distance = 0;
+    }
+    const force_link = d3.forceLink(data.links)
+                         .id((d) => d.name)  // which data field to use as id for links
+                         .distance(50)
+                         .strength(link_strength);
+
+    let force_simulation = d3.forceSimulation(data.nodes);
+    force_simulation.force("link", force_link)
+        .force("charge", d3.forceManyBody().strength(charge_strength))
+        .force("center", d3.forceCenter(graph_width/2, graph_height/2))
+        .force('collision', d3.forceCollide().radius(radius_distance))
+        .force('x', d3.forceX().x(function(d) {
+            return centers[d.affiliation][0];
+        }).strength(cluster_strength))
+        .force('y', d3.forceY().y(function(d) {
+            return centers[d.affiliation][1];
+        }).strength(cluster_strength))
+        .on("tick", render_simulation);  // what to do when the sim updates
+
+    function render_simulation() {
+        // Update node positions
+        config.nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
+
+        // Update link positions
+        config.links.attr("x1", (d) => d.source.x)
+            .attr("y1", (d) => d.source.y)
+            .attr("x2", (d) => d.target.x)
+            .attr("y2", (d) => d.target.y);
+    }
+
+    function resize() {
+        const svg = d3.select("svg_id")
+        console.log("RESIZING", config.width, config.height);
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        svg.attr("width", width).attr("height", height);
+        config.width = width;
+        config.height = height;
+        let force_simulation = initialize_force_sim(config, data);
+        force_simulation.alphaTarget(0.3).restart();
+        force_simulation.alphaTarget(0);
+    }
+    d3.select(window).on("resize", resize);
+    return force_simulation;
+}
+
 
 /**
  * Returns information of the given id
@@ -241,7 +317,7 @@ export function get_information(data, name){
     let name_info = {};
     for(const indx in data_nodes){
         const current_name = data_nodes[indx];
-        if (current_name["name"]  == name){
+        if (current_name["name"]  === name){
             name_info = current_name;
         }
     }
@@ -258,12 +334,13 @@ export function get_information(data, name){
 export function update_graph(el, data, config, action) {
     if (action === 'focus') {
         update_focused_node(el, data, config);
+    } else if (action === "cluster_nodes") {
+        initialize_force_sim(config, data);
     } else {
         //function update_unfocus_node (el, data, config) {
         const svg = d3.select(el);
         svg.selectAll(".graph_node").style("opacity", 1);
         svg.selectAll(".graph_link").style("opacity", 1);
-
     }
 
     function update_focused_node(el, data, config) {

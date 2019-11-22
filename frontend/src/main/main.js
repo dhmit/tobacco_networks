@@ -57,21 +57,28 @@ class Controls extends React.Component {
                         placeholder={"Type a name here"}
                     />
                 </div>
-                <button
-                    className="button"
-                    onClick={() => this.validate_input_and_maybe_search()}
-                >Search</button>
-                <button
-                    className="button"
-                    onClick={() => {
-                        this.props.update_searchbar_value("");
-                        this.props.handle_searchbar_query("", false);
-                    }}
-                >Clear</button>
-                <div id="info_button">
-                    <a onClick={this.props.toggle_show_table}>
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                    </a>
+                <div className="col-6">
+                    <div className="form-check float-right">
+                        <input type="checkbox" className="form-check-input"
+                            onChange={this.props.toggle_checkbox}/>
+                        <label>Check to cluster</label>
+                    </div>
+                    <div id="info_button">
+                        <a onClick={this.props.toggle_show_table}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                        </a>
+                    </div>
+                    <button
+                        className="button"
+                        onClick={() => this.validate_input_and_maybe_search()}
+                    >Search</button>
+                    <button
+                        className="button"
+                        onClick={() => {
+                            this.props.update_searchbar_value("");
+                            this.props.handle_searchbar_query("", false);
+                        }}
+                    >Clear</button>
                 </div>
                 <div className="col-4">
                     <div className="form-group">
@@ -95,6 +102,7 @@ class Controls extends React.Component {
 
 
 Controls.propTypes = {
+    toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
     searchbar_value: PropTypes.string.isRequired,
     update_searchbar_value: PropTypes.func.isRequired,
@@ -131,9 +139,9 @@ class Viz extends React.Component {
         }
 
         let update_func, action;
-        if (this.props.config.viz_update_func === 'focus_node') {
+        if (this.props.config.viz_update_func === "cluster_nodes") {
             update_func = update_graph;
-            action = 'focus';
+            action = 'cluster_nodes';
         }
         else if (this.props.config.viz_update_func === 'unfocus_node') {
             update_func = update_graph;
@@ -221,7 +229,6 @@ Info.propTypes ={
     docs: PropTypes.number,
     words: PropTypes.number,
     affiliation: PropTypes.string,
-    show_info_panel: PropTypes.bool,
     toggle_show_table: PropTypes.func,
 };
 
@@ -250,6 +257,7 @@ class MainView extends React.Component {
             words: 0,
             affiliation: "",
             show_info_panel: false,
+            cluster_nodes: true,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -280,6 +288,15 @@ class MainView extends React.Component {
                 this.setState({show_info_panel: true});
             }
         }
+    }
+
+    toggle_checkbox() {
+        this.setState({cluster_nodes: !this.state.cluster_nodes});
+        const config = {... this.state.config};
+        config.cluster_nodes = this.state.cluster_nodes;
+        config.viz_update_func = 'cluster_nodes';
+        this.setState({config: config});
+
     }
 
     /**
@@ -340,7 +357,6 @@ class MainView extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
-        console.log('calling toggle show table!');
         this.setState({show_info_panel: !this.state.show_info_panel});
     }
 
@@ -362,7 +378,9 @@ class MainView extends React.Component {
                         update_searchbar_value={
                             (search_string) => this.update_searchbar_value(search_string)
                         }
+                        toggle_checkbox={() => this.toggle_checkbox()}
                         toggle_show_table={() => this.toggle_show_table()}
+                        cluster_nodes={this.state.cluster_nodes}
                         nodes={this.state.data.nodes}
                         searchbar_value={this.state.config.searchbar_value}
                         dataset_name={this.state.config.dataset_name}
