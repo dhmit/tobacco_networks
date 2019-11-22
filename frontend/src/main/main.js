@@ -80,6 +80,21 @@ class Controls extends React.Component {
                         }}
                     >Clear</button>
                 </div>
+                <div className="col-4">
+                    <div className="form-group">
+                        <label htmlFor="exampleFormControlSelect1">Dataset</label>
+                        <select className="form-control"
+                            value={this.props.dataset_name}
+                            onChange={(e) => this.props.update_dataset(e.target.value)}
+                        >
+                            <option value="lawyers">Lawyers</option>
+                            <option value="research_directors">Research Directors</option>
+                            <option value="sterling">Theodore Sterling</option>
+                            <option value="top_100_edges">100 Strongest Edges</option>
+                            <option value="test">Test Dataset</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -93,6 +108,8 @@ Controls.propTypes = {
     update_searchbar_value: PropTypes.func.isRequired,
     handle_searchbar_query: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
+    dataset_name: PropTypes.string.isRequired,
+    update_dataset: PropTypes.func.isRequired
 };
 
 /***************************************************************************************************
@@ -120,6 +137,7 @@ class Viz extends React.Component {
         if (this.props.config.viz_update_func === undefined) {
             return;
         }
+
         let update_func, action;
         if (this.props.config.viz_update_func === "cluster_nodes") {
             update_func = update_graph;
@@ -129,6 +147,12 @@ class Viz extends React.Component {
             update_func = update_graph;
             action = 'unfocus';
         }
+        else if (this.props.config.viz_update_func === 'create_graph') {
+            document.getElementById('graph_root').innerHTML = '';
+            update_func = create_graph;
+        }
+
+
         update_func(
             this._graphRoot.current,
             this.props.data,
@@ -139,7 +163,7 @@ class Viz extends React.Component {
 
     render() {
         return (
-            <div className="col-12 p-0 m-0" ref={this._graphRoot}>
+            <div className="col-12 p-0 m-0" ref={this._graphRoot} id='graph_root'>
 
             </div>
         )
@@ -223,6 +247,7 @@ class MainView extends React.Component {
                 color: 'blue',
                 person_to_highlight: "",
                 searchbar_value: "",
+                dataset_name: 'test'
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
@@ -240,16 +265,7 @@ class MainView extends React.Component {
      * Runs when the MainView item is connected to the DOM.
      */
     componentDidMount() {
-        fetch("get_network_data")
-            .then((response) => {
-                response
-                    .json()
-                    .then((data) => {
-                        this.setState({data:data});
-                    })
-            }).catch(() => {
-                console.log("error");
-            });
+        this.load_dataset(this.state.config.dataset_name);
     }
 
     /**
@@ -311,6 +327,31 @@ class MainView extends React.Component {
         event.preventDefault();
     }
 
+    update_dataset(dataset_name) {
+        console.log(dataset_name);
+        const config = {...this.state.config};
+        config.dataset_name = dataset_name;
+        config.viz_update_func = 'create_graph';
+        this.load_dataset(config.dataset_name);
+        this.setState({config: config});
+    }
+
+    async load_dataset(dataset_name) {
+        const dataset = encodeURIComponent(dataset_name);
+        fetch(`get_network_data?dataset=${dataset}`)
+            .then((response) => {
+                response
+                    .json()
+                    .then((data) => {
+                        console.log("new data", data);
+                        this.setState({data:data});
+                    })
+            }).catch(() => {
+                console.log("error");
+            });
+    }
+
+
     /**
      * Calls when button is pressed.  Shows the table containing info about person when it is
      * hidden and hides table when visible.
@@ -342,6 +383,10 @@ class MainView extends React.Component {
                         cluster_nodes={this.state.cluster_nodes}
                         nodes={this.state.data.nodes}
                         searchbar_value={this.state.config.searchbar_value}
+                        dataset_name={this.state.config.dataset_name}
+                        update_dataset={
+                            (dataset_name) => this.update_dataset(dataset_name)
+                        }
                     />
 
                     <div className="row">
