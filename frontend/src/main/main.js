@@ -73,18 +73,20 @@ class Controls extends React.Component {
                         <FontAwesomeIcon icon={faInfoCircle} />
                     </a>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="exampleFormControlSelect1">Dataset</label>
-                    <select className="form-control"
-                        value={this.props.dataset_name}
-                        onChange={(e) => this.props.update_dataset(e.target.value)}
-                    >
-                        <option value="lawyers">Lawyers</option>
-                        <option value="research_directors">Research Directors</option>
-                        <option value="sterling">Theodore Sterling</option>
-                        <option value="top_100_edges">100 Strongest Edges</option>
-                        <option value="test">Test Dataset</option>
-                    </select>
+                <div className="col-4">
+                    <div className="form-group">
+                        <label htmlFor="exampleFormControlSelect1">Dataset</label>
+                        <select className="form-control"
+                            value={this.props.dataset_name}
+                            onChange={(e) => this.props.update_dataset(e.target.value)}
+                        >
+                            <option value="lawyers">Lawyers</option>
+                            <option value="research_directors">Research Directors</option>
+                            <option value="sterling">Theodore Sterling</option>
+                            <option value="top_100_edges">100 Strongest Edges</option>
+                            <option value="test">Test Dataset</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         );
