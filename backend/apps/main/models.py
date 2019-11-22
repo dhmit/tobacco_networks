@@ -3,14 +3,12 @@ Models for tobacco networks: DjangoPerson (represent a person & associated infor
 & Document (represent a document & associated information & its author/recipient DjangoPerson).
 """
 import json
-from pathlib import Path
 import pickle
 from collections import Counter
 import pandas as pd
 from django.db import models
 from name_disambiguation.person import Person
 from name_disambiguation.name_preprocessing import parse_column_person
-from name_disambiguation.config import BACKEND_PATH
 
 MAX_LENGTH = 250
 
@@ -225,69 +223,6 @@ def import_peopledb_to_person_model(file_path):
                               aliases=json.dumps(person.aliases),
                               count=person.count)
         person.save()
-
-
-# TODO update this / write interface between this and django models
-class NetworkPerson:
-    """
-    Python class for representing people in the data;
-    probably to be eventually replaced with a Django model
-    """
-    def __init__(self, pk: int, name: str, docs: int, words: int):
-        self.pk = pk  # pylint: disable=C0103
-        self.name = name
-        self.docs = docs
-        self.words = words
-
-
-# TODO update this / write interface between this and django models
-class NetworkEdge:
-    """
-    Python object to store edges, should be replaced if the Person class is replaced
-    """
-    def __init__(self, pk: int, node1: str, node2: str,  # pylint: disable-msg=R0913
-                 docs: int, words: int):
-        self.pk = pk  # pylint: disable=C0103
-        self.node1 = node1  # could be replaced with Person
-        self.node2 = node2
-        self.docs = docs
-        self.words = words
-
-
-# TODO update this / write interface between this and django models
-def load_network_json_data(return_type: str):
-    """
-    Loads test json data for initial prototyping
-    :param return_type: string, determines which list needs to be determined, has the
-    precondition that it either must be 'nodes' or 'edges'
-    :return: list, contains all of the edges or all of the nodes (people at this point in time)
-    from network_test_data.json
-    """
-    if return_type not in ['nodes', 'edges']:
-        raise ValueError("Specified return type needs to be nodes or edges")
-
-    json_path = Path(BACKEND_PATH, 'data', 'network_test_data.json')
-    with open(json_path) as json_file:
-        data = json.load(json_file)
-    if return_type == "edges":
-        edges = []
-        for edges_dict in data['links']:
-            pk = int(edges_dict.get('id'))  # pylint: disable=C0103
-            node1 = edges_dict.get('node1')
-            node2 = edges_dict.get('node2')
-            docs = edges_dict.get('docs')
-            words = int(edges_dict.get('words'))
-            edges.append(NetworkEdge(pk, node1, node2, docs, words))
-        return edges
-    else:
-        people = []
-        for person_dict in data['nodes']:
-            pk = int(person_dict.get('id'))  # pylint: disable=C0103
-            name = person_dict.get('name')
-            docs = person_dict.get('docs')
-            words = int(person_dict.get('words'))
-            people.append(NetworkPerson(pk, name, docs, words))
-        return people
 
 
 if __name__ == '__main__':
