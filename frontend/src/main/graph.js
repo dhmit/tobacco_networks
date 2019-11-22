@@ -31,7 +31,6 @@ export function neigh(a, b, adjacent_nodes) {
  * @param handle_viz_events: function to pass visualization events back to react.
  */
 export function create_graph(el, data, config, handle_viz_events) {
-    console.log("The data", data);
     const graph_width = config.width;
     const graph_height = config.height;
 
@@ -220,7 +219,6 @@ export function create_graph(el, data, config, handle_viz_events) {
         const width = window.innerWidth;
         const height = window.innerHeight;
         svg.attr("width", width).attr("height", height);
-        console.log(width,height);
         force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
         render_simulation(); // not sure if this makes a difference
     }

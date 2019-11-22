@@ -57,7 +57,6 @@ def get_network_data(request):
         adjacent_nodes[link['node1'] + "-" + link['node2']] = True
         adjacent_nodes[link['node2'] + "-" + link['node1']] = True
     data["adjacent_nodes"] = adjacent_nodes
-    print(data)
 
     # TODO: Need to add adjacent_nodes and add False value : talk to rest of group about this
 

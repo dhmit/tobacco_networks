@@ -34,6 +34,7 @@ class Controls extends React.Component {
             if (search_string.toLowerCase() === name.toLowerCase()) {
                 is_name = true;
                 this.props.handle_searchbar_query(search_string, true);
+                break;
             } else {
                 // TODO: tell the user the name isn't in the list
 
@@ -44,11 +45,6 @@ class Controls extends React.Component {
         }
     }
 
-    update_searchstring(e){
-        let search_string = e.target.value;
-        this.props.update_searchbar_value(search_string);
-    }
-
     render() {
         return (
             <div className="row">
@@ -57,7 +53,7 @@ class Controls extends React.Component {
                         type="text"
                         maxLength="20" size="20"
                         value={this.props.searchbar_value}
-                        onChange={(e) => this.update_searchstring(e)}
+                        onChange={(e) => this.props.update_searchbar_value(e.target.value)}
                         placeholder={"Type a name here"}
                     />
                 </div>
@@ -67,7 +63,10 @@ class Controls extends React.Component {
                 >Search</button>
                 <button
                     className="button"
-                    onClick={() => this.props.update_searchbar_value("")}
+                    onClick={() => {
+                        this.props.update_searchbar_value("");
+                        this.props.handle_searchbar_query("", false);
+                    }}
                 >Clear</button>
                 <div id="info_button">
                     <a onClick={this.props.toggle_show_table}>
@@ -84,7 +83,6 @@ Controls.propTypes = {
     toggle_show_table: PropTypes.func,
     searchbar_value: PropTypes.string.isRequired,
     update_searchbar_value: PropTypes.func.isRequired,
-    empty_searchbar_value: PropTypes.func.isRequired,
     handle_searchbar_query: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
 };
@@ -261,8 +259,8 @@ class MainView extends React.Component {
             this.setState({person: data.name});
             this.setState({docs: data.docs});
             this.setState({words: data.words});
-            this.setState({affiliation: data.affiliation})
-            if (this.state.show_info_panel == false) {
+            this.setState({affiliation: data.affiliation});
+            if (this.state.show_info_panel === false) {
                 this.setState({show_info_panel: true});
             }
         }
