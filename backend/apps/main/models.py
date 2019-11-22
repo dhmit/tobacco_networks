@@ -150,42 +150,6 @@ def import_csv_to_document_model(csv_path):
         elif row['rc']:
             parsed_rc = parse_column_person(row['rc'])
 
-        def match_djangoperson_from_name(parsed_name):
-            """
-            Returns DjangoPerson object that contains parsed_name as an alias
-            :param parsed_name: str, a parsed alias
-            :return: DjangoPerson object
-            """
-            # Searches in database the DjangoPerson object whose aliases contain parsed_name
-            name_with_quotes = f'\"{parsed_name}'
-            try:
-                # TODO: search for '"{name}"' [to include quotation marks in the search;
-                #  currently if you search "Dunn WL", could match someone like "Pete-Dunn WLA"]
-                person = DjangoPerson.objects.get(aliases__contains=name_with_quotes)
-            # If no such DjangoPerson exists, create a new DjangoPerson from the parsed name and
-            # store it in the database
-            # TODO: currently after creating new DjangoPerson objects, there is no attempt to merge
-            except DjangoPerson.DoesNotExist:
-                person_original = Person(name_raw=parsed_name)
-                person = DjangoPerson(last=person_original.last,
-                                      first=person_original.first,
-                                      middle=person_original.middle,
-                                      full_name=f'{person_original.first} '
-                                                f'{person_original.middle} {person_original.last}',
-                                      most_likely_org=person_original.most_likely_org,
-                                      # convert Counter object into json string
-                                      positions=json.dumps(person_original.positions),
-                                      aliases=json.dumps(person_original.aliases),
-                                      count=person_original.count
-                                      )
-                person.save()
-            # If multiple DjangoPerson objects are matched, return the first match and print out
-            # message
-            except DjangoPerson.MultipleObjectsReturned:
-                person = DjangoPerson.objects.filter(aliases__contains=name_with_quotes)[0]
-                print("Matched multiple DjangoPerson objects! Currently uses the first match")
-            return person
-
         # for each raw author name, get the corresponding DjangoPerson object & add to the
         # Document model's authors (ManyToManyField)
         for name in parsed_au:
@@ -198,6 +162,43 @@ def import_csv_to_document_model(csv_path):
         for name in parsed_rc:
             matched_person = match_djangoperson_from_name(name.upper())
             doc.recipients.add(matched_person)
+
+def match_djangoperson_from_name(parsed_name):
+    """
+        Returns DjangoPerson object that contains parsed_name as an alias
+        :param parsed_name: str, a parsed alias
+        :return: DjangoPerson object
+        """
+    # Searches in database the DjangoPerson object whose aliases contain parsed_name
+    # Searches the name with the left " so the aliases (str of Counter) must have parsed_name
+    # as the start of an alias (so if you search for "Dunn, WL", will not match aliases that contain
+    # "MacDunn, WL" but will match "Dunn, WL, Philip Morris")
+    name_with_quotes = f'\"{parsed_name}'
+    try:
+        person = DjangoPerson.objects.get(aliases__contains=name_with_quotes)
+    # If no such DjangoPerson exists, create a new DjangoPerson from the parsed name and
+    # store it in the database
+    # TODO: currently after creating new DjangoPerson objects, there is no attempt to merge
+    except DjangoPerson.DoesNotExist:
+        person_original = Person(name_raw=parsed_name)
+        person = DjangoPerson(last=person_original.last,
+                              first=person_original.first,
+                              middle=person_original.middle,
+                              full_name=f'{person_original.first} '
+                                        f'{person_original.middle} {person_original.last}',
+                              most_likely_org=person_original.most_likely_org,
+                              # convert Counter object into json string
+                              positions=json.dumps(person_original.positions),
+                              aliases=json.dumps(person_original.aliases),
+                              count=person_original.count
+                              )
+        person.save()
+    # If multiple DjangoPerson objects are matched, return the first match and print out
+    # message
+    except DjangoPerson.MultipleObjectsReturned:
+        person = DjangoPerson.objects.filter(aliases__contains=name_with_quotes)[0]
+        print("Matched multiple DjangoPerson objects! Currently uses the first match")
+    return person
 
 
 def import_peopledb_to_person_model(file_path):
@@ -223,7 +224,3 @@ def import_peopledb_to_person_model(file_path):
                               aliases=json.dumps(person.aliases),
                               count=person.count)
         person.save()
-
-
-if __name__ == '__main__':
-    pass
