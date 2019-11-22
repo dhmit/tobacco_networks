@@ -145,7 +145,72 @@ Viz.propTypes = {
     handle_viz_events: PropTypes.func,
 };
 
-
+/*****************************************
+ * Visual Density
+ *****************************************/
+class RadioButton extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            degree: ''
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    handleChange(event) {
+        this.setState({
+            degree: event.target.value
+        }
+        );
+    }
+    handleSubmit(event) {
+        event.preventDefault();
+        alert(`You chose the ${this.state.degree} degree to display.`);
+    }
+    render() {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <p>Visual Density </p>
+                <ul>
+                    <li>
+                        <label>
+                            <input
+                                type="radio"
+                                value="1"
+                                checked={this.state.degree === "1"}
+                                onChange={this.handleChange}
+                            />
+                            1st
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input
+                                type="radio"
+                                value="1.5"
+                                checked={this.state.degree === "1.5"}
+                                onChange={this.handleChange}
+                            />
+                            1.5
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input
+                                type="radio"
+                                value="2"
+                                checked={this.state.degree === "2"}
+                                onChange={this.handleChange}
+                            />
+                            2nd
+                        </label>
+                    </li>
+                </ul>
+                <button type="submit">Hover on a value to learn more</button>
+            </form>
+        );
+    }
+}
 
 
 
@@ -325,6 +390,10 @@ class MainView extends React.Component {
                         nodes={this.state.data.nodes}
                         searchbar_value={this.state.config.searchbar_value}
                     />
+
+                    <div className= "row">
+                        <RadioButton></RadioButton>
+                    </div>
 
                     <div className="row">
                         <Viz
