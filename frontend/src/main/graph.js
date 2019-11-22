@@ -101,7 +101,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     nodes
         .append("circle")
             .attr("r", (d) => calc_circle_radius(d))
-            .attr("fill", (d) => calc_circle_color(d))
+            .attr("fill", (d) => calc_circle_color(d));
 
     // Setup labels
     const calc_label_pos = (d, i, nodes) => {
@@ -209,13 +209,8 @@ export function create_graph(el, data, config, handle_viz_events) {
         config.links = links;
     }
     function resize() {
-        //const svg = d3.select("svg_id")
         const width = window.innerWidth;
         const height = window.innerHeight;
-        // let centers = {"Phillip Morris International": [width * .2, height * .2],
-        //              "British American Tobacco": [width * .8, height * .2],
-        //              "Imperial Tobacco": [width * .2, height * .8],
-        //              "Japan Tobacco": [width*.8, height*.8]};
 
         svg.attr("width", width).attr("height", height);
         config.width = width;
@@ -223,8 +218,6 @@ export function create_graph(el, data, config, handle_viz_events) {
         let force_simulation = initialize_force_sim(config, data);
         force_simulation.alphaTarget(0.3).restart();
         force_simulation.alphaTarget(0);
-        //force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
-        //render_simulation(); // not sure if this makes a difference
     }
     d3.select(window).on("resize", resize);
 
@@ -305,11 +298,8 @@ function initialize_force_sim(config, data) {
         let force_simulation = initialize_force_sim(config, data);
         force_simulation.alphaTarget(0.3).restart();
         force_simulation.alphaTarget(0);
-        //force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
-        //render_simulation(); // not sure if this makes a difference
     }
     d3.select(window).on("resize", resize);
-    //d3.select(window).on("resize", resize(force_simulation, config, data));
     return force_simulation;
 }
 
@@ -327,7 +317,7 @@ export function get_information(data, name){
     let name_info = {};
     for(const indx in data_nodes){
         const current_name = data_nodes[indx];
-        if (current_name["name"]  == name){
+        if (current_name["name"]  === name){
             name_info = current_name;
         }
     }
