@@ -10,7 +10,7 @@ from pathlib import Path
 import pandas as pd
 
 from name_disambiguation.name_preprocessing import parse_column_person
-from people_db import PeopleDatabase
+from name_disambiguation.people_db import PeopleDatabase
 
 
 def load_1970s_network():       # pylint: disable=R0914
@@ -146,12 +146,14 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
     :return:
     """
 
+    # Load people db
     people_db_path = Path('..', 'data', 'network_generation', 'people_db_1970s.pickle')
     people_db = PeopleDatabase()
     people_db.load_from_disk(Path(people_db_path))
     for person in people_db.people:
         people_db.alias_to_person_dict[person.full_name] = person
 
+    # initialize the center group of people
     center_people = []
     for name in names:
         try:
@@ -163,6 +165,7 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
                 print(result)
             raise KeyError
 
+    # load the whole 1970s network
     network = load_1970s_network()
     edges = network['edges']
 
@@ -170,6 +173,7 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
     edges_out = []
     nodes_out = []
 
+    # first identify all the primary edges including at least one person from center_people
     for idx, edge in enumerate(edges.values()):
         if idx % 1000 == 0:
             print(idx, len(edges))
@@ -177,8 +181,9 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
         if (person1 in center_people or person2 in center_people) and edge['count'] > 1:
             edges_out.append({'node1': person1.full_name, 'node2': person2.full_name,
                               'docs': edge['count'], 'words': 0})
-
     edges_out = sorted(edges_out, key=lambda x: x['docs'], reverse=True)[:max_number_of_nodes]
+
+    # then gather data on the individual nodes
     for edge in edges_out:
         person1 = people_db.alias_to_person_dict[edge['node1']]
         person2 = people_db.alias_to_person_dict[edge['node2']]
@@ -189,6 +194,9 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
         nodes_out.append({'name': node.full_name, 'docs': nodes_temp[node], 'words': 0,
                           'affiliation': node.most_likely_position})
         print(node.full_name, node.most_likely_position)
+
+    # finally, add edges between people
+    from IPython import embed;embed()
 
     print(len(nodes_out))
 

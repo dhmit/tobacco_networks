@@ -14,8 +14,8 @@ from collections import Counter
 import pandas as pd
 from name_disambiguation.person import Person
 from name_disambiguation.people_db import PeopleDatabase
-from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
-from name_disambiguation.config import DATA_PATH
+from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
+from IPython import embed
 
 
 def merge_names_from_json_file(json_name_file, people_db_pickle_file):
@@ -48,7 +48,7 @@ def merge_names_from_json_file(json_name_file, people_db_pickle_file):
     print("Merging names took", time.time() - initial_time)
 
 
-def parse_doc_metadata_csv(csv_path, people_db=None):
+def parse_doc_metadata_csv_to_people_db(csv_path, people_db=None, output_people_db_path=None):
     """
     Parses the metadata for each document in a csv of tobacco document metadata
 
@@ -77,32 +77,39 @@ def parse_doc_metadata_csv(csv_path, people_db=None):
     if not people_db:
         people_db = PeopleDatabase()
 
-    alias_to_person_dict = people_db.get_alias_to_person_dict()
-
     # get lists of dicts for authors and recipients. each of them has 3 fields:
     # general, person, organization
     people_dicts = get_au_and_rc_by_document(csv_path, return_type='both')
 
-    for person in people_dicts:
-        orgs = set()
+    print("p dicts", len(people_dicts))
+    for idx, person in enumerate(people_dicts):
+        if idx % 100 == 0:
+            print(idx, len(people_db))
+
+        orgs = []
         for org in person['organization']:
             if org not in RAW_ORG_TO_CLEAN_ORG_DICT:
                 continue
-            orgs.add(RAW_ORG_TO_CLEAN_ORG_DICT[org])
+            orgs.append(RAW_ORG_TO_CLEAN_ORG_DICT[org])
 
-        if len(orgs) != 1:
-            continue
-        org = list(orgs)[0]
-        aliases = person['person']
-        aliases.extend(person['general'])
+        if len(orgs) == 0:
+            org = None
+        else:
+            org = list(orgs)[0]
+
+        aliases = person['person'] + person['general']
         if not aliases or len(aliases) >= 4:
             continue
 
         for alias in aliases:
-            if alias not in alias_to_person_dict:
-                people_db.add_person_raw(alias)
-            else:
-                alias_to_person_dict[alias].positions[org] += 1
+            people_db.add_person_raw(alias, position=org)
+
+    people_db.merge_duplicates()
+
+    if output_people_db_path:
+        people_db.store_to_disk(output_people_db_path)
+
+    return people_db
 
 
 def get_au_and_rc_by_document(path, return_type='both') -> list:
@@ -196,24 +203,29 @@ class TestAddPositions(unittest.TestCase):
         """
         Test add_au_and_rc_function
         """
-        csv_path = Path(DATA_PATH, 'name_disambiguation', 'test_docs.csv')
-        parse_doc_metadata_csv(csv_path, people_db=self.people_db)
+        csv_path = Path('..', 'data', 'name_disambiguation', 'test_docs.csv')
+        self.people_db = parse_doc_metadata_csv_to_people_db(csv_path, people_db=self.people_db)
 
         expected_people_db = PeopleDatabase()
-        raquel = Person('Garcia, Raquel')
-        raquel.positions = Counter(["British American Tobacco"])
+        raquel = Person('Garcia, Raquel', count=4)
+        raquel.positions = Counter({"British American Tobacco": 1, "Brown & Williamson": 1})
+        raquel.aliases = Counter({'Garcia, Raquel': 4})
         expected_people_db.people.add(raquel)
 
-        dunn = Person('Dunn, WL')
-        dunn.positions = Counter(["British American Tobacco"])
+        dunn = Person('Dunn, WL', count=4)
+        dunn.positions = Counter({"British American Tobacco": 1, "Brown & Williamson": 1})
+        dunn.aliases = Counter({'Dunn, WL': 4})
         expected_people_db.people.add(dunn)
 
-        stephan = Person('Risi, Stephan')
-        stephan.positions = Counter(["Philip Morris", "Philip Morris"])
+        stephan = Person('Risi, Stephan', count=4)
+        stephan.positions = Counter({"Philip Morris": 2})
+        stephan.aliases = Counter({'Risi, Stephan': 4})
         expected_people_db.people.add(stephan)
+
 
         self.assertEqual(self.people_db, expected_people_db)
 
 
 if __name__ == '__main__':
+
     unittest.main()
