@@ -296,6 +296,21 @@ function initialize_force_sim(config, data) {
             .attr("x2", (d) => d.target.x)
             .attr("y2", (d) => d.target.y);
     }
+
+    function resize() {
+        const svg = d3.select("svg_id")
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        svg.attr("width", width).attr("height", height);
+        config.width = width;
+        config.height = height;
+        let force_simulation = initialize_force_sim(config, data);
+        force_simulation.alphaTarget(0.3).restart();
+        force_simulation.alphaTarget(0);
+        //force_simulation.force("center", d3.forceCenter(width / 2,height / 2)).restart();
+        //render_simulation(); // not sure if this makes a difference
+    }
+    d3.select(window).on("resize", resize);
     //d3.select(window).on("resize", resize(force_simulation, config, data));
     return force_simulation;
 }
