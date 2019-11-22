@@ -322,11 +322,6 @@ export function get_information(data, name){
     return name_info;
 }
 
-// eslint-disable-next-line no-unused-vars
-export function update_clustering(el, data, config) {
-    initialize_force_sim(config, data)
-}
-
 /**
  * Updates visualization according to what the user searches
  *
@@ -341,7 +336,10 @@ export function update_graph(el, data, config, action) {
         const svg = d3.select(el);
         svg.selectAll(".graph_node").style("opacity", 1);
         svg.selectAll(".graph_link").style("opacity", 1);
+    }
 
+    if (config.cluster_nodes) {
+        initialize_force_sim(config, data);
     }
 
     function update_focused_node(el, data, config) {
@@ -371,6 +369,6 @@ export function update_graph(el, data, config, action) {
 
     }
 
+
+
 }
-
-

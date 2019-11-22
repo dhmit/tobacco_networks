@@ -11,7 +11,6 @@ import { getCookie } from '../common'
 import * as d3 from 'd3';
 import { create_graph, update_graph} from './graph.js'
 import './main.css';
-import {update_clustering} from "./graph";
 
 
 /***************************************************************************************************
@@ -123,9 +122,8 @@ class Viz extends React.Component {
         }
         let update_func, action;
         if (this.props.config.viz_update_func === "cluster_nodes") {
-            update_func = update_clustering;
             update_func = update_graph;
-            action = 'focus';
+            action = 'unfocus';
         }
         else if (this.props.config.viz_update_func === 'unfocus_node') {
             update_func = update_graph;
