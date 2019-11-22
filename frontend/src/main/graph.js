@@ -237,8 +237,8 @@ export function create_graph(el, data, config, handle_viz_events) {
 }
 
 function initialize_force_sim(config, data) {
-    const graph_x_center = config.width / 2;
-    const graph_y_center = config.height / 2;
+    const graph_width = config.width;
+    const graph_height = config.height;
 
     let centers;
     let link_strength;
@@ -247,10 +247,10 @@ function initialize_force_sim(config, data) {
     let radius_distance;
     if (config.cluster_nodes) {
         centers = {
-            "Phillip Morris International": [config.width * .2, config.height * .2],
-            "British American Tobacco": [config.width * .8, config.height * .2],
-            "Imperial Tobacco": [config.width * .2, config.height * .8],
-            "Japan Tobacco": [config.width * .8, config.height * .8]
+            "Phillip Morris International": [graph_width * .2, graph_height * .2],
+            "British American Tobacco": [graph_width * .8, graph_height * .2],
+            "Imperial Tobacco": [graph_width * .2, graph_height * .8],
+            "Japan Tobacco": [graph_width * .8, graph_height * .8]
         };
         link_strength = 0;
         charge_strength = -1000;
@@ -258,10 +258,10 @@ function initialize_force_sim(config, data) {
         radius_distance = 30;
     } else {
         centers = {
-            "Phillip Morris International": [config.width/2, config.height/2],
-            "British American Tobacco": [config.width/2, config.height/2],
-            "Imperial Tobacco": [config.width/2, config.height/2],
-            "Japan Tobacco": [config.width/2, config.height/2]
+            "Phillip Morris International": [graph_width/2, graph_height/2],
+            "British American Tobacco": [graph_width/2, graph_height/2],
+            "Imperial Tobacco": [graph_width/2, graph_height/2],
+            "Japan Tobacco": [graph_width/2, graph_height/2]
         };
         link_strength = 1;
         charge_strength = -5000;
@@ -276,7 +276,7 @@ function initialize_force_sim(config, data) {
     let force_simulation = d3.forceSimulation(data.nodes);
     force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(charge_strength))
-        .force("center", d3.forceCenter(graph_x_center, graph_y_center))
+        .force("center", d3.forceCenter(graph_width/2, graph_height/2))
         .force('collision', d3.forceCollide().radius(radius_distance))
         .force('x', d3.forceX().x(function(d) {
             return centers[d.affiliation][0];
@@ -299,6 +299,7 @@ function initialize_force_sim(config, data) {
 
     function resize() {
         const svg = d3.select("svg_id")
+        console.log("RESIZING", config.width, config.height);
         const width = window.innerWidth;
         const height = window.innerHeight;
         svg.attr("width", width).attr("height", height);
