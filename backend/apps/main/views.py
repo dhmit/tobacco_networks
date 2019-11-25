@@ -28,7 +28,7 @@ def get_network_data(request):
     Temporary view to get network test data json
     """
     json_path = Path('/Users/kimba/Documents/GitHub/tobacco_networks/backend', 'data',
-                     'network_test_data.json')
+                     'person_research_directors.json')
     with open(json_path) as json_file:
         data = json.load(json_file)
     nodes = data['nodes']
