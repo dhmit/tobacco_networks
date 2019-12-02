@@ -152,7 +152,6 @@ class Viz extends React.Component {
             update_func = create_graph;
         }
 
-
         update_func(
             this._graphRoot.current,
             this.props.data,

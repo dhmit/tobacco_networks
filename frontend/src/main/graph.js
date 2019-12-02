@@ -164,9 +164,11 @@ export function create_graph(el, data, config, handle_viz_events) {
         d.fx = d.x;
         d.fy = d.y;
     }
+
     function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
+        d.has_been_dragged = true;
 
         // fix_nodes(d);
     }
@@ -278,14 +280,19 @@ function initialize_force_sim(config, data) {
                          .distance(50)
                          .strength(link_strength);
 
+    const force_x_pos = (d) => {
+        console.log(d.has_been_dragged);
+        return centers[d.affiliation][0];
+    }
+
     let force_simulation = d3.forceSimulation(data.nodes);
     force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(charge_strength))
         .force("center", d3.forceCenter(graph_width/2, graph_height/2))
         .force('collision', d3.forceCollide().radius(radius_distance))
-        .force('x', d3.forceX().x(function(d) {
-            return centers[d.affiliation][0];
-        }).strength(cluster_strength))
+        .force('x', d3.forceX()
+                        .x((d) => force_x_pos(d))
+                        .strength(cluster_strength))
         .force('y', d3.forceY().y(function(d) {
             return centers[d.affiliation][1];
         }).strength(cluster_strength))
