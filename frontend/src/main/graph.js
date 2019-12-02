@@ -122,7 +122,17 @@ export function create_graph(el, data, config, handle_viz_events) {
             .style("font-size", 12)
             .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
                 .style("pointer-events", "none");
+    let centers;
+    centers = {
+            "Phillip Morris International": [graph_width * .2, graph_height * .2],
+            "British American Tobacco": [graph_width * .8, graph_height * .2],
+            "Imperial Tobacco": [graph_width * .2, graph_height * .8],
+            "Japan Tobacco": [graph_width * .8, graph_height * .8]
+        };
+    nodes.attr('current_center_x', (d) => centers[d.affiliation][0])
+        .attr('current_center_y',(d) => centers[d.affiliation][1]);
 
+    // console.log(nodes)
     /*
      * Event handlers
      */
@@ -168,9 +178,15 @@ export function create_graph(el, data, config, handle_viz_events) {
     //  }
 
     function drag_ended(d) {
+        console.log(d)
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
         d.fx = d.x;
         d.fy = d.y;
+        // let cluster_strength=3;
+        // force_simulation
+        // .force('x', d3.forceX().x(d.current_center_x).strength(cluster_strength))
+        // .force('y', d3.forceY().y(d.current_center_y).strength(cluster_strength))
+        // .on("tick", render_simulation);
         nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
     }
 
