@@ -8,7 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { getCookie } from '../common'
-import { create_graph, update_focused_node } from './graph.js'
+import * as d3 from 'd3';
+import { create_graph, update_graph} from './graph.js'
 import './main.css';
 
 
@@ -21,40 +22,78 @@ class Controls extends React.Component {
         super(props);
     }
 
-    validate_input(e) {
+    validate_input_and_maybe_search() {
         // Check if the person we're searching for actually exists
-        const search_string = e.target.value;
+        const search_string = this.props.searchbar_value;
         this.props.update_searchbar_value(search_string);
 
         const nodes = this.props.nodes;
+        let is_name = false;
         for (const node of nodes) {
             const name = node.name;
             if (search_string.toLowerCase() === name.toLowerCase()) {
-                this.props.handle_searchbar_query(search_string);
+                is_name = true;
+                this.props.handle_searchbar_query(search_string, true);
+                break;
             } else {
-                // probably do something like tell the user the name isn't in the list
-                return;
+                // TODO: tell the user the name isn't in the list
+
             }
+        }
+        if (is_name === false) {
+            this.props.handle_searchbar_query(search_string, false);
         }
     }
 
     render() {
         return (
             <div className="row">
-                <div className="col-6">
+                <div className="col-4">
                     <input className="form-control"
                         type="text"
                         maxLength="20" size="20"
                         value={this.props.searchbar_value}
+                        onChange={(e) => this.props.update_searchbar_value(e.target.value)}
                         placeholder={"Type a name here"}
-                        onChange={(e) => this.validate_input(e)}
                     />
-                    {/*<label>Color is blue</label>*/}
                 </div>
-                <div id="info_button">
-                    <a onClick={this.props.toggle_show_table}>
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                    </a>
+                <div className="col-6">
+                    <div className="form-check float-right">
+                        <input type="checkbox" className="form-check-input"
+                            onChange={this.props.toggle_checkbox}/>
+                        <label>Check to cluster</label>
+                    </div>
+                    <div id="info_button">
+                        <a onClick={this.props.toggle_show_table}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                        </a>
+                    </div>
+                    <button
+                        className="button"
+                        onClick={() => this.validate_input_and_maybe_search()}
+                    >Search</button>
+                    <button
+                        className="button"
+                        onClick={() => {
+                            this.props.update_searchbar_value("");
+                            this.props.handle_searchbar_query("", false);
+                        }}
+                    >Clear</button>
+                </div>
+                <div className="col-4">
+                    <div className="form-group">
+                        <label htmlFor="exampleFormControlSelect1">Dataset</label>
+                        <select className="form-control"
+                            value={this.props.dataset_name}
+                            onChange={(e) => this.props.update_dataset(e.target.value)}
+                        >
+                            <option value="lawyers">Lawyers</option>
+                            <option value="research_directors">Research Directors</option>
+                            <option value="sterling">Theodore Sterling</option>
+                            <option value="top_100_edges">100 Strongest Edges</option>
+                            <option value="test">Test Dataset</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         );
@@ -63,11 +102,14 @@ class Controls extends React.Component {
 
 
 Controls.propTypes = {
+    toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
     searchbar_value: PropTypes.string.isRequired,
     update_searchbar_value: PropTypes.func.isRequired,
     handle_searchbar_query: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
+    dataset_name: PropTypes.string.isRequired,
+    update_dataset: PropTypes.func.isRequired
 };
 
 /***************************************************************************************************
@@ -87,29 +129,41 @@ class Viz extends React.Component {
             this.props.config,
             this.props.handle_viz_events,
         );
+        window.d3 = d3;
     }
 
     componentDidUpdate() {
         // D3 Code to update the chart
-
         if (this.props.config.viz_update_func === undefined) {
             return;
         }
 
-        let update_func;
-        if (this.props.config.viz_update_func === 'focus_node') {
-            update_func = update_focused_node;
+        let update_func, action;
+        if (this.props.config.viz_update_func === "cluster_nodes") {
+            update_func = update_graph;
+            action = 'cluster_nodes';
         }
+        else if (this.props.config.viz_update_func === 'unfocus_node') {
+            update_func = update_graph;
+            action = 'unfocus';
+        }
+        else if (this.props.config.viz_update_func === 'create_graph') {
+            document.getElementById('graph_root').innerHTML = '';
+            update_func = create_graph;
+        }
+
+
         update_func(
             this._graphRoot.current,
             this.props.data,
             this.props.config,
+            action,
         );
     }
 
     render() {
         return (
-            <div className="col-12 p-0 m-0" ref={this._graphRoot}>
+            <div className="col-12 p-0 m-0" ref={this._graphRoot} id='graph_root'>
 
             </div>
         )
@@ -156,6 +210,11 @@ class Info extends React.Component {
                             <th scope="row">Words</th>
                             <td>{this.props.words > 0 ? this.props.words : 0}</td>
                         </tr>
+                        <tr>
+                            <th scope="row">Affiliation</th>
+                            <td>{this.props.affiliation.length > 0 ? this.props.affiliation :
+                                ""}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -169,7 +228,7 @@ Info.propTypes ={
     person: PropTypes.string,
     docs: PropTypes.number,
     words: PropTypes.number,
-    show_info_panel: PropTypes.bool,
+    affiliation: PropTypes.string,
     toggle_show_table: PropTypes.func,
 };
 
@@ -188,6 +247,7 @@ class MainView extends React.Component {
                 color: 'blue',
                 person_to_highlight: "",
                 searchbar_value: "",
+                dataset_name: 'test'
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
@@ -195,7 +255,9 @@ class MainView extends React.Component {
             person: "",
             docs: 0,
             words: 0,
+            affiliation: "",
             show_info_panel: false,
+            cluster_nodes: true,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -203,16 +265,7 @@ class MainView extends React.Component {
      * Runs when the MainView item is connected to the DOM.
      */
     componentDidMount() {
-        fetch("get_network_data")
-            .then((response) => {
-                response
-                    .json()
-                    .then((data) => {
-                        this.setState({data:data});
-                    })
-            }).catch(() => {
-                console.log("error");
-            });
+        this.load_dataset(this.state.config.dataset_name);
     }
 
     /**
@@ -230,10 +283,20 @@ class MainView extends React.Component {
             this.setState({person: data.name});
             this.setState({docs: data.docs});
             this.setState({words: data.words});
-            if (this.state.show_info_panel == false) {
+            this.setState({affiliation: data.affiliation});
+            if (this.state.show_info_panel === false) {
                 this.setState({show_info_panel: true});
             }
         }
+    }
+
+    toggle_checkbox() {
+        this.setState({cluster_nodes: !this.state.cluster_nodes});
+        const config = {... this.state.config};
+        config.cluster_nodes = this.state.cluster_nodes;
+        config.viz_update_func = 'cluster_nodes';
+        this.setState({config: config});
+
     }
 
     /**
@@ -241,11 +304,17 @@ class MainView extends React.Component {
      *
      * @param event_name: String
      */
-    handle_searchbar_query(search_string) {
+    handle_searchbar_query(search_string, action) {
         const config = {... this.state.config};
         config.search_person_name = search_string;
-        config.viz_update_func = 'focus_node';
-        this.setState({config: config})
+        if (action === true) {
+            config.viz_update_func = 'focus_node';
+        } else {
+            config.viz_update_func = 'unfocus_node';
+        }
+        config.searchbar_value = search_string;
+        this.setState({config: config});
+
     }
 
     update_searchbar_value(search_string) {
@@ -258,12 +327,36 @@ class MainView extends React.Component {
         event.preventDefault();
     }
 
+    update_dataset(dataset_name) {
+        console.log(dataset_name);
+        const config = {...this.state.config};
+        config.dataset_name = dataset_name;
+        config.viz_update_func = 'create_graph';
+        this.load_dataset(config.dataset_name);
+        this.setState({config: config});
+    }
+
+    async load_dataset(dataset_name) {
+        const dataset = encodeURIComponent(dataset_name);
+        fetch(`get_network_data?dataset=${dataset}`)
+            .then((response) => {
+                response
+                    .json()
+                    .then((data) => {
+                        console.log("new data", data);
+                        this.setState({data:data});
+                    })
+            }).catch(() => {
+                console.log("error");
+            });
+    }
+
+
     /**
      * Calls when button is pressed.  Shows the table containing info about person when it is
      * hidden and hides table when visible.
      */
     toggle_show_table() {
-        console.log('calling toggle show table!');
         this.setState({show_info_panel: !this.state.show_info_panel});
     }
 
@@ -279,14 +372,21 @@ class MainView extends React.Component {
                     <Controls  // this is its own row
                         person_to_highlight={this.state.config.person_to_highlight}
                         handle_searchbar_query={
-                            (search_string) => this.handle_searchbar_query(search_string)
+                            (search_string, action) => this.handle_searchbar_query(search_string,
+                                action)
                         }
                         update_searchbar_value={
                             (search_string) => this.update_searchbar_value(search_string)
                         }
+                        toggle_checkbox={() => this.toggle_checkbox()}
                         toggle_show_table={() => this.toggle_show_table()}
+                        cluster_nodes={this.state.cluster_nodes}
                         nodes={this.state.data.nodes}
                         searchbar_value={this.state.config.searchbar_value}
+                        dataset_name={this.state.config.dataset_name}
+                        update_dataset={
+                            (dataset_name) => this.update_dataset(dataset_name)
+                        }
                     />
 
                     <div className="row">
@@ -303,6 +403,7 @@ class MainView extends React.Component {
                                 person={this.state.person}
                                 docs={this.state.docs}
                                 words={this.state.words}
+                                affiliation={this.state.affiliation}
                                 show_info_panel={this.state.show_info_panel}
                                 toggle_show_table={() => this.toggle_show_table()}
                             />
