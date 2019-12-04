@@ -255,7 +255,7 @@ class MainView extends React.Component {
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
-
+            clicked:["false", null],
             person: "",
             docs: 0,
             words: 0,
@@ -284,6 +284,14 @@ class MainView extends React.Component {
         } else if (event_name === "mouseout") {
             this.setState({mouseover: false});
         } else if (event_name === "click") {
+            if (this.state.clicked[0] == "false"){
+                this.setState({clicked: [!(this.state.clicked), data.name]})
+            }
+            else if (this.state.clicked[0] == "true"){
+                if (data.name == this.state.clicked[1]){
+                    this.setState({clicked: [!(this.state.clicked), data.name]})
+                }
+            }
             this.setState({person: data.name});
             this.setState({docs: data.docs});
             this.setState({words: data.words});
