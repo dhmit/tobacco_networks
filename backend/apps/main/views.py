@@ -14,7 +14,21 @@ def get_network_data(request):
     """
     Temporary view to get network test data json
     """
-    json_path = Path(BACKEND_DIR, 'data', 'network_test_data.json')
+
+    datasets = {
+        'lawyers': 'person_lawyers.json',
+        'research_directors': 'person_research_directors.json',
+        'sterling': 'person_sterling.json',
+        'top_100_edges': 'top_100_edges.json',
+        'test': 'network_test_data.json'
+    }
+
+    if request.GET and 'dataset' in request.GET:
+        json_filename = datasets[request.GET['dataset']]
+    else:
+        json_filename = 'network_test_data.json'
+
+    json_path = Path(BACKEND_DIR, 'data', json_filename)
     with open(json_path) as json_file:
         data = json.load(json_file)
     nodes = data['nodes']
