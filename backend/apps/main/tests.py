@@ -8,7 +8,6 @@ from collections import Counter
 from rest_framework.test import APIRequestFactory
 from rest_framework.response import Response
 from .serializers import PersonInfoSerializer
-from .models import Person
 from .views import get_person_info
 import os
 from pathlib import Path
