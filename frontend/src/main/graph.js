@@ -365,6 +365,38 @@ function initialize_force_sim(config, data) {
     return force_simulation;
 }
 
+function change_clusters(config, data) {
+    const graph_width = config.width;
+    const graph_height = config.height;
+
+    force_sim(config,render_simulation,graph_width,graph_height,data)
+
+    function render_simulation() {
+        // Update node positions
+        config.nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
+
+        // Update link positions
+        config.links.attr("x1", (d) => d.source.x)
+            .attr("y1", (d) => d.source.y)
+            .attr("x2", (d) => d.target.x)
+            .attr("y2", (d) => d.target.y);
+    }
+
+    function resize() {
+        const svg = d3.select("svg_id")
+        console.log("RESIZING", config.width, config.height);
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        svg.attr("width", width).attr("height", height);
+        config.width = width;
+        config.height = height;
+        let force_simulation = initialize_force_sim(config, data);
+        force_simulation.alphaTarget(0.3).restart();
+        force_simulation.alphaTarget(0);
+    }
+    d3.select(window).on("resize", resize);
+}
+
 
 /**
  * Returns information of the given id
@@ -397,7 +429,8 @@ export function update_graph(el, data, config, action) {
     if (action === 'focus') {
         update_focused_node(el, data, config);
     } else if (action === "cluster_nodes") {
-        initialize_force_sim(config, data);
+        // initialize_force_sim(config, data);
+        change_clusters(config, data);
     } else {
         //function update_unfocus_node (el, data, config) {
         const svg = d3.select(el);
