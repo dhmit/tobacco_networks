@@ -122,22 +122,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             .style("font-size", 12)
             .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
                 .style("pointer-events", "none");
-    let centers;
-    // let cluster_strength = 3;
-    centers = {
-            "Phillip Morris International": [graph_width * .2, graph_height * .2],
-            "British American Tobacco": [graph_width * .8, graph_height * .2],
-            "Imperial Tobacco": [graph_width * .2, graph_height * .8],
-            "Japan Tobacco": [graph_width * .8, graph_height * .8]
-        };
-    nodes.attr('current_center_x', (d) => centers[d.affiliation][0])
-        .attr('current_center_y',(d) => centers[d.affiliation][1]);
-
     console.log(nodes)
-    force_simulation
-        .force('x', d3.forceX().x((d)=> nodes[d.id].)).strength(cluster_strength)
-        .force('y', d3.forceY().y((d)=> d.current_center_y)).strength(cluster_strength)
-        .on("tick", render_simulation);
     /*
      * Event handlers
      */
@@ -169,7 +154,6 @@ export function create_graph(el, data, config, handle_viz_events) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
         d.has_been_dragged = true;
-
         // fix_nodes(d);
     }
 
@@ -186,8 +170,12 @@ export function create_graph(el, data, config, handle_viz_events) {
 
     function drag_ended(d) {
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
-        d.fx = d.x;
-        d.fy = d.y;
+        d.fx = null;
+        d.fy = null;
+        d.x_grav = d.x;
+        d.y_grav = d.y;
+        d.has_been_dragged = true;
+        force_sim();
         nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
     }
 
@@ -236,6 +224,56 @@ export function create_graph(el, data, config, handle_viz_events) {
         force_simulation.alphaTarget(0.3).restart();
         force_simulation.alphaTarget(0);
     }
+
+    function force_sim(){
+        let centers
+        if (config.cluster_nodes) {
+            centers = {
+                "Phillip Morris International": [graph_width * .2, graph_height * .2],
+                "British American Tobacco": [graph_width * .8, graph_height * .2],
+                "Imperial Tobacco": [graph_width * .2, graph_height * .8],
+                "Japan Tobacco": [graph_width * .8, graph_height * .8]
+                };
+        } else {
+            centers = {
+                "Phillip Morris International": [graph_width/2, graph_height/2],
+                "British American Tobacco": [graph_width/2, graph_height/2],
+                "Imperial Tobacco": [graph_width/2, graph_height/2],
+                "Japan Tobacco": [graph_width/2, graph_height/2]
+            };
+        }
+
+        const force_x_pos = (d) => {
+            if (d.has_been_dragged){
+                return d.x_grav;
+            } else {
+                return centers[d.affiliation][0];
+            }
+        }
+        const force_y_pos = (d) => {
+            if (d.has_been_dragged){
+                return d.y_grav;
+            } else {
+                return centers[d.affiliation][1];
+            }
+        }
+        const cluster_strength = (d) => {
+            if (d.has_been_dragged){
+                return 5;
+            } else {
+                return 3;
+            }
+        }
+
+    let force_simulation = d3.forceSimulation(data.nodes);
+    force_simulation
+        .force("charge", d3.forceManyBody())
+        .force('collision', d3.forceCollide().radius(30))
+        .force('x', d3.forceX().x((d) => force_x_pos(d)).strength(cluster_strength))
+        .force('y', d3.forceY().y((d) => force_y_pos(d)).strength(cluster_strength))
+        .on("tick", render_simulation);  // what to do when the sim updates
+    }
+
     d3.select(window).on("resize", resize);
 
     config.svg = svg;
