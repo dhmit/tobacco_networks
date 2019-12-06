@@ -272,9 +272,9 @@ export function force_sim(config,render_simulation,graph_width,graph_height,data
         }
         const cluster_strength = (d) => {
             if (d.has_been_dragged){
-                return 5;
-            } else {
                 return 3;
+            } else {
+                return 1;
             }
         }
 
@@ -304,8 +304,8 @@ function initialize_force_sim(config, data) {
             "Japan Tobacco": [graph_width * .8, graph_height * .8]
         };
         link_strength = 0;
-        charge_strength = -1000;
-        cluster_strength = 5;
+        charge_strength = -500;
+        cluster_strength = 3;
         radius_distance = 30;
     } else {
         centers = {
@@ -315,8 +315,8 @@ function initialize_force_sim(config, data) {
             "Japan Tobacco": [graph_width/2, graph_height/2]
         };
         link_strength = 1;
-        charge_strength = -5000;
-        cluster_strength = 3;
+        charge_strength = -2500;
+        cluster_strength = 1;
         radius_distance = 0;
     }
     const force_link = d3.forceLink(data.links)
