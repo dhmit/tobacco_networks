@@ -246,7 +246,8 @@ class MainView extends React.Component {
                 color: 'blue',
                 person_to_highlight: "",
                 searchbar_value: "",
-                dataset_name: 'test'
+                dataset_name: 'test',
+                cluster_nodes: false,
             },  // initial configuration for the viz
             data: null,  // data for the viz
             mouseover: false,  // info panel state (based on callbacks from viz)
@@ -256,7 +257,6 @@ class MainView extends React.Component {
             words: 0,
             affiliation: "",
             show_info_panel: false,
-            cluster_nodes: true,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -290,9 +290,9 @@ class MainView extends React.Component {
     }
 
     toggle_checkbox() {
-        this.setState({cluster_nodes: !this.state.cluster_nodes});
+        // this.setState({cluster_nodes: !this.state.config.cluster_nodes});
         const config = {... this.state.config};
-        config.cluster_nodes = this.state.cluster_nodes;
+        config.cluster_nodes = !this.state.config.cluster_nodes;
         config.viz_update_func = 'cluster_nodes';
         this.setState({config: config});
 

@@ -29,7 +29,8 @@ export function create_graph(el, data, config, handle_viz_events) {
 
 
     let force_simulation = initialize_force_sim(config, data);
-
+    console.log("owo")
+    console.log(config.cluster_nodes)
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
         .append('svg')
@@ -251,6 +252,9 @@ function force_sim(config,render_simulation,graph_width,graph_height,data){
                 "Japan Tobacco": [graph_width/2, graph_height/2]
             };
         }
+        console.log("hey")
+        console.log(config)
+        console.log(config.cluster_nodes)
 
         const force_x_pos = (d) => {
             if (d.has_been_dragged){
@@ -430,6 +434,8 @@ export function update_graph(el, data, config, action) {
         update_focused_node(el, data, config);
     } else if (action === "cluster_nodes") {
         // initialize_force_sim(config, data);
+        console.log("idea")
+        console.log(config)
         change_clusters(config, data);
     } else {
         //function update_unfocus_node (el, data, config) {
