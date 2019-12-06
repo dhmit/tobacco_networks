@@ -291,7 +291,7 @@ class MainView extends React.Component {
 
     toggle_checkbox() {
         // this.setState({cluster_nodes: !this.state.config.cluster_nodes});
-        const config = {... this.state.config};
+        let config = {... this.state.config};
         config.cluster_nodes = !this.state.config.cluster_nodes;
         config.viz_update_func = 'cluster_nodes';
         this.setState({config: config});
@@ -379,7 +379,7 @@ class MainView extends React.Component {
                         }
                         toggle_checkbox={() => this.toggle_checkbox()}
                         toggle_show_table={() => this.toggle_show_table()}
-                        cluster_nodes={this.state.cluster_nodes}
+                        cluster_nodes={this.state.config.cluster_nodes}
                         nodes={this.state.data.nodes}
                         searchbar_value={this.state.config.searchbar_value}
                         dataset_name={this.state.config.dataset_name}

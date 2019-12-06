@@ -235,7 +235,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     config.links = links;
 }
 
-function force_sim(config,render_simulation,graph_width,graph_height,data){
+export function force_sim(config,render_simulation,graph_width,graph_height,data){
         let centers
         if (config.cluster_nodes) {
             centers = {
@@ -373,6 +373,7 @@ function change_clusters(config, data) {
     const graph_width = config.width;
     const graph_height = config.height;
 
+    console.log("change_clusters")
     force_sim(config,render_simulation,graph_width,graph_height,data)
 
     function render_simulation() {
