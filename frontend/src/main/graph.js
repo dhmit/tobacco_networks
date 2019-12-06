@@ -408,8 +408,24 @@ function change_clusters(config, data) {
     nodes  // bind event handlers for nodes
         .call(
             d3.drag()
+                .on("start", drag_started)
+                .on("drag", dragged)
                 .on("end", drag_ended)
         )
+    function drag_started(d) {
+        nodes.on("mouseover", () => {}).on("mouseout", () => {});
+        d3.event.sourceEvent.stopPropagation();
+        if (!d3.event.active) {force_simulation.alphaTarget(0.3).restart();}
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+
+    function dragged(d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+        d.has_been_dragged = true;
+        // fix_nodes(d);
+    }
     function drag_ended(d) {
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
         d.fx = null;
