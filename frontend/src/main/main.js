@@ -286,10 +286,12 @@ class MainView extends React.Component {
         } else if (event_name === "click") {
             if (this.state.clicked[0] == "false"){
                 this.setState({clicked: [!(this.state.clicked), data.name]})
+                update_graph(this, data, this.state.config, "focus")
             }
             else if (this.state.clicked[0] == "true"){
                 if (data.name == this.state.clicked[1]){
                     this.setState({clicked: [!(this.state.clicked), data.name]})
+                    update_graph(this, data, this.state.config, "unfocus")
                 }
             }
             this.setState({person: data.name});

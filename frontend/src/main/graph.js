@@ -69,7 +69,7 @@ export function create_graph(el, data, config, handle_viz_events) {
                 .on("end", drag_ended)
         )
         .on("click", focus_node)
-       // .on("click", unfocus_node)
+        //.on("click", unfocus_node)
         .on("click", (d, _i) => handle_viz_events('click', d));
 
     // Setup circle helper funcs
@@ -171,7 +171,8 @@ export function create_graph(el, data, config, handle_viz_events) {
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
         d.fx = d.x;
         d.fy = d.y;
-        nodes.on("click", focus_node).on("mouseout", unfocus_node);
+        nodes.on("click", (d, _i) => handle_viz_events('click', d));
+        //nodes.on("click", focus_node).on("click", unfocus_node);
     }
 
     function focus_node() {
@@ -202,12 +203,12 @@ export function create_graph(el, data, config, handle_viz_events) {
         get_information(data, "DUNN,WL");
     }
 
-    function unfocus_node() {
-        nodes.style("opacity", 1);
-        links.style("opacity", 1);
-        config.nodes = nodes;
-        config.links = links;
-    }
+    // function unfocus_node() {
+    //     nodes.style("opacity", 1);
+    //     links.style("opacity", 1);
+    //     config.nodes = nodes;
+    //     config.links = links;
+    // }
     function resize() {
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -342,7 +343,6 @@ export function update_graph(el, data, config, action) {
         svg.selectAll(".graph_node").style("opacity", 1);
         svg.selectAll(".graph_link").style("opacity", 1);
     }
-
     function update_focused_node(el, data, config) {
         const name = config.search_person_name.toUpperCase();
         const svg = d3.select(el);
