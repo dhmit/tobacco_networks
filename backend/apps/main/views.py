@@ -11,7 +11,16 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from backend.config.settings.base import BACKEND_DIR
 from .models import DjangoPerson
-from .serializers import PersonInfoSerializer
+from .serializers import PersonInfoSerializer, EdgeSerializer
+
+
+@api_view(['GET'])
+def list_edges(request):
+    """
+    Return a list of all Edge objects, serialized.
+    """
+    serializer = EdgeSerializer(instance=load_network_json_data("edges"), many=True)
+    return Response(serializer.data)
 
 
 def get_network_data(request):
