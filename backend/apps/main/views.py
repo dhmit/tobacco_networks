@@ -8,6 +8,7 @@ import random
 from collections import Counter
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
+from .models import DjangoPerson
 from rest_framework.response import Response
 from backend.config.settings.base import BACKEND_DIR
 
