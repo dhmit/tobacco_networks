@@ -175,7 +175,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         d.x_grav = d.x;
         d.y_grav = d.y;
         d.has_been_dragged = true;
-        force_sim();
+        force_sim(config,render_simulation,graph_width,graph_height,data);
         nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
     }
 
@@ -225,7 +225,16 @@ export function create_graph(el, data, config, handle_viz_events) {
         force_simulation.alphaTarget(0);
     }
 
-    function force_sim(){
+
+
+    d3.select(window).on("resize", resize);
+
+    config.svg = svg;
+    config.nodes = nodes;
+    config.links = links;
+}
+
+function force_sim(config,render_simulation,graph_width,graph_height,data){
         let centers
         if (config.cluster_nodes) {
             centers = {
@@ -273,13 +282,6 @@ export function create_graph(el, data, config, handle_viz_events) {
         .force('y', d3.forceY().y((d) => force_y_pos(d)).strength(cluster_strength))
         .on("tick", render_simulation);  // what to do when the sim updates
     }
-
-    d3.select(window).on("resize", resize);
-
-    config.svg = svg;
-    config.nodes = nodes;
-    config.links = links;
-}
 
 function initialize_force_sim(config, data) {
     const graph_width = config.width;
