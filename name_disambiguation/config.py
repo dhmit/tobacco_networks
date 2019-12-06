@@ -1,5 +1,5 @@
 """
-Helper file, currently makes path to DATA_PATH available
+Helper file, currently makes path to DATA_PATH and BACKEND_PATH available
 
 """
 

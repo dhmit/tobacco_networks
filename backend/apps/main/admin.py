@@ -2,6 +2,7 @@
 This file controls the administrative interface for tobacco_analytics' main app
 """
 
-# from django.contrib import admin
+from django.contrib import admin
+from .models import DjangoPerson
 
-# TODO: implement me!
+admin.site.register(DjangoPerson)
