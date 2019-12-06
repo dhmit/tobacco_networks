@@ -24,7 +24,7 @@ django.setup()
 
 class MainTests(TestCase):
     def setUp(self):
-        Person.objects.create(
+        DjangoPerson.objects.create(
             last="LAB",
             first="MIT",
             middle="DH",
@@ -33,7 +33,7 @@ class MainTests(TestCase):
             positions=json.dumps(Counter()),
             aliases=json.dumps(Counter()),
             count=5)
-        Person.objects.create(
+        DjangoPerson.objects.create(
             last="LAR",
             first="MOT",
             middle="DJ",
@@ -42,7 +42,7 @@ class MainTests(TestCase):
             positions=json.dumps(Counter()),
             aliases=json.dumps(Counter()),
             count=3)
-        Person.objects.create(
+        DjangoPerson.objects.create(
             last="BOBBERT",
             first="BOB",
             middle="BOBSON",
@@ -54,8 +54,8 @@ class MainTests(TestCase):
         self.factory = APIRequestFactory()
 
     def test_models_01(self):
-        dummy_1 = Person.objects.get(last='LAB')
-        dummy_2 = Person.objects.get(last='LAR')
+        dummy_1 = DjangoPerson.objects.get(last='LAB')
+        dummy_2 = DjangoPerson.objects.get(last='LAR')
         s = f'{dummy_1.first} {dummy_1.middle} {dummy_1.last}'
         s = s + ", Position: " + str(dummy_1.positions) + ", Aliases: " + \
             str(dummy_1.aliases) + ", count: " + str(dummy_1.count)
@@ -73,7 +73,7 @@ class MainTests(TestCase):
         database"""
         self.factory = APIRequestFactory()
         request = self.factory.get('/api/person_info/', {'full_name': 'BOB BOBSON BOBBERT'})
-        dummy_1 = Person.objects.filter(full_name='BOB BOBSON BOBBERT')
+        dummy_1 = DjangoPerson.objects.filter(full_name='BOB BOBSON BOBBERT')
         serializer = PersonInfoSerializer(instance=dummy_1, many=True)
         expected = Response(serializer.data)
         result = get_person_info(request)
@@ -82,7 +82,7 @@ class MainTests(TestCase):
     def test_api_views_02(self):
         """tests that get_person_info returns correct person info when the person is NOT in the
         database"""
-        Person.objects.create(
+        DjangoPerson.objects.create(
             last="",
             first="",
             middle="",
@@ -92,13 +92,11 @@ class MainTests(TestCase):
             aliases=json.dumps(Counter()),
             count=0)
         request = self.factory.get('/api/person_info/', {'full_name': 'JANE DOE DEERE'})
-        dummy_1 = Person.objects.get(full_name='JANE DOE DEERE not available.')
+        dummy_1 = DjangoPerson.objects.get(full_name='JANE DOE DEERE not available.')
         serializer = PersonInfoSerializer(instance=dummy_1, many=False)
         expected = Response(serializer.data)
         result = get_person_info(request)
         self.assertEqual(expected.data, result.data)
-
-
 
 
 class ModelsTests(TestCase):

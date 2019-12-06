@@ -6,7 +6,7 @@ allow the frontend to suggest changes to the backend/database.
 import json
 from pathlib import Path
 from rest_framework import serializers
-from .models import Person
+from .models import DjangoPerson
 
 
 class EdgeSerializer(serializers.Serializer):
@@ -28,10 +28,10 @@ class EdgeSerializer(serializers.Serializer):
 
 class PersonInfoSerializer(serializers.ModelSerializer):
     """
-    Serializer for the Person Info model
+    Serializer for the DjangoPerson Info model
     """
     class Meta:
-        model = Person
+        model = DjangoPerson
         fields = ["last", "first", "middle", "full_name", "most_likely_org", "positions",
                   "aliases", "count"]
 
@@ -44,12 +44,12 @@ class PersonInfoSerializer(serializers.ModelSerializer):
 
 class Edge:
     """
-    Python object to store edges, should be replaced if the Person class is replaced
+    Python object to store edges, should be replaced if the DjangoPerson class is replaced
     """
     def __init__(self, pk: int, node1: str, node2: str,  # pylint: disable-msg=R0913
                  docs: int, words: int):
         self.pk = pk  # pylint: disable=C0103
-        self.node1 = node1  # could be replaced with Person
+        self.node1 = node1  # could be replaced with DjangoPerson
         self.node2 = node2
         self.docs = docs
         self.words = words
@@ -87,5 +87,5 @@ def load_network_json_data(return_type: str):
             name = person_dict.get('name')
             docs = person_dict.get('docs')
             words = int(person_dict.get('words'))
-            people.append(Person(pk, name, docs, words))
+            people.append(DjangoPerson(pk, name, docs, words))
         return people
