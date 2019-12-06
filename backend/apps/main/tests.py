@@ -61,11 +61,11 @@ class MainTests(TestCase):
         dummy_1 = DjangoPerson.objects.get(last='LAB')
         dummy_2 = DjangoPerson.objects.get(last='LAR')
         s_1 = f'{dummy_1.first} {dummy_1.middle} {dummy_1.last}'
-        s_1 = s_1 + ", Position: " + str(dummy_1.positions) + ", Aliases: " + \
+        s_1 = s_1 + ", Positions: " + str(dummy_1.positions) + ", Aliases: " + \
             str(dummy_1.aliases) + ", count: " + str(dummy_1.count)
 
         s_2 = f'{dummy_2.first} {dummy_2.middle} {dummy_2.last}'
-        s_2 = s_2 + ", Position: " + str(dummy_2.positions) + ", Aliases: " + \
+        s_2 = s_2 + ", Positions: " + str(dummy_2.positions) + ", Aliases: " + \
             str(dummy_2.aliases) + ", count: " + str(dummy_2.count)
         self.assertEqual(
             str(dummy_1), s_1)
