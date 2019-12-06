@@ -29,8 +29,6 @@ export function create_graph(el, data, config, handle_viz_events) {
 
 
     let force_simulation = initialize_force_sim(config, data);
-    console.log("owo")
-    console.log(config.cluster_nodes)
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
         .append('svg')
@@ -62,8 +60,6 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("class", "graph_node")
             .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
 
-    console.log("first_binding")
-    console.log(config.cluster_nodes)
     nodes  // bind event handlers for nodes
         .call(
             d3.drag()
@@ -125,7 +121,6 @@ export function create_graph(el, data, config, handle_viz_events) {
             .style("font-size", 12)
             .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
                 .style("pointer-events", "none");
-    console.log(nodes)
     /*
      * Event handlers
      */
@@ -178,8 +173,6 @@ export function create_graph(el, data, config, handle_viz_events) {
         d.x_grav = d.x;
         d.y_grav = d.y;
         d.has_been_dragged = true;
-        console.log("in drag ended version 1")
-        console.log(config.cluster_nodes)
         force_sim(config,render_simulation,data);
         nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
     }
@@ -258,9 +251,6 @@ export function force_sim(config,render_simulation,data) {
                 "Japan Tobacco": [graph_width/2, graph_height/2]
             };
         }
-        console.log("force_sim's config")
-        console.log(config.cluster_nodes)
-
         const force_x_pos = (d) => {
             if (d.has_been_dragged){
                 return d.x_grav;
@@ -330,7 +320,6 @@ function initialize_force_sim(config, data) {
                          .strength(link_strength);
 
     const force_x_pos = (d) => {
-        console.log(d.has_been_dragged);
         return centers[d.affiliation][0];
     }
 
@@ -375,9 +364,6 @@ function initialize_force_sim(config, data) {
 }
 
 function change_clusters(config, data) {
-
-    console.log("change_clusters")
-    console.log(config.cluster_nodes)
     force_sim(config,render_simulation,data)
 
     function resize() {
@@ -401,10 +387,6 @@ function change_clusters(config, data) {
 
     const all_graph_links = d3.select("#graph_links");
     const links = all_graph_links.selectAll('line');
-
-    console.log("second_binding")
-    console.log(config.cluster_nodes)
-
     nodes  // bind event handlers for nodes
         .call(
             d3.drag()
@@ -433,8 +415,6 @@ function change_clusters(config, data) {
         d.x_grav = d.x;
         d.y_grav = d.y;
         d.has_been_dragged = true;
-        console.log("in drag ended")
-        console.log(config.cluster_nodes)
         force_sim(config,render_simulation,data);
         nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
     }
