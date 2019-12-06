@@ -176,3 +176,4 @@ data/network_generation/people_db_1970s\.pickle
 data/documents/docs_1970s_all\.csv
 
 
+data/django/test_peopledb.pickle
