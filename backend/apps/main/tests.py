@@ -1,27 +1,31 @@
 """
 Tests for the main app.
 """
-import django
+
 import json
-from django.test import TestCase
 from collections import Counter
+from pathlib import Path
+import os
+from django.test import TestCase
+import django
 from rest_framework.test import APIRequestFactory
 from rest_framework.response import Response
-from .serializers import PersonInfoSerializer
-from .views import get_person_info
-import os
-from pathlib import Path
-from name_disambiguation.people_db import PeopleDatabase
 from name_disambiguation.config import DATA_PATH
-from apps.main.models import DjangoPerson
+from name_disambiguation.people_db import PeopleDatabase
 from apps.main.models import Document
+from apps.main.models import DjangoPerson
 from apps.main.models import import_peopledb_to_person_model
 from apps.main.models import import_csv_to_document_model
+from .views import get_person_info
+from .serializers import PersonInfoSerializer
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
 django.setup()
 
 
 class MainTests(TestCase):
+    """Test that models creates people correctly,
+    get_person_info returns correct info when person is in the database
+    get_person_info returns correct message when person is NOT in the database"""
     def setUp(self):
         DjangoPerson.objects.create(
             last="LAB",
@@ -53,19 +57,20 @@ class MainTests(TestCase):
         self.factory = APIRequestFactory()
 
     def test_models_01(self):
+        """Tests that the person created with DjangoPerson model has the correct attributes"""
         dummy_1 = DjangoPerson.objects.get(last='LAB')
         dummy_2 = DjangoPerson.objects.get(last='LAR')
-        s = f'{dummy_1.first} {dummy_1.middle} {dummy_1.last}'
-        s = s + ", Position: " + str(dummy_1.positions) + ", Aliases: " + \
+        s_1 = f'{dummy_1.first} {dummy_1.middle} {dummy_1.last}'
+        s_1 = s_1 + ", Position: " + str(dummy_1.positions) + ", Aliases: " + \
             str(dummy_1.aliases) + ", count: " + str(dummy_1.count)
 
-        s2 = f'{dummy_2.first} {dummy_2.middle} {dummy_2.last}'
-        s2 = s2 + ", Position: " + str(dummy_2.positions) + ", Aliases: " + \
+        s_2 = f'{dummy_2.first} {dummy_2.middle} {dummy_2.last}'
+        s_2 = s_2 + ", Position: " + str(dummy_2.positions) + ", Aliases: " + \
             str(dummy_2.aliases) + ", count: " + str(dummy_2.count)
         self.assertEqual(
-            str(dummy_1), s)
+            str(dummy_1), s_1)
         self.assertEqual(
-            str(dummy_2), s2)
+            str(dummy_2), s_2)
 
     def test_api_views_01(self):
         """tests that get_person_info returns correct person info when the person is in the

@@ -7,11 +7,11 @@ from pathlib import Path
 import random
 from collections import Counter
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from django.http import JsonResponse
+from backend.config.settings.base import BACKEND_DIR
 from .models import DjangoPerson
 from .serializers import PersonInfoSerializer
-from rest_framework.response import Response
-from backend.config.settings.base import BACKEND_DIR
 
 
 def get_network_data(request):
