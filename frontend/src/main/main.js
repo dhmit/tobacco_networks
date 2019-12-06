@@ -331,13 +331,51 @@ class MainView extends React.Component {
         event.preventDefault();
     }
 
+    // this function takes in a node as a string and returns two lists
+    // the first list is the node's first degree connection and
+    // the second list is the nodes's second degree connection
+    update_degree_relation(search_string) {
+        const nodes = this.state.data.nodes;
+        const links = this.state.data.links;
+        let first_degree_names=[];
+        let second_degree_names = [];
+        if (nodes.includes(search_string)) {
+            for (let i = 0; i < nodes.length; i++) {
+                if (nodes[i].name === search_string) {
+                    for (let j = 0; j < links.length; j++) {
+                        if (links[i].name1 === search_string)
+                            first_degree_names.push(links[i].name2);
+                        for (let k = 0; k < first_degree_names.length; k++) {
+                            for ( j = 0; j < links.length; j++)
+                                if (first_degree_names[k] === links[j].name1)
+                                    second_degree_names.push(links[j].name2)
+                        }
+                    }
+                }
+            }
+            return [first_degree_names, second_degree_names];
+        } else {
+            return [nodes, nodes];
+        }
+    }
+
     update_dataset(dataset_name) {
         console.log(dataset_name);
+        let state = {...this.state};
         const config = {...this.state.config};
         config.dataset_name = dataset_name;
         config.viz_update_func = 'create_graph';
         this.load_dataset(config.dataset_name);
         this.setState({config: config});
+
+        const focus_person = state.config.person_to_highlight;
+        const data_copy = {...this.state.data};
+        let first_and_second = this.update_degree_relation(focus_person);
+        data_copy.first_degree = first_and_second[0];
+        data_copy.second_degree = first_and_second[1];
+
+        this.setState({data: data_copy});
+
     }
 
     async load_dataset(dataset_name) {
