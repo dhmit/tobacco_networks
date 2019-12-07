@@ -350,7 +350,6 @@ export function update_graph(el, data, config, action) {
         svg.selectAll(".graph_node")
             .style("opacity", function (o) {
                 const other_name = o.name.toUpperCase();
-                console.log("Other name " + other_name);
                 if (other_name + "-" + name in adj_data) {
                     return 1;
                 } else if (other_name === name) {
