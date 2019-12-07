@@ -232,46 +232,32 @@ export function create_graph(el, data, config, handle_viz_events) {
     config.links = links;
 }
 
-export function force_sim(config,render_simulation,data) {
-            const graph_width = config.width;
+function force_sim(config,render_simulation,data) {
+    const graph_width = config.width;
     const graph_height = config.height;
-        let centers
-        if (config.cluster_nodes) {
-            centers = {
-                "Phillip Morris International": [graph_width * .2, graph_height * .2],
-                "British American Tobacco": [graph_width * .8, graph_height * .2],
-                "Imperial Tobacco": [graph_width * .2, graph_height * .8],
-                "Japan Tobacco": [graph_width * .8, graph_height * .8]
-                };
-        } else {
-            centers = {
-                "Phillip Morris International": [graph_width/2, graph_height/2],
-                "British American Tobacco": [graph_width/2, graph_height/2],
-                "Imperial Tobacco": [graph_width/2, graph_height/2],
-                "Japan Tobacco": [graph_width/2, graph_height/2]
-            };
-        }
-        const force_x_pos = (d) => {
-            if (d.has_been_dragged){
+    const force_x_pos = (d) => {
+        if (d.has_been_dragged){
                 return d.x_grav;
-            } else {
-                return centers[d.affiliation][0];
+        } else {
+                return get_center([d.affiliation],
+            config.cluster_nodes,graph_width,graph_height)[0];
             }
-        }
-        const force_y_pos = (d) => {
+    };
+    const force_y_pos = (d) => {
             if (d.has_been_dragged){
                 return d.y_grav;
             } else {
-                return centers[d.affiliation][1];
+                return get_center([d.affiliation],
+            config.cluster_nodes,graph_width,graph_height)[1];
             }
-        }
-        const cluster_strength = (d) => {
+    };
+    const cluster_strength = (d) => {
             if (d.has_been_dragged){
                 return 3;
             } else {
                 return 1;
             }
-        }
+    };
 
     let force_simulation = d3.forceSimulation(data.nodes);
     force_simulation
@@ -282,37 +268,48 @@ export function force_sim(config,render_simulation,data) {
         .on("tick", render_simulation);  // what to do when the sim updates
     }
 
-function initialize_force_sim(config, data) {
-    const graph_width = config.width;
-    const graph_height = config.height;
 
+function get_center(affiliation, should_cluster,graph_width,graph_height){
     let centers;
-    let link_strength;
-    let cluster_strength;
-    let charge_strength;
-    let radius_distance;
-    if (config.cluster_nodes) {
+    let mode;
+    if (should_cluster){
+        mode = "rectangle";
+    } else {
+        mode = "single_cluster";
+    }
+    if (mode == "rectangle") {
         centers = {
             "Phillip Morris International": [graph_width * .2, graph_height * .2],
             "British American Tobacco": [graph_width * .8, graph_height * .2],
             "Imperial Tobacco": [graph_width * .2, graph_height * .8],
             "Japan Tobacco": [graph_width * .8, graph_height * .8]
         };
-        link_strength = 0;
-        charge_strength = -500;
-        cluster_strength = 3;
-        radius_distance = 30;
-    } else {
+    } else if (mode == "single_cluster"){
         centers = {
             "Phillip Morris International": [graph_width/2, graph_height/2],
             "British American Tobacco": [graph_width/2, graph_height/2],
             "Imperial Tobacco": [graph_width/2, graph_height/2],
             "Japan Tobacco": [graph_width/2, graph_height/2]
         };
+    }
+    return centers[affiliation]
+}
+function initialize_force_sim(config, data) {
+    const graph_width = config.width;
+    const graph_height = config.height;
+
+    let link_strength;
+    let cluster_strength;
+    let charge_strength;
+    let radius_distance = 30;
+    if (config.cluster_nodes) {
+        link_strength = 0;
+        charge_strength = -500;
+        cluster_strength = 3;
+    } else {
         link_strength = 1;
         charge_strength = -2500;
         cluster_strength = 1;
-        radius_distance = 0;
     }
     const force_link = d3.forceLink(data.links)
                          .id((d) => d.name)  // which data field to use as id for links
@@ -320,7 +317,12 @@ function initialize_force_sim(config, data) {
                          .strength(link_strength);
 
     const force_x_pos = (d) => {
-        return centers[d.affiliation][0];
+        return get_center([d.affiliation],
+            config.cluster_nodes,graph_width,graph_height)[0];
+    }
+    const force_y_pos = (d) => {
+        return get_center([d.affiliation],
+            config.cluster_nodes,graph_width,graph_height)[1];
     }
 
     let force_simulation = d3.forceSimulation(data.nodes);
@@ -329,11 +331,11 @@ function initialize_force_sim(config, data) {
         .force("center", d3.forceCenter(graph_width/2, graph_height/2))
         .force('collision', d3.forceCollide().radius(radius_distance))
         .force('x', d3.forceX()
-                        .x((d) => force_x_pos(d))
+                        .x(force_x_pos)
                         .strength(cluster_strength))
-        .force('y', d3.forceY().y(function(d) {
-            return centers[d.affiliation][1];
-        }).strength(cluster_strength))
+        .force('y', d3.forceY()
+                        .y(force_y_pos)
+                        .strength(cluster_strength))
         .on("tick", render_simulation);  // what to do when the sim updates
 
     function render_simulation() {
@@ -409,6 +411,7 @@ function change_clusters(config, data) {
         // fix_nodes(d);
     }
     function drag_ended(d) {
+        force_simulation.stop();
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
         d.fx = null;
         d.fy = null;
@@ -417,6 +420,7 @@ function change_clusters(config, data) {
         d.has_been_dragged = true;
         force_sim(config,render_simulation,data);
         nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
+        force_simulation.restart();
     }
 
     function focus_node() {
