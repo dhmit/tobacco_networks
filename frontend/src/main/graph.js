@@ -349,7 +349,8 @@ export function update_graph(el, data, config, action) {
         const adj_data = data["adjacent_nodes"];
         svg.selectAll(".graph_node")
             .style("opacity", function (o) {
-                const other_name = o.name;
+                const other_name = o.name.toUpperCase();
+                console.log("Other name " + other_name);
                 if (other_name + "-" + name in adj_data) {
                     return 1;
                 } else if (other_name === name) {
@@ -359,8 +360,8 @@ export function update_graph(el, data, config, action) {
             });
         svg.selectAll(".graph_link")
             .style("opacity", function (o) {
-                const source = o.source.name;
-                const target = o.target.name;
+                const source = o.source.name.toUpperCase();
+                const target = o.target.name.toUpperCase();
 
                 if (name === source || name === target) {
                     return 1;
