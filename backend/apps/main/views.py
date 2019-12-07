@@ -44,8 +44,8 @@ def get_network_data(request):
     for link in links:
         link['source'] = link['node1']
         link['target'] = link['node2']
-        adjacent_nodes[link['node1'] + "-" + link['node2']] = True
-        adjacent_nodes[link['node2'] + "-" + link['node1']] = True
+        adjacent_nodes[link['node1'].upper() + "-" + link['node2'].upper()] = True
+        adjacent_nodes[link['node2'].upper() + "-" + link['node1'].upper()] = True
     data["adjacent_nodes"] = adjacent_nodes
 
     # TODO: Need to add adjacent_nodes and add False value : talk to rest of group about this
