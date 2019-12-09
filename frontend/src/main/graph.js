@@ -67,8 +67,8 @@ export function create_graph(el, data, config, handle_viz_events) {
                 .on("drag", dragged)
                 .on("end", drag_ended)
         )
-        .on("mouseover", focus_node)
-        .on("mouseout", unfocus_node)
+        .on("mouseover", () => focus_node(config,nodes,links,data))
+        .on("mouseout", () => unfocus_node(config,nodes,links))
         .on("click", (d, _i) => handle_viz_events('click', d));
 
     // Setup circle helper funcs
@@ -151,10 +151,11 @@ export function create_graph(el, data, config, handle_viz_events) {
         d.y_grav = d.y;
         d.has_been_dragged = true;
         force_sim(config,data);
-        nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
+        nodes.on("mouseover", () => focus_node(config,nodes,links,data))
+            .on("mouseout", () => unfocus_node(config,nodes,links));
     }
 
-    function focus_node() {
+    function focus_node(config,nodes,links,data) {
         const node = d3.select(d3.event.target);
         const name = node["_groups"][0][0]["__data__"]["name"];
 
@@ -182,7 +183,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         get_information(data, "DUNN,WL");
     }
 
-    function unfocus_node() {
+    function unfocus_node(config,nodes,links) {
         nodes.style("opacity", 1);
         links.style("opacity", 1);
         config.nodes = nodes;
@@ -412,48 +413,50 @@ function change_clusters(config, data) {
         d.y_grav = d.y;
         d.has_been_dragged = true;
         force_sim(config,data);
-        nodes.on("mouseover", ()=> focus_node).on("mouseout", unfocus_node);
+        nodes.on("mouseover", () => focus_node(config,nodes,links,data))
+            .on("mouseout", () => unfocus_node(config,nodes,links));
         force_simulation.restart();
     }
 
-    function focus_node(config) {
-        const node = d3.select(d3.event.target);
-        const name = node["_groups"][0][0]["__data__"]["name"];
 
-        nodes.style("opacity", function(o) {
-            const other_name = o.name;
-                const adj_data = data["adjacent_nodes"];
-                if (other_name + "-" + name in adj_data) {
-                    return 1;
-                } else if (other_name === name) {
-                    return 1;
-                }
-                return 0;
-        });
-
-        links.style("opacity", function(o) {
-            const source = o.source.name;
-            const target = o.target.name;
-            if (name === source || name === target) {
-                return 1;
-            }
-            return 0;
-        });
-        config.nodes = nodes;
-        config.links = links;
-        // TODO: Fix this to pass in the node name
-        get_information(data, "DUNN,WL");
-    }
-
-    function unfocus_node() {
-        nodes.style("opacity", 1);
-        links.style("opacity", 1);
-        config.nodes = nodes;
-        config.links = links;
-    }
 
 }
 
+function focus_node(config,nodes,links,data) {
+    const node = d3.select(d3.event.target);
+    const name = node["_groups"][0][0]["__data__"]["name"];
+
+    nodes.style("opacity", function(o) {
+        const other_name = o.name;
+            const adj_data = data["adjacent_nodes"];
+            if (other_name + "-" + name in adj_data) {
+                return 1;
+            } else if (other_name === name) {
+                return 1;
+            }
+            return 0;
+    });
+
+    links.style("opacity", function(o) {
+        const source = o.source.name;
+        const target = o.target.name;
+        if (name === source || name === target) {
+            return 1;
+        }
+        return 0;
+    });
+    config.nodes = nodes;
+    config.links = links;
+    // TODO: Fix this to pass in the node name
+    get_information(data, "DUNN,WL");
+}
+
+function unfocus_node(config,nodes,links) {
+    nodes.style("opacity", 1);
+    links.style("opacity", 1);
+    config.nodes = nodes;
+    config.links = links;
+}
 
 /**
  * Returns information of the given id
