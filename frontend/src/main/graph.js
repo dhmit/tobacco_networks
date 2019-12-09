@@ -62,9 +62,9 @@ export function create_graph(el, data, config, handle_viz_events) {
     nodes  // bind event handlers for nodes
         .call(
             d3.drag()
-                .on("start", (d) => drag_started(d,nodes,force_simulation))
+                .on("start", (d) => drag_started(d, nodes, force_simulation))
                 .on("drag", dragged)
-                .on("end", (d) => drag_ended(d,config,data,nodes,links,force_simulation))
+                .on("end", (d) => drag_ended(d, config, data, nodes, links,force_simulation))
         )
         .on("mouseover", () => focus_node(config,nodes,links,data))
         .on("mouseout", () => unfocus_node(config,nodes,links))
@@ -188,20 +188,28 @@ function force_sim(config,data) {
     const graph_width = config.width;
     const graph_height = config.height;
     const force_x_pos = (d) => {
-        if (d.has_been_dragged){
-                return d.x_grav;
+        if (d.has_been_dragged) {
+            return d.x_grav;
         } else {
-                return get_center([d.affiliation],
-            config.cluster_nodes,graph_width,graph_height)[0];
-            }
+            const center = get_center(
+                [d.affiliation],
+                config.cluster_nodes,
+                graph_width,
+                graph_height);
+            return center[0];
+        }
     };
     const force_y_pos = (d) => {
-            if (d.has_been_dragged){
-                return d.y_grav;
-            } else {
-                return get_center([d.affiliation],
-            config.cluster_nodes,graph_width,graph_height)[1];
-            }
+        if (d.has_been_dragged) {
+            return d.y_grav;
+        } else {
+            const center = get_center(
+                [d.affiliation],
+                config.cluster_nodes,
+                graph_width,
+                graph_height);
+            return center[1];
+        }
     };
     const cluster_strength = (d) => {
             if (d.has_been_dragged){
