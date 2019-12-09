@@ -63,7 +63,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     nodes  // bind event handlers for nodes
         .call(
             d3.drag()
-                .on("start", drag_started)
+                .on("start", (d) => drag_started(d,nodes,force_simulation))
                 .on("drag", dragged)
                 .on("end", drag_ended)
         )
@@ -121,32 +121,9 @@ export function create_graph(el, data, config, handle_viz_events) {
             .style("font-size", 12)
             .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
                 .style("pointer-events", "none");
-    /*
-     * Event handlers
-     */
-    // Update the position of all svg elements according to the force sim
-    // This function is called whenever the simulation updates
-    // eslint-disable-next-line no-unused-vars
-    function render_simulation() {
-        // Update node positions
-        nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
 
-        // Update link positions
-        links.attr("x1", (d) => d.source.x)
-            .attr("y1", (d) => d.source.y)
-            .attr("x2", (d) => d.target.x)
-            .attr("y2", (d) => d.target.y);
-        config.nodes = nodes;
-        config.links = links;
-    }
 
-    function drag_started(d) {
-        nodes.on("mouseover", () => {}).on("mouseout", () => {});
-        d3.event.sourceEvent.stopPropagation();
-        if (!d3.event.active) {force_simulation.alphaTarget(0.3).restart();}
-        d.fx = d.x;
-        d.fy = d.y;
-    }
+
 
     function dragged(d) {
         d.fx = d3.event.x;
@@ -173,7 +150,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         d.x_grav = d.x;
         d.y_grav = d.y;
         d.has_been_dragged = true;
-        force_sim(config,render_simulation,data);
+        force_sim(config,data);
         nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
     }
 
@@ -232,7 +209,23 @@ export function create_graph(el, data, config, handle_viz_events) {
     config.links = links;
 }
 
-function force_sim(config,render_simulation,data) {
+
+function drag_started(d,nodes,force_simulation) {
+    nodes.on("mouseover", () => {}).on("mouseout", () => {});
+    d3.event.sourceEvent.stopPropagation();
+    if (!d3.event.active) {force_simulation.alphaTarget(0.3).restart();}
+    d.fx = d.x;
+    d.fy = d.y;
+}
+
+function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+    d.has_been_dragged = true;
+    // fix_nodes(d);
+}
+
+function force_sim(config,data) {
     const graph_width = config.width;
     const graph_height = config.height;
     const force_x_pos = (d) => {
@@ -265,7 +258,7 @@ function force_sim(config,render_simulation,data) {
         .force('collision', d3.forceCollide().radius(30))
         .force('x', d3.forceX().x((d) => force_x_pos(d)).strength(cluster_strength))
         .force('y', d3.forceY().y((d) => force_y_pos(d)).strength(cluster_strength))
-        .on("tick", render_simulation);  // what to do when the sim updates
+        .on("tick", () => render_simulation(config));  // what to do when the sim updates
     }
 
 
@@ -299,10 +292,26 @@ function get_center(affiliation, should_cluster,graph_width,graph_height){
     console.log(affiliation,affiliation_center_id[affiliation]%no_centers )
     return centers_list[affiliation_center_id[affiliation]%no_centers]
 }
+
+/*
+ * Event handlers
+ */
+// Update the position of all svg elements according to the force sim
+// This function is called whenever the simulation updates
+// eslint-disable-next-line no-unused-vars
+function render_simulation(config) {
+    // Update node positions
+    config.nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
+
+    // Update link positions
+    config.links.attr("x1", (d) => d.source.x)
+        .attr("y1", (d) => d.source.y)
+        .attr("x2", (d) => d.target.x)
+        .attr("y2", (d) => d.target.y);
+}
 function initialize_force_sim(config, data) {
     const graph_width = config.width;
     const graph_height = config.height;
-
     let link_strength;
     let cluster_strength;
     let charge_strength;
@@ -341,18 +350,9 @@ function initialize_force_sim(config, data) {
         .force('y', d3.forceY()
                         .y(force_y_pos)
                         .strength(cluster_strength))
-        .on("tick", render_simulation);  // what to do when the sim updates
+        .on("tick",() => render_simulation(config));  // what to do when the sim updates
 
-    function render_simulation() {
-        // Update node positions
-        config.nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
 
-        // Update link positions
-        config.links.attr("x1", (d) => d.source.x)
-            .attr("y1", (d) => d.source.y)
-            .attr("x2", (d) => d.target.x)
-            .attr("y2", (d) => d.target.y);
-    }
 
     function resize() {
         const svg = d3.select("svg_id")
@@ -371,7 +371,7 @@ function initialize_force_sim(config, data) {
 }
 
 function change_clusters(config, data) {
-    force_sim(config,render_simulation,data)
+    force_sim(config,data)
 
     function resize() {
         const svg = d3.select("svg_id")
@@ -397,24 +397,13 @@ function change_clusters(config, data) {
     nodes  // bind event handlers for nodes
         .call(
             d3.drag()
-                .on("start", drag_started)
-                .on("drag", dragged)
+                .on("start", (d) => drag_started(d,nodes,force_simulation))
+                .on("drag", (d) => dragged(d))
                 .on("end", drag_ended)
         )
-    function drag_started(d) {
-        nodes.on("mouseover", () => {}).on("mouseout", () => {});
-        d3.event.sourceEvent.stopPropagation();
-        if (!d3.event.active) {force_simulation.alphaTarget(0.3).restart();}
-        d.fx = d.x;
-        d.fy = d.y;
-    }
 
-    function dragged(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-        d.has_been_dragged = true;
-        // fix_nodes(d);
-    }
+
+
     function drag_ended(d) {
         force_simulation.stop();
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
@@ -423,7 +412,7 @@ function change_clusters(config, data) {
         d.x_grav = d.x;
         d.y_grav = d.y;
         d.has_been_dragged = true;
-        force_sim(config,render_simulation,data);
+        force_sim(config,data);
         nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
         force_simulation.restart();
     }
@@ -464,16 +453,6 @@ function change_clusters(config, data) {
         config.links = links;
     }
 
-    function render_simulation() {
-        // Update node positions
-        config.nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
-
-        // Update link positions
-        config.links.attr("x1", (d) => d.source.x)
-            .attr("y1", (d) => d.source.y)
-            .attr("x2", (d) => d.target.x)
-            .attr("y2", (d) => d.target.y);
-    }
 }
 
 
