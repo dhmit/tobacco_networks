@@ -64,7 +64,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             d3.drag()
                 .on("start", (d) => drag_started(d,nodes,force_simulation))
                 .on("drag", dragged)
-                .on("end", drag_ended)
+                .on("end", (d) => drag_ended(d,config,data,nodes,links,force_simulation))
         )
         .on("mouseover", () => focus_node(config,nodes,links,data))
         .on("mouseout", () => unfocus_node(config,nodes,links))
@@ -124,12 +124,7 @@ export function create_graph(el, data, config, handle_viz_events) {
 
 
 
-    function dragged(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-        d.has_been_dragged = true;
-        // fix_nodes(d);
-    }
+
 
     // Preventing other nodes from moving while dragging one node
     // function fix_nodes(this_node) {
@@ -141,18 +136,6 @@ export function create_graph(el, data, config, handle_viz_events) {
     //          }
     //      });
     //  }
-
-    function drag_ended(d) {
-        if (!d3.event.active) {force_simulation.alphaTarget(0);}
-        d.fx = null;
-        d.fy = null;
-        d.x_grav = d.x;
-        d.y_grav = d.y;
-        d.has_been_dragged = true;
-        force_sim(config,data);
-        nodes.on("mouseover", () => focus_node(config,nodes,links,data))
-            .on("mouseout", () => unfocus_node(config,nodes,links));
-    }
     function resize() {
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -190,6 +173,17 @@ function dragged(d) {
     // fix_nodes(d);
 }
 
+function drag_ended(d,config,data,nodes,links,force_simulation) {
+    if (!d3.event.active) {force_simulation.alphaTarget(0);}
+    d.fx = null;
+    d.fy = null;
+    d.x_grav = d.x;
+    d.y_grav = d.y;
+    d.has_been_dragged = true;
+    force_sim(config,data);
+    nodes.on("mouseover", () => focus_node(config,nodes,links,data))
+        .on("mouseout", () => unfocus_node(config,nodes,links));
+}
 function force_sim(config,data) {
     const graph_width = config.width;
     const graph_height = config.height;
@@ -363,24 +357,11 @@ function change_clusters(config, data) {
             d3.drag()
                 .on("start", (d) => drag_started(d,nodes,force_simulation))
                 .on("drag", (d) => dragged(d))
-                .on("end", (d) => drag_ended(d,force_simulation))
+                .on("end", (d) => drag_ended(d,config,data,nodes,links,force_simulation))
         )
 
 
 
-    function drag_ended(d,force_simulation) {
-        force_simulation.stop();
-        if (!d3.event.active) {force_simulation.alphaTarget(0);}
-        d.fx = null;
-        d.fy = null;
-        d.x_grav = d.x;
-        d.y_grav = d.y;
-        d.has_been_dragged = true;
-        force_sim(config,data);
-        nodes.on("mouseover", () => focus_node(config,nodes,links,data))
-            .on("mouseout", () => unfocus_node(config,nodes,links));
-        force_simulation.restart();
-    }
 
 
 
