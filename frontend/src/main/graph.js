@@ -372,7 +372,6 @@ function initialize_force_sim(config, data) {
 
 function change_clusters(config, data) {
     force_sim(config,data)
-
     function resize() {
         const svg = d3.select("svg_id")
         console.log("RESIZING", config.width, config.height);
@@ -399,12 +398,12 @@ function change_clusters(config, data) {
             d3.drag()
                 .on("start", (d) => drag_started(d,nodes,force_simulation))
                 .on("drag", (d) => dragged(d))
-                .on("end", drag_ended)
+                .on("end", (d) => drag_ended(d,force_simulation))
         )
 
 
 
-    function drag_ended(d) {
+    function drag_ended(d,force_simulation) {
         force_simulation.stop();
         if (!d3.event.active) {force_simulation.alphaTarget(0);}
         d.fx = null;
@@ -413,11 +412,11 @@ function change_clusters(config, data) {
         d.y_grav = d.y;
         d.has_been_dragged = true;
         force_sim(config,data);
-        nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
+        nodes.on("mouseover", ()=> focus_node).on("mouseout", unfocus_node);
         force_simulation.restart();
     }
 
-    function focus_node() {
+    function focus_node(config) {
         const node = d3.select(d3.event.target);
         const name = node["_groups"][0][0]["__data__"]["name"];
 
