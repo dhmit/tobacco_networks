@@ -270,29 +270,34 @@ function force_sim(config,render_simulation,data) {
 
 
 function get_center(affiliation, should_cluster,graph_width,graph_height){
-    let centers;
-    let mode;
+    let no_centers;
     if (should_cluster){
-        mode = "rectangle";
+        no_centers = 2;
     } else {
-        mode = "single_cluster";
+        no_centers  = 1;
     }
-    if (mode == "rectangle") {
-        centers = {
-            "Phillip Morris International": [graph_width * .2, graph_height * .2],
-            "British American Tobacco": [graph_width * .8, graph_height * .2],
-            "Imperial Tobacco": [graph_width * .2, graph_height * .8],
-            "Japan Tobacco": [graph_width * .8, graph_height * .8]
+    let affiliation_center_id;
+    let centers_list;
+
+    affiliation_center_id = {
+            "Phillip Morris International": 1,
+            "British American Tobacco": 2,
+            "Imperial Tobacco": 3,
+            "Japan Tobacco": 4
         };
-    } else if (mode == "single_cluster"){
-        centers = {
-            "Phillip Morris International": [graph_width/2, graph_height/2],
-            "British American Tobacco": [graph_width/2, graph_height/2],
-            "Imperial Tobacco": [graph_width/2, graph_height/2],
-            "Japan Tobacco": [graph_width/2, graph_height/2]
-        };
+
+    if (no_centers == 4) {
+        centers_list = [[graph_width * .2, graph_height * .2],[graph_width * .8, graph_height * .2],
+            [graph_width * .2, graph_height * .8],[graph_width * .8, graph_height * .8]]
+    } else if (no_centers == 1){
+        centers_list = [[graph_width/2, graph_height/2]]
+    } else if (no_centers == 2){
+        centers_list = [[graph_width * 0.2, graph_height/2],[graph_width* 0.8, graph_height/2]]
     }
-    return centers[affiliation]
+    console.log(no_centers)
+    console.log(centers_list)
+    console.log(affiliation,affiliation_center_id[affiliation]%no_centers )
+    return centers_list[affiliation_center_id[affiliation]%no_centers]
 }
 function initialize_force_sim(config, data) {
     const graph_width = config.width;
