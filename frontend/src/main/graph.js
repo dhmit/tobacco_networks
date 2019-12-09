@@ -18,7 +18,6 @@ import * as d3 from 'd3';
  * @param handle_viz_events: function to pass visualization events back to react.
  */
 export function create_graph(el, data, config, handle_viz_events) {
-    const adj_data = data["adjacent_nodes"];
     const graph_width = config.width;
     const graph_height = config.height;
 
@@ -153,41 +152,6 @@ export function create_graph(el, data, config, handle_viz_events) {
         force_sim(config,data);
         nodes.on("mouseover", () => focus_node(config,nodes,links,data))
             .on("mouseout", () => unfocus_node(config,nodes,links));
-    }
-
-    function focus_node(config,nodes,links,data) {
-        const node = d3.select(d3.event.target);
-        const name = node["_groups"][0][0]["__data__"]["name"];
-
-        nodes.style("opacity", function(o) {
-            const other_name = o.name;
-                if (other_name + "-" + name in adj_data) {
-                    return 1;
-                } else if (other_name === name) {
-                    return 1;
-                }
-                return 0;
-        });
-
-        links.style("opacity", function(o) {
-            const source = o.source.name;
-            const target = o.target.name;
-            if (name === source || name === target) {
-                return 1;
-            }
-            return 0;
-        });
-        config.nodes = nodes;
-        config.links = links;
-        // TODO: Fix this to pass in the node name
-        get_information(data, "DUNN,WL");
-    }
-
-    function unfocus_node(config,nodes,links) {
-        nodes.style("opacity", 1);
-        links.style("opacity", 1);
-        config.nodes = nodes;
-        config.links = links;
     }
     function resize() {
         const width = window.innerWidth;
