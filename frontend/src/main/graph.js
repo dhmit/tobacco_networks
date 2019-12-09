@@ -64,10 +64,10 @@ export function create_graph(el, data, config, handle_viz_events) {
             d3.drag()
                 .on("start", (d) => drag_started(d, nodes, force_simulation))
                 .on("drag", dragged)
-                .on("end", (d) => drag_ended(d, config, data, nodes, links,force_simulation))
+                .on("end", (d) => drag_ended(d, config, data, nodes, links, force_simulation))
         )
-        .on("mouseover", () => focus_node(config,nodes,links,data))
-        .on("mouseout", () => unfocus_node(config,nodes,links))
+        .on("mouseover", () => focus_node(config, nodes, links, data))
+        .on("mouseout", () => unfocus_node(config, nodes, links))
         .on("click", (d, _i) => handle_viz_events('click', d));
 
     // Setup circle helper funcs
@@ -173,7 +173,7 @@ function dragged(d) {
     // fix_nodes(d);
 }
 
-function drag_ended(d,config,data,nodes,links,force_simulation) {
+function drag_ended(d, config, data, nodes, links, force_simulation) {
     if (!d3.event.active) {force_simulation.alphaTarget(0);}
     d.fx = null;
     d.fy = null;
@@ -212,11 +212,11 @@ function force_sim(config,data) {
         }
     };
     const cluster_strength = (d) => {
-            if (d.has_been_dragged){
-                return 3;
-            } else {
-                return 1;
-            }
+        if (d.has_been_dragged){
+            return 3;
+        } else {
+            return 1;
+        }
     };
 
     let force_simulation = d3.forceSimulation(data.nodes);
@@ -231,7 +231,7 @@ function force_sim(config,data) {
 
 function get_center(affiliation, should_cluster,graph_width,graph_height){
     let no_centers;
-    if (should_cluster){
+    if (should_cluster) {
         no_centers = 2;
     } else {
         no_centers  = 1;
@@ -240,23 +240,28 @@ function get_center(affiliation, should_cluster,graph_width,graph_height){
     let centers_list;
 
     affiliation_center_id = {
-            "Phillip Morris International": 1,
-            "British American Tobacco": 2,
-            "Imperial Tobacco": 3,
-            "Japan Tobacco": 4
-        };
+        "Phillip Morris International": 1,
+        "British American Tobacco": 2,
+        "Imperial Tobacco": 3,
+        "Japan Tobacco": 4
+    };
 
     if (no_centers == 4) {
-        centers_list = [[graph_width * .2, graph_height * .2],[graph_width * .8, graph_height * .2],
-            [graph_width * .2, graph_height * .8],[graph_width * .8, graph_height * .8]]
-    } else if (no_centers == 1){
+        centers_list = [
+            [graph_width * .2, graph_height * .2],
+            [graph_width * .8, graph_height * .2],
+            [graph_width * .2, graph_height * .8],
+            [graph_width * .8, graph_height * .8]
+        ];
+
+    } else if (no_centers == 1) {
         centers_list = [[graph_width/2, graph_height/2]]
-    } else if (no_centers == 2){
-        centers_list = [[graph_width * 0.2, graph_height/2],[graph_width* 0.8, graph_height/2]]
-    }
-    console.log(no_centers)
-    console.log(centers_list)
-    console.log(affiliation,affiliation_center_id[affiliation]%no_centers )
+    } else if (no_centers == 2) {
+        centers_list = [
+            [graph_width * 0.2, graph_height/2],
+            [graph_width* 0.8, graph_height/2]
+        ];
+    };
     return centers_list[affiliation_center_id[affiliation]%no_centers]
 }
 
