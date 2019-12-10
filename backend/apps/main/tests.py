@@ -12,10 +12,10 @@ from rest_framework.test import APIRequestFactory
 from rest_framework.response import Response
 from name_disambiguation.config import DATA_PATH
 from name_disambiguation.people_db import PeopleDatabase
-from apps.main.models import Document
-from apps.main.models import DjangoPerson
-from apps.main.models import import_peopledb_to_person_model
-from apps.main.models import import_csv_to_document_model
+from .models import Document
+from .models import DjangoPerson
+from .models import import_peopledb_to_person_model
+from .models import import_csv_to_document_model
 from .views import get_person_info
 from .serializers import PersonInfoSerializer
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)

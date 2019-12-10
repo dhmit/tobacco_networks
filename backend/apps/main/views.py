@@ -12,7 +12,7 @@ from django.http import JsonResponse
 from backend.config.settings.base import BACKEND_DIR
 from .models import DjangoPerson
 from .serializers import PersonInfoSerializer, EdgeSerializer
-
+from .serializers import load_network_json_data
 
 @api_view(['GET'])
 def list_edges(request):
