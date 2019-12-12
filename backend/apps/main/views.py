@@ -39,6 +39,8 @@ def get_network_data(request):
         node['affiliation'] = random.choice(['Phillip Morris International', 'British American '
                                                                              'Tobacco',
                                              'Japan Tobacco', 'Imperial Tobacco'])
+
+
     links = data['links']
     adjacent_nodes = {}
     for link in links:
