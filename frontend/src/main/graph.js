@@ -1,4 +1,3 @@
-
 /**
  * Graph code mostly in D3.js for the visualization
  */
@@ -33,7 +32,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         .append('svg')
             .attr("width", graph_width)
             .attr("height", graph_height)
-            .attr("id", "svg_id");
+            .attr("id", "graph_svg");
 
     // Create links
     const links = svg
@@ -120,11 +119,6 @@ export function create_graph(el, data, config, handle_viz_events) {
             .style("font-size", 12)
             .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
                 .style("pointer-events", "none");
-
-
-
-
-
 
     // Preventing other nodes from moving while dragging one node
     // function fix_nodes(this_node) {
@@ -247,7 +241,7 @@ function get_center(affiliation, should_cluster,graph_width,graph_height){
         "Japan Tobacco": 4
     };
 
-    if (no_centers == 4) {
+    if (no_centers === 4) {
         centers_list = [
             [graph_width * .2, graph_height * .2],
             [graph_width * .8, graph_height * .2],
@@ -255,9 +249,9 @@ function get_center(affiliation, should_cluster,graph_width,graph_height){
             [graph_width * .8, graph_height * .8]
         ];
 
-    } else if (no_centers == 1) {
+    } else if (no_centers === 1) {
         centers_list = [[graph_width/2, graph_height/2]]
-    } else if (no_centers == 2) {
+    } else if (no_centers === 2) {
         centers_list = [
             [graph_width * 0.2, graph_height/2],
             [graph_width* 0.8, graph_height/2]
@@ -307,11 +301,11 @@ function initialize_force_sim(config, data) {
     const force_x_pos = (d) => {
         return get_center([d.affiliation],
             config.cluster_nodes,graph_width,graph_height)[0];
-    }
+    };
     const force_y_pos = (d) => {
         return get_center([d.affiliation],
             config.cluster_nodes,graph_width,graph_height)[1];
-    }
+    };
 
     let force_simulation = d3.forceSimulation(data.nodes);
     force_simulation.force("link", force_link)
@@ -329,7 +323,7 @@ function initialize_force_sim(config, data) {
 
 
     function resize() {
-        const svg = d3.select("#svg_id");
+        const svg = d3.select("#graph_svg");
         console.log("RESIZING", config.width, config.height);
         console.log("svg", svg);
         const width = window.innerWidth;
@@ -348,7 +342,7 @@ function initialize_force_sim(config, data) {
 function change_clusters(config, data) {
     force_sim(config,data);
     function resize() {
-        const svg = d3.select("svg_id");
+        const svg = d3.select("#graph_svg");
         console.log("RESIZING", config.width, config.height);
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -375,12 +369,6 @@ function change_clusters(config, data) {
                 .on("drag", (d) => dragged(d))
                 .on("end", (d) => drag_ended(d,config,data,nodes,links,force_simulation))
         )
-
-
-
-
-
-
 }
 
 function focus_node(config,nodes,links,data) {
@@ -443,8 +431,10 @@ export function get_information(data, name){
 /**
  * Updates visualization according to what the user searches
  *
+ * @param el: the html element to which the graph is bound
  * @param data: data
- * @param name: String
+ * @param config: the graph config from react
+ * @param action: the update action, e.g. "focus" or "cluster_nodes"
  */
 export function update_graph(el, data, config, action) {
     if (action === 'focus') {
@@ -484,5 +474,4 @@ export function update_graph(el, data, config, action) {
                 return 0;
             });
     }
-
 }
