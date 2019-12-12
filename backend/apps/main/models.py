@@ -77,7 +77,6 @@ class Document(models.Model):
         text: TextField, text of the document
         tid: CharField, document ID
         title: CharField, title of the document
-
         authors: ManyToManyField, connect Document and its authors' DjangoPerson objects in database
         recipients: ManyToManyField, connect Document and its recipients' DjangoPerson objects in
         database

@@ -5,9 +5,22 @@ import json
 from pathlib import Path
 
 import random
-
+from collections import Counter
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from django.http import JsonResponse
 from backend.config.settings.base import BACKEND_DIR
+from .models import DjangoPerson
+from .serializers import PersonInfoSerializer, EdgeSerializer
+from .serializers import load_network_json_data
+
+@api_view(['GET'])
+def list_edges(request):
+    """
+    Return a list of all Edge objects, serialized.
+    """
+    serializer = EdgeSerializer(instance=load_network_json_data("edges"), many=True)
+    return Response(serializer.data)
 
 
 def get_network_data(request):
@@ -51,3 +64,31 @@ def get_network_data(request):
     # TODO: Need to add adjacent_nodes and add False value : talk to rest of group about this
 
     return JsonResponse(data)
+
+
+@api_view(['GET'])
+def get_person_info(request):
+    """
+    Finds a person matching the full name requested by the user, serializes this person, and
+    returns the serialized person
+    :param request: request from the user;
+        request.query_params is a dict {'full name': FULL NAME OF RELEVANT PERSON}
+    :return: serialized person matching full name imbain request
+    """
+    queryset = DjangoPerson.objects.filter(full_name=request.query_params['full_name'])
+    if not list(queryset):
+        full_name = request.query_params['full_name']
+        new = DjangoPerson(
+            last="",
+            first="",
+            middle="",
+            full_name=full_name + " not available.",
+            most_likely_org="",
+            positions=json.dumps(Counter()),
+            aliases=json.dumps(Counter()),
+            count=0)
+        serializer = PersonInfoSerializer(instance=new, many=False)
+        return Response(serializer.data)
+    else:
+        serializer = PersonInfoSerializer(instance=queryset, many=True)
+        return Response(serializer.data)

@@ -26,9 +26,18 @@ urlpatterns = [
     # Django admin page
     path('admin/', admin.site.urls),
 
+    # API endpoints
+    # might want to change name later
+    url('api/edges/', main_views.list_edges),
+
     # temporary json endpoint for network data
     url('get_network_data', main_views.get_network_data),
 
+    # Person_info views
+    url('api/person_info/', main_views.get_person_info),
+
     # React views
     url('', render_react_view, {'component_name': 'MainView'}),
+
+
 ]

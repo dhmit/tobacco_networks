@@ -3,15 +3,104 @@ Tests for the main app.
 """
 
 import json
-from pathlib import Path
 from collections import Counter
+from pathlib import Path
+import os
 from django.test import TestCase
-from name_disambiguation.people_db import PeopleDatabase
+import django
+from rest_framework.test import APIRequestFactory
+from rest_framework.response import Response
 from name_disambiguation.config import DATA_PATH
-from apps.main.models import DjangoPerson
-from apps.main.models import Document
-from apps.main.models import import_peopledb_to_person_model
-from apps.main.models import import_csv_to_document_model
+from name_disambiguation.people_db import PeopleDatabase
+from .models import Document
+from .models import DjangoPerson
+from .models import import_peopledb_to_person_model
+from .models import import_csv_to_document_model
+from .views import get_person_info
+from .serializers import PersonInfoSerializer
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
+django.setup()
+
+
+class MainTests(TestCase):
+    """Test that models creates people correctly,
+    get_person_info returns correct info when person is in the database
+    get_person_info returns correct message when person is NOT in the database"""
+    def setUp(self):
+        DjangoPerson.objects.create(
+            last="LAB",
+            first="MIT",
+            middle="DH",
+            full_name="MIT DH LAB",
+            most_likely_org="MIT YAY",
+            positions=json.dumps(Counter()),
+            aliases=json.dumps(Counter()),
+            count=5)
+        DjangoPerson.objects.create(
+            last="LAR",
+            first="MOT",
+            middle="DJ",
+            full_name="MOT DJ LAR",
+            most_likely_org="KIT BAY",
+            positions=json.dumps(Counter()),
+            aliases=json.dumps(Counter()),
+            count=3)
+        DjangoPerson.objects.create(
+            last="BOBBERT",
+            first="BOB",
+            middle="BOBSON",
+            full_name="BOB BOBSON BOBBERT",
+            most_likely_org="MIT",
+            positions=json.dumps(Counter()),
+            aliases=json.dumps(Counter()),
+            count=5)
+        self.factory = APIRequestFactory()
+
+    def test_models_01(self):
+        """Tests that the person created with DjangoPerson model has the correct attributes"""
+        dummy_1 = DjangoPerson.objects.get(last='LAB')
+        dummy_2 = DjangoPerson.objects.get(last='LAR')
+        s_1 = f'{dummy_1.first} {dummy_1.middle} {dummy_1.last}'
+        s_1 = s_1 + ", Positions: " + str(dummy_1.positions) + ", Aliases: " + \
+            str(dummy_1.aliases) + ", count: " + str(dummy_1.count)
+
+        s_2 = f'{dummy_2.first} {dummy_2.middle} {dummy_2.last}'
+        s_2 = s_2 + ", Positions: " + str(dummy_2.positions) + ", Aliases: " + \
+            str(dummy_2.aliases) + ", count: " + str(dummy_2.count)
+        self.assertEqual(
+            str(dummy_1), s_1)
+        self.assertEqual(
+            str(dummy_2), s_2)
+
+    def test_api_views_01(self):
+        """tests that get_person_info returns correct person info when the person is in the
+        database"""
+        self.factory = APIRequestFactory()
+        request = self.factory.get('/api/person_info/', {'full_name': 'BOB BOBSON BOBBERT'})
+        dummy_1 = DjangoPerson.objects.filter(full_name='BOB BOBSON BOBBERT')
+        serializer = PersonInfoSerializer(instance=dummy_1, many=True)
+        expected = Response(serializer.data)
+        result = get_person_info(request)
+        self.assertEqual(expected.data, result.data)
+
+    def test_api_views_02(self):
+        """tests that get_person_info returns correct person info when the person is NOT in the
+        database"""
+        DjangoPerson.objects.create(
+            last="",
+            first="",
+            middle="",
+            full_name="JANE DOE DEERE not available.",
+            most_likely_org="",
+            positions=json.dumps(Counter()),
+            aliases=json.dumps(Counter()),
+            count=0)
+        request = self.factory.get('/api/person_info/', {'full_name': 'JANE DOE DEERE'})
+        dummy_1 = DjangoPerson.objects.get(full_name='JANE DOE DEERE not available.')
+        serializer = PersonInfoSerializer(instance=dummy_1, many=False)
+        expected = Response(serializer.data)
+        result = get_person_info(request)
+        self.assertEqual(expected.data, result.data)
 
 
 class ModelsTests(TestCase):
