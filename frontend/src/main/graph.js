@@ -184,6 +184,7 @@ function drag_ended(d, config, data, nodes, links, force_simulation) {
     nodes.on("mouseover", () => focus_node(config,nodes,links,data))
         .on("mouseout", () => unfocus_node(config,nodes,links));
 }
+
 function force_sim(config,data) {
     const graph_width = config.width;
     const graph_height = config.height;
@@ -261,7 +262,7 @@ function get_center(affiliation, should_cluster,graph_width,graph_height){
             [graph_width * 0.2, graph_height/2],
             [graph_width* 0.8, graph_height/2]
         ];
-    };
+    }
     return centers_list[affiliation_center_id[affiliation]%no_centers]
 }
 
@@ -281,6 +282,7 @@ function render_simulation(config) {
         .attr("x2", (d) => d.target.x)
         .attr("y2", (d) => d.target.y);
 }
+
 function initialize_force_sim(config, data) {
     const graph_width = config.width;
     const graph_height = config.height;
@@ -327,8 +329,9 @@ function initialize_force_sim(config, data) {
 
 
     function resize() {
-        const svg = d3.select("svg_id")
+        const svg = d3.select("#svg_id");
         console.log("RESIZING", config.width, config.height);
+        console.log("svg", svg);
         const width = window.innerWidth;
         const height = window.innerHeight;
         svg.attr("width", width).attr("height", height);
@@ -343,9 +346,9 @@ function initialize_force_sim(config, data) {
 }
 
 function change_clusters(config, data) {
-    force_sim(config,data)
+    force_sim(config,data);
     function resize() {
-        const svg = d3.select("svg_id")
+        const svg = d3.select("svg_id");
         console.log("RESIZING", config.width, config.height);
         const width = window.innerWidth;
         const height = window.innerHeight;
