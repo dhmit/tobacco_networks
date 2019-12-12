@@ -33,7 +33,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         .append('svg')
             .attr("width", graph_width)
             .attr("height", graph_height)
-            .attr("id", "svg_id");
+            .attr("id", "graph_svg");
 
     // Create links
     const links = svg
@@ -121,40 +121,25 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
                 .style("pointer-events", "none");
 
-
-
-
-
-
-    // Preventing other nodes from moving while dragging one node
-    // function fix_nodes(this_node) {
-    //     nodes.each(
-    //         function(node){
-    //         if (this_node != node){
-    //             node.fx = node.x;
-    //             node.fy = node.y;
-    //          }
-    //      });
-    //  }
-    function resize() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        svg.attr("width", width).attr("height", height);
-        config.width = width;
-        config.height = height;
-        let force_simulation = initialize_force_sim(config, data);
-        force_simulation.alphaTarget(0.3).restart();
-        force_simulation.alphaTarget(0);
-    }
-
-
-
-    d3.select(window).on("resize", resize);
+    d3.select(window).on("resize", resize_graph(config, data));
 
     config.svg = svg;
     config.nodes = nodes;
     config.links = links;
+}
+
+// Resize graph after the window has been resized
+function resize_graph(config, data) {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const svg = d3.select("graph_svg");
+    svg.attr("width", width).attr("height", height);
+    config.width = width;
+    config.height = height;
+    let force_simulation = initialize_force_sim(config, data);
+    force_simulation.alphaTarget(0.3).restart();
+    force_simulation.alphaTarget(0);
 }
 
 
@@ -184,6 +169,7 @@ function drag_ended(d, config, data, nodes, links, force_simulation) {
     nodes.on("mouseover", () => focus_node(config,nodes,links,data))
         .on("mouseout", () => unfocus_node(config,nodes,links));
 }
+
 function force_sim(config,data) {
     const graph_width = config.width;
     const graph_height = config.height;
@@ -229,10 +215,10 @@ function force_sim(config,data) {
     }
 
 
-function get_center(affiliation, should_cluster,graph_width,graph_height){
+function get_center(affiliation, should_cluster, graph_width, graph_height){
     let no_centers;
     if (should_cluster) {
-        no_centers = 2;
+        no_centers = 4;
     } else {
         no_centers  = 1;
     }
@@ -261,7 +247,7 @@ function get_center(affiliation, should_cluster,graph_width,graph_height){
             [graph_width * 0.2, graph_height/2],
             [graph_width* 0.8, graph_height/2]
         ];
-    };
+    }
     return centers_list[affiliation_center_id[affiliation]%no_centers]
 }
 
@@ -327,7 +313,7 @@ function initialize_force_sim(config, data) {
 
 
     function resize() {
-        const svg = d3.select("svg_id")
+        const svg = d3.select("svg_id");
         console.log("RESIZING", config.width, config.height);
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -345,7 +331,7 @@ function initialize_force_sim(config, data) {
 function change_clusters(config, data) {
     force_sim(config,data)
     function resize() {
-        const svg = d3.select("svg_id")
+        const svg = d3.select("graph_svg")
         console.log("RESIZING", config.width, config.height);
         const width = window.innerWidth;
         const height = window.innerHeight;
