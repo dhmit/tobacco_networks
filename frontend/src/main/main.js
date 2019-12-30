@@ -299,7 +299,6 @@ class MainView extends React.Component {
         config.cluster_nodes = !this.state.config.cluster_nodes;
         config.viz_update_func = 'cluster_nodes';
         this.setState({config: config});
-
     }
 
     /**

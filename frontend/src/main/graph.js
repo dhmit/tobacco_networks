@@ -180,30 +180,18 @@ function drag_ended(d, config, data, nodes, links, force_simulation) {
 }
 
 function force_sim(config,data) {
-    const graph_width = config.width;
-    const graph_height = config.height;
     const force_x_pos = (d) => {
         if (d.has_been_dragged) {
             return d.x_grav;
         } else {
-            const center = get_center(
-                [d.affiliation],
-                config.cluster_nodes,
-                graph_width,
-                graph_height);
-            return center[0];
+            return get_gravity_center(d, config, data)[0];
         }
     };
     const force_y_pos = (d) => {
         if (d.has_been_dragged) {
             return d.y_grav;
         } else {
-            const center = get_center(
-                [d.affiliation],
-                config.cluster_nodes,
-                graph_width,
-                graph_height);
-            return center[1];
+            return get_gravity_center(d, config, data)[1];
         }
     };
     const cluster_strength = (d) => {
@@ -223,42 +211,54 @@ function force_sim(config,data) {
         .on("tick", () => render_simulation(config));  // what to do when the sim updates
     }
 
+function get_gravity_center(d, config, data){
 
-function get_center(affiliation, should_cluster,graph_width,graph_height){
-    let no_centers;
-    if (should_cluster) {
-        no_centers = 2;
+    // if clustering inactive -> all nodes in the center of the graph
+    if (!config.cluster_nodes){
+        return [config.width / 2, config.height /2]
     } else {
-        no_centers  = 1;
+        const x_pos = (data.clusters[d.cluster]['x_pos'] * config.width + 0.2) / 3 * 2;
+        const y_pos = (data.clusters[d.cluster]['y_pos'] * config.height + 0.2) / 3 * 2;
+        return [x_pos, y_pos]
     }
-    let affiliation_center_id;
-    let centers_list;
-
-    affiliation_center_id = {
-        "Phillip Morris International": 1,
-        "British American Tobacco": 2,
-        "Imperial Tobacco": 3,
-        "Japan Tobacco": 4
-    };
-
-    if (no_centers === 4) {
-        centers_list = [
-            [graph_width * .2, graph_height * .2],
-            [graph_width * .8, graph_height * .2],
-            [graph_width * .2, graph_height * .8],
-            [graph_width * .8, graph_height * .8]
-        ];
-
-    } else if (no_centers === 1) {
-        centers_list = [[graph_width/2, graph_height/2]]
-    } else if (no_centers === 2) {
-        centers_list = [
-            [graph_width * 0.2, graph_height/2],
-            [graph_width* 0.8, graph_height/2]
-        ];
-    }
-    return centers_list[affiliation_center_id[affiliation]%no_centers]
 }
+//
+//
+// function get_center(affiliation, should_cluster,graph_width,graph_height){
+//     let no_centers;
+//     if (should_cluster) {
+//         no_centers = 2;
+//     } else {
+//         no_centers  = 1;
+//     }
+//     let affiliation_center_id;
+//     let centers_list;
+//
+//     affiliation_center_id = {
+//         "Phillip Morris International": 1,
+//         "British American Tobacco": 2,
+//         "Imperial Tobacco": 3,
+//         "Japan Tobacco": 4
+//     };
+//
+//     if (no_centers === 4) {
+//         centers_list = [
+//             [graph_width * .2, graph_height * .2],
+//             [graph_width * .8, graph_height * .2],
+//             [graph_width * .2, graph_height * .8],
+//             [graph_width * .8, graph_height * .8]
+//         ];
+//
+//     } else if (no_centers === 1) {
+//         centers_list = [[graph_width/2, graph_height/2]]
+//     } else if (no_centers === 2) {
+//         centers_list = [
+//             [graph_width * 0.2, graph_height/2],
+//             [graph_width* 0.8, graph_height/2]
+//         ];
+//     }
+//     return centers_list[affiliation_center_id[affiliation]%no_centers]
+// }
 
 /*
  * Event handlers
@@ -299,12 +299,10 @@ function initialize_force_sim(config, data) {
                          .strength(link_strength);
 
     const force_x_pos = (d) => {
-        return get_center([d.affiliation],
-            config.cluster_nodes,graph_width,graph_height)[0];
+        return get_gravity_center(d, config, data)[0];
     };
     const force_y_pos = (d) => {
-        return get_center([d.affiliation],
-            config.cluster_nodes,graph_width,graph_height)[1];
+        return get_gravity_center(d, config, data)[1];
     };
 
     let force_simulation = d3.forceSimulation(data.nodes);
