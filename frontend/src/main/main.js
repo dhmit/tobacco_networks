@@ -10,6 +10,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { getCookie } from '../common'
 import * as d3 from 'd3';
 import { create_graph, update_graph} from './graph.js'
+import {update_node_degrees} from "./node_degree_calculation";
 import './main.css';
 
 
@@ -46,6 +47,7 @@ class Controls extends React.Component {
     }
 
     render() {
+        console.log("searchbar", this.props.searchbar_value);
         return (
             <div className="row">
                 <div className="col-4">
@@ -133,9 +135,17 @@ class Viz extends React.Component {
     }
 
     componentDidUpdate() {
+
         // D3 Code to update the chart
         if (this.props.config.viz_update_func === undefined) {
             return;
+        }
+
+        if (this.props.config.viz_update_func === 'create_graph') {
+            document.getElementById('graph_root').innerHTML = '';
+            create_graph(this._graphRoot.current, this.props.data, this.props.config,
+                this.props.handle_viz_events);
+            return
         }
 
         let update_func, action;
@@ -143,23 +153,16 @@ class Viz extends React.Component {
             update_func = update_graph;
             action = 'cluster_nodes';
         }
-        else if (this.props.config.viz_update_func === 'focus_node') {
+        else if (this.props.config.viz_update_func === 'update_focus') {
             update_func = update_graph;
-            action = 'focus';
-        }
-        else if (this.props.config.viz_update_func === 'unfocus_node') {
-            update_func = update_graph;
-            action = 'unfocus';
-        }
-        else if (this.props.config.viz_update_func === 'create_graph') {
-            document.getElementById('graph_root').innerHTML = '';
-            update_func = create_graph;
+            action = 'update_focus';
         }
 
         update_func(
-            this._graphRoot.current,
-            this.props.data,
-            this.props.config,
+            {... this._graphRoot.current},
+            {... this.props.data},
+            {... this.props.config},
+            {... this.props.data_bindings},
             action,
         );
     }
@@ -177,6 +180,7 @@ class Viz extends React.Component {
 Viz.propTypes = {
     data: PropTypes.objectOf(PropTypes.array).isRequired,
     config: PropTypes.object.isRequired,
+    data_bindings: PropTypes.object.isRequired,
     handle_viz_events: PropTypes.func,
 };
 
@@ -246,21 +250,25 @@ class MainView extends React.Component {
         this.state = {
             config: {
                 width: window.innerWidth,
-                height: window.innerHeight,
-                color: 'blue',
+                height: window.innerHeight - 100,
                 person_to_highlight: "",
-                searchbar_value: "",
+                searchbar_value: "test",
                 dataset_name: 'test',
-                cluster_nodes: false,
+                cluster_nodes: true,
+                selection_active: false,
+                selection_name: undefined,
+                mouseover_active: false,
+                show_info_panel: false
             },  // initial configuration for the viz
             data: null,  // data for the viz
+            data_bindings: {}, // data bindings for d3
             mouseover: false,  // info panel state (based on callbacks from viz)
 
             person: "",
             docs: 0,
             words: 0,
             affiliation: "",
-            show_info_panel: false,
+            //show_info_panel: false,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -278,18 +286,54 @@ class MainView extends React.Component {
      * @param data: Object
      */
     handle_viz_events(event_name, data) { // eslint-disable-line no-unused-vars
-        if (event_name === "mouseover") {
-            this.setState({mouseover: true});
-        } else if (event_name === "mouseout") {
-            this.setState({mouseover: false});
-        } else if (event_name === "click") {
-            this.setState({person: data.name});
-            this.setState({docs: data.docs});
-            this.setState({words: data.words});
-            this.setState({affiliation: data.affiliation});
-            if (this.state.show_info_panel === false) {
-                this.setState({show_info_panel: true});
+
+        console.log(event_name, data);
+
+        if (event_name === 'update_data_bindings'){
+            if (!data === null) {
+                console.log(data.clusters === this.state.data_bindings.clusters);
             }
+            this.setState({data_bindings: data});
+            return
+        }
+
+        // all other viz events use the data from a node -> rename
+        let config = {... this.state.config};
+        let node = data;
+        if (event_name === "mouseover") {
+            console.log("mouseover", config.selection_active);
+            // if a selection is already active, don't change to mouseover target
+            if (!config.selection_active){
+                config.viz_update_func = 'update_focus';
+                const data = update_node_degrees({... this.state.data}, node.name);
+                this.setState({data: data, config: config});
+            }
+
+        } else if (event_name === "mouseout") {
+            console.log("mouseout");
+            if (!config.selection_active){
+                config.viz_update_func = 'update_focus';
+                const data = update_node_degrees({... this.state.data});
+                this.setState({data: data, config: config});
+            }
+        } else if (event_name === "click") {
+            config.viz_update_func = 'update_focus';
+            let data;
+
+            // select new person
+            if (!config.selection_active || node.name !== this.state.config.selection_name){
+                config.selection_active = true;
+                config.selection_name = node.name;
+                config.show_info_panel = true;
+                config.searchbar_value = node.name;
+                data = update_node_degrees({...this.state.data}, node.name)
+            } else {
+                config.selection_active = false;
+                config.selection_name = undefined;
+                config.show_info_panel = false;
+                data = update_node_degrees({...this.state.data})
+            }
+            this.setState({data: data, config: config});
         }
     }
 
@@ -307,35 +351,48 @@ class MainView extends React.Component {
      * @param event_name: String
      */
     handle_searchbar_query(search_string, action) {
-        const config = {... this.state.config};
+        let config = {... this.state.config};
+        let data = {... this.state.data};
+
         config.search_person_name = search_string;
         if (action === true) {
             config.viz_update_func = 'focus_node';
+            data = update_node_degrees(data, search_string);
         } else {
             config.viz_update_func = 'unfocus_node';
+            data = update_node_degrees(data);
         }
         config.searchbar_value = search_string;
-        this.setState({config: config});
-
+        this.setState({config: config, data: data});
     }
 
     update_searchbar_value(search_string) {
+        console.log("update bar val", search_string);
         const config = {...this.state.config};
+        console.log(config.searchbar_value);
         config.searchbar_value = search_string;
         this.setState({config: config});
+        console.log(this.state.config.searchbar_value);
+        console.log("update", this.state.config.searchbar_value);
     }
 
     submitFormHandler = event => {
         event.preventDefault();
-    }
+    };
 
     update_dataset(dataset_name) {
-        console.log(dataset_name);
-        const config = {...this.state.config};
+        this.setState({data: null});
+        let config = {...this.state.config};
         config.dataset_name = dataset_name;
         config.viz_update_func = 'create_graph';
-        this.load_dataset(config.dataset_name);
         this.setState({config: config});
+        this.load_dataset(config.dataset_name);
+
+        //setting update to undefined after loading to prevent infinite loop of
+        // update -> setting data bindings -> update
+        config = {... this.state.config};
+        config.viz_update_func = undefined;
+        this.setState({config: config})
     }
 
     async load_dataset(dataset_name) {
@@ -347,9 +404,11 @@ class MainView extends React.Component {
                     .then((data) => {
                         console.log("new data", data);
                         this.setState({data:data});
+                        return true
                     })
             }).catch(() => {
                 console.log("error");
+                return false
             });
     }
 
@@ -359,7 +418,9 @@ class MainView extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
-        this.setState({show_info_panel: !this.state.show_info_panel});
+        let config = {...this.state.config};
+        config.show_info_panel = !config.show_info_panel;
+        this.setState({config: config});
     }
 
     /**
@@ -369,6 +430,7 @@ class MainView extends React.Component {
      */
     render() {
         if (this.state.data) {
+            console.log("fin", this.state.config.searchbar_value);
             return (
                 <div className="container-fluid">
                     <Controls  // this is its own row
@@ -393,12 +455,14 @@ class MainView extends React.Component {
 
                     <div className="row">
                         <Viz
+                            key={this.state.config.dataset_name}
                             data={this.state.data}
                             config={this.state.config}
+                            data_bindings={this.state.data_bindings}
                             handle_viz_events={(event_name, data) =>
                                 this.handle_viz_events(event_name, data )}
                         />
-                        {this.state.show_info_panel &&
+                        {this.state.config.show_info_panel &&
                             <Info
                                 mouseover={this.state.mouseover}
                                 currentColor={this.state.config.color}

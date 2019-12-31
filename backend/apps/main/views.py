@@ -26,7 +26,7 @@ def get_network_data(request):
         'sterling': 'person_sterling.json',
         'top_100_edges': 'top_100_edges.json',
 
-        'test': 'person_lawyers.json'
+        'test': 'person_sterling.json'
     }
 
     if request.GET and 'dataset' in request.GET:
@@ -40,10 +40,13 @@ def get_network_data(request):
     with open(json_path) as json_file:
         data = json.load(json_file)
     nodes = data['nodes']
+    for node in nodes:
+        node['degree'] = -1
 
     links = data['links']
     adjacent_nodes = {}
     for link in links:
+        link['degree'] = -1
         link['source'] = link['node1']
         link['target'] = link['node2']
         adjacent_nodes[link['node1'].upper() + "-" + link['node2'].upper()] = True
@@ -103,13 +106,30 @@ def get_clusters_data(nodes):
     # Place clusters on unit circle
     clusters = {}
     current_unit_circle_pos_in_degrees = 0
-    bmap = brewer2mpl.get_map(name='Spectral', map_type='Diverging',
+    bmap = brewer2mpl.get_map(name='Paired', map_type='Qualitative',
                               number=len(most_common_affiliations))
+
+    bmap = [
+        (53, 132, 187),
+        (255, 140, 38),
+        (65, 169, 65),
+        (218, 61, 61),
+        (158, 118, 195),
+        (151, 103, 93),
+        (229, 132, 200),
+        (140, 140, 140),
+        (194, 195, 56),
+        (46, 196, 211)
+    ][:len(most_common_affiliations)]
+
+
     for affiliation_id, affiliation in enumerate(most_common_affiliations):
         affilation_name, affiliation_count = affiliation
         # if affilation_name == 'No Positions Available':
         #     continue
-        total_degrees_taken_by_affiliation = affiliation_count / len(nodes) * 360
+        total_degrees_taken_by_affiliation = (affiliation_count / len(nodes) * 360 / 2)
+        total_degrees_taken_by_affiliation += 360 / len(most_common_affiliations) / 2
+#        total_degrees_taken_by_affiliation = 1 / len(most_common_affiliations) * 360
         affiliation_center = current_unit_circle_pos_in_degrees + \
                              total_degrees_taken_by_affiliation / 2
         current_unit_circle_pos_in_degrees += total_degrees_taken_by_affiliation
@@ -125,7 +145,7 @@ def get_clusters_data(nodes):
             'count': affiliation_count,
             'x_pos': x_display_window,
             'y_pos': y_display_window,
-            'color': bmap.colors[affiliation_id]
+            'color': f'rgb({",".join([str(i) for i in bmap[affiliation_id]])})'
         }
 
     # assign each node to a cluster.
