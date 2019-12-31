@@ -252,8 +252,10 @@ def generate_network_lawyers(include_2nd_degree_connections=True):
     """
     Generates the network for the industry's general counsels, ca. 1972
     For more on them and in particular the CTR, see http://tobacco-analytics.org/case/ctr
+
     :param: include_second_degree_connections: if true, include edges between nodes that are
                                                 in the network but not main nades.
+
     :return:
     """
 

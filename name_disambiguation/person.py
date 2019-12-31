@@ -152,8 +152,10 @@ class Person:
         >>> from person import Person
         >>> Person(name_raw='DUNN,WL').full_name
         'W. L. Dunn'
+
         >>> Person(name_raw='Dunn, William Lee').full_name
         'William Lee Dunn'
+
         :return:
         """
         components = []

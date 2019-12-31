@@ -103,6 +103,7 @@ class PeopleDatabase:
     @property
     def counter(self):
         """
+
         :return:
         """
         person_counter = Counter()
