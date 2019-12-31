@@ -7,31 +7,7 @@ from pathlib import Path
 import random
 
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from config.settings.base import BACKEND_DIR
-from .serializers import PersonSerializer, EdgeSerializer
-from .models import load_network_json_data
-
-
-
-
-@api_view(['GET'])
-def list_people(request):
-    """
-    Return a list of all Person objects, serialized.
-    """
-    serializer = PersonSerializer(instance=load_network_json_data("nodes"), many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def list_edges(request):
-    """
-    Return a list of all Edge objects, serialized.
-    """
-    serializer = EdgeSerializer(instance=load_network_json_data("edges"), many=True)
-    return Response(serializer.data)
+from backend.config.settings.base import BACKEND_DIR
 
 
 def get_network_data(request):
@@ -68,8 +44,8 @@ def get_network_data(request):
     for link in links:
         link['source'] = link['node1']
         link['target'] = link['node2']
-        adjacent_nodes[link['node1'] + "-" + link['node2']] = True
-        adjacent_nodes[link['node2'] + "-" + link['node1']] = True
+        adjacent_nodes[link['node1'].upper() + "-" + link['node2'].upper()] = True
+        adjacent_nodes[link['node2'].upper() + "-" + link['node1'].upper()] = True
     data["adjacent_nodes"] = adjacent_nodes
 
     # TODO: Need to add adjacent_nodes and add False value : talk to rest of group about this

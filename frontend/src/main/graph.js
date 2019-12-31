@@ -1,4 +1,3 @@
-
 /**
  * Graph code mostly in D3.js for the visualization
  */
@@ -18,7 +17,6 @@ import * as d3 from 'd3';
  * @param handle_viz_events: function to pass visualization events back to react.
  */
 export function create_graph(el, data, config, handle_viz_events) {
-    const adj_data = data["adjacent_nodes"];
     const graph_width = config.width;
     const graph_height = config.height;
 
@@ -29,13 +27,12 @@ export function create_graph(el, data, config, handle_viz_events) {
 
 
     let force_simulation = initialize_force_sim(config, data);
-
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
         .append('svg')
             .attr("width", graph_width)
             .attr("height", graph_height)
-            .attr("id", "svg_id");
+            .attr("id", "graph_svg");
 
     // Create links
     const links = svg
@@ -64,12 +61,12 @@ export function create_graph(el, data, config, handle_viz_events) {
     nodes  // bind event handlers for nodes
         .call(
             d3.drag()
-                .on("start", drag_started)
+                .on("start", (d) => drag_started(d, nodes, force_simulation))
                 .on("drag", dragged)
-                .on("end", drag_ended)
+                .on("end", (d) => drag_ended(d, config, data, nodes, links, force_simulation))
         )
-        .on("mouseover", focus_node)
-        .on("mouseout", unfocus_node)
+        .on("mouseover", () => focus_node(config, nodes, links, data))
+        .on("mouseout", () => unfocus_node(config, nodes, links))
         .on("click", (d, _i) => handle_viz_events('click', d));
 
     // Setup circle helper funcs
@@ -123,39 +120,6 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
                 .style("pointer-events", "none");
 
-    /*
-     * Event handlers
-     */
-    // Update the position of all svg elements according to the force sim
-    // This function is called whenever the simulation updates
-    // eslint-disable-next-line no-unused-vars
-    function render_simulation() {
-        // Update node positions
-        nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
-
-        // Update link positions
-        links.attr("x1", (d) => d.source.x)
-            .attr("y1", (d) => d.source.y)
-            .attr("x2", (d) => d.target.x)
-            .attr("y2", (d) => d.target.y);
-        config.nodes = nodes;
-        config.links = links;
-    }
-
-    function drag_started(d) {
-        nodes.on("mouseover", () => {}).on("mouseout", () => {});
-        d3.event.sourceEvent.stopPropagation();
-        if (!d3.event.active) {force_simulation.alphaTarget(0.3).restart();}
-        d.fx = d.x;
-        d.fy = d.y;
-    }
-    function dragged(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-
-        // fix_nodes(d);
-    }
-
     // Preventing other nodes from moving while dragging one node
     // function fix_nodes(this_node) {
     //     nodes.each(
@@ -166,48 +130,6 @@ export function create_graph(el, data, config, handle_viz_events) {
     //          }
     //      });
     //  }
-
-    function drag_ended(d) {
-        if (!d3.event.active) {force_simulation.alphaTarget(0);}
-        d.fx = d.x;
-        d.fy = d.y;
-        nodes.on("mouseover", focus_node).on("mouseout", unfocus_node);
-    }
-
-    function focus_node() {
-        const node = d3.select(d3.event.target);
-        const name = node["_groups"][0][0]["__data__"]["name"];
-
-        nodes.style("opacity", function(o) {
-            const other_name = o.name;
-                if (other_name + "-" + name in adj_data) {
-                    return 1;
-                } else if (other_name === name) {
-                    return 1;
-                }
-                return 0;
-        });
-
-        links.style("opacity", function(o) {
-            const source = o.source.name;
-            const target = o.target.name;
-            if (name === source || name === target) {
-                return 1;
-            }
-            return 0;
-        });
-        config.nodes = nodes;
-        config.links = links;
-        // TODO: Fix this to pass in the node name
-        get_information(data, "DUNN,WL");
-    }
-
-    function unfocus_node() {
-        nodes.style("opacity", 1);
-        links.style("opacity", 1);
-        config.nodes = nodes;
-        config.links = links;
-    }
     function resize() {
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -219,6 +141,9 @@ export function create_graph(el, data, config, handle_viz_events) {
         force_simulation.alphaTarget(0.3).restart();
         force_simulation.alphaTarget(0);
     }
+
+
+
     d3.select(window).on("resize", resize);
 
     config.svg = svg;
@@ -226,70 +151,181 @@ export function create_graph(el, data, config, handle_viz_events) {
     config.links = links;
 }
 
+
+function drag_started(d,nodes,force_simulation) {
+    nodes.on("mouseover", () => {}).on("mouseout", () => {});
+    d3.event.sourceEvent.stopPropagation();
+    if (!d3.event.active) {force_simulation.alphaTarget(0.3).restart();}
+    d.fx = d.x;
+    d.fy = d.y;
+}
+
+function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+    d.has_been_dragged = true;
+    // fix_nodes(d);
+}
+
+function drag_ended(d, config, data, nodes, links, force_simulation) {
+    if (!d3.event.active) {force_simulation.alphaTarget(0);}
+    d.fx = null;
+    d.fy = null;
+    d.x_grav = d.x;
+    d.y_grav = d.y;
+    d.has_been_dragged = true;
+    force_sim(config,data);
+    nodes.on("mouseover", () => focus_node(config,nodes,links,data))
+        .on("mouseout", () => unfocus_node(config,nodes,links));
+}
+
+function force_sim(config,data) {
+    const graph_width = config.width;
+    const graph_height = config.height;
+    const force_x_pos = (d) => {
+        if (d.has_been_dragged) {
+            return d.x_grav;
+        } else {
+            const center = get_center(
+                [d.affiliation],
+                config.cluster_nodes,
+                graph_width,
+                graph_height);
+            return center[0];
+        }
+    };
+    const force_y_pos = (d) => {
+        if (d.has_been_dragged) {
+            return d.y_grav;
+        } else {
+            const center = get_center(
+                [d.affiliation],
+                config.cluster_nodes,
+                graph_width,
+                graph_height);
+            return center[1];
+        }
+    };
+    const cluster_strength = (d) => {
+        if (d.has_been_dragged){
+            return 3;
+        } else {
+            return 1;
+        }
+    };
+
+    let force_simulation = d3.forceSimulation(data.nodes);
+    force_simulation
+        .force("charge", d3.forceManyBody())
+        .force('collision', d3.forceCollide().radius(30))
+        .force('x', d3.forceX().x((d) => force_x_pos(d)).strength(cluster_strength))
+        .force('y', d3.forceY().y((d) => force_y_pos(d)).strength(cluster_strength))
+        .on("tick", () => render_simulation(config));  // what to do when the sim updates
+    }
+
+
+function get_center(affiliation, should_cluster,graph_width,graph_height){
+    let no_centers;
+    if (should_cluster) {
+        no_centers = 2;
+    } else {
+        no_centers  = 1;
+    }
+    let affiliation_center_id;
+    let centers_list;
+
+    affiliation_center_id = {
+        "Phillip Morris International": 1,
+        "British American Tobacco": 2,
+        "Imperial Tobacco": 3,
+        "Japan Tobacco": 4
+    };
+
+    if (no_centers === 4) {
+        centers_list = [
+            [graph_width * .2, graph_height * .2],
+            [graph_width * .8, graph_height * .2],
+            [graph_width * .2, graph_height * .8],
+            [graph_width * .8, graph_height * .8]
+        ];
+
+    } else if (no_centers === 1) {
+        centers_list = [[graph_width/2, graph_height/2]]
+    } else if (no_centers === 2) {
+        centers_list = [
+            [graph_width * 0.2, graph_height/2],
+            [graph_width* 0.8, graph_height/2]
+        ];
+    }
+    return centers_list[affiliation_center_id[affiliation]%no_centers]
+}
+
+/*
+ * Event handlers
+ */
+// Update the position of all svg elements according to the force sim
+// This function is called whenever the simulation updates
+// eslint-disable-next-line no-unused-vars
+function render_simulation(config) {
+    // Update node positions
+    config.nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
+
+    // Update link positions
+    config.links.attr("x1", (d) => d.source.x)
+        .attr("y1", (d) => d.source.y)
+        .attr("x2", (d) => d.target.x)
+        .attr("y2", (d) => d.target.y);
+}
+
 function initialize_force_sim(config, data) {
     const graph_width = config.width;
     const graph_height = config.height;
-
-    let centers;
     let link_strength;
     let cluster_strength;
     let charge_strength;
-    let radius_distance;
+    let radius_distance = 30;
     if (config.cluster_nodes) {
-        centers = {
-            "Phillip Morris International": [graph_width * .2, graph_height * .2],
-            "British American Tobacco": [graph_width * .8, graph_height * .2],
-            "Imperial Tobacco": [graph_width * .2, graph_height * .8],
-            "Japan Tobacco": [graph_width * .8, graph_height * .8]
-        };
         link_strength = 0;
-        charge_strength = -1000;
-        cluster_strength = 5;
-        radius_distance = 30;
-    } else {
-        centers = {
-            "Phillip Morris International": [graph_width/2, graph_height/2],
-            "British American Tobacco": [graph_width/2, graph_height/2],
-            "Imperial Tobacco": [graph_width/2, graph_height/2],
-            "Japan Tobacco": [graph_width/2, graph_height/2]
-        };
-        link_strength = 1;
-        charge_strength = -5000;
+        charge_strength = -500;
         cluster_strength = 3;
-        radius_distance = 0;
+    } else {
+        link_strength = 1;
+        charge_strength = -2500;
+        cluster_strength = 1;
     }
     const force_link = d3.forceLink(data.links)
                          .id((d) => d.name)  // which data field to use as id for links
                          .distance(50)
                          .strength(link_strength);
 
+    const force_x_pos = (d) => {
+        return get_center([d.affiliation],
+            config.cluster_nodes,graph_width,graph_height)[0];
+    };
+    const force_y_pos = (d) => {
+        return get_center([d.affiliation],
+            config.cluster_nodes,graph_width,graph_height)[1];
+    };
+
     let force_simulation = d3.forceSimulation(data.nodes);
     force_simulation.force("link", force_link)
         .force("charge", d3.forceManyBody().strength(charge_strength))
         .force("center", d3.forceCenter(graph_width/2, graph_height/2))
         .force('collision', d3.forceCollide().radius(radius_distance))
-        .force('x', d3.forceX().x(function(d) {
-            return centers[d.affiliation][0];
-        }).strength(cluster_strength))
-        .force('y', d3.forceY().y(function(d) {
-            return centers[d.affiliation][1];
-        }).strength(cluster_strength))
-        .on("tick", render_simulation);  // what to do when the sim updates
+        .force('x', d3.forceX()
+                        .x(force_x_pos)
+                        .strength(cluster_strength))
+        .force('y', d3.forceY()
+                        .y(force_y_pos)
+                        .strength(cluster_strength))
+        .on("tick",() => render_simulation(config));  // what to do when the sim updates
 
-    function render_simulation() {
-        // Update node positions
-        config.nodes.attr("transform", (d) => { return `translate(${d.x}, ${d.y})`} );
 
-        // Update link positions
-        config.links.attr("x1", (d) => d.source.x)
-            .attr("y1", (d) => d.source.y)
-            .attr("x2", (d) => d.target.x)
-            .attr("y2", (d) => d.target.y);
-    }
 
     function resize() {
-        const svg = d3.select("svg_id")
+        const svg = d3.select("#graph_svg");
         console.log("RESIZING", config.width, config.height);
+        console.log("svg", svg);
         const width = window.innerWidth;
         const height = window.innerHeight;
         svg.attr("width", width).attr("height", height);
@@ -303,6 +339,73 @@ function initialize_force_sim(config, data) {
     return force_simulation;
 }
 
+function change_clusters(config, data) {
+    force_sim(config,data);
+    function resize() {
+        const svg = d3.select("#graph_svg");
+        console.log("RESIZING", config.width, config.height);
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        svg.attr("width", width).attr("height", height);
+        config.width = width;
+        config.height = height;
+        let force_simulation = initialize_force_sim(config, data);
+        force_simulation.alphaTarget(0.3).restart();
+        force_simulation.alphaTarget(0);
+    }
+    d3.select(window).on("resize", resize);
+
+    let force_simulation = d3.forceSimulation(data.nodes);
+
+    const all_graph_nodes = d3.select("#graph_nodes");
+    const nodes = all_graph_nodes.selectAll('g');
+
+    const all_graph_links = d3.select("#graph_links");
+    const links = all_graph_links.selectAll('line');
+    nodes  // bind event handlers for nodes
+        .call(
+            d3.drag()
+                .on("start", (d) => drag_started(d,nodes,force_simulation))
+                .on("drag", (d) => dragged(d))
+                .on("end", (d) => drag_ended(d,config,data,nodes,links,force_simulation))
+        )
+}
+
+function focus_node(config,nodes,links,data) {
+    const node = d3.select(d3.event.target);
+    const name = node["_groups"][0][0]["__data__"]["name"];
+
+    nodes.style("opacity", function(o) {
+        const other_name = o.name;
+            const adj_data = data["adjacent_nodes"];
+            if (other_name + "-" + name in adj_data) {
+                return 1;
+            } else if (other_name === name) {
+                return 1;
+            }
+            return 0;
+    });
+
+    links.style("opacity", function(o) {
+        const source = o.source.name;
+        const target = o.target.name;
+        if (name === source || name === target) {
+            return 1;
+        }
+        return 0;
+    });
+    config.nodes = nodes;
+    config.links = links;
+    // TODO: Fix this to pass in the node name
+    get_information(data, "DUNN,WL");
+}
+
+function unfocus_node(config,nodes,links) {
+    nodes.style("opacity", 1);
+    links.style("opacity", 1);
+    config.nodes = nodes;
+    config.links = links;
+}
 
 /**
  * Returns information of the given id
@@ -328,14 +431,17 @@ export function get_information(data, name){
 /**
  * Updates visualization according to what the user searches
  *
+ * @param el: the html element to which the graph is bound
  * @param data: data
- * @param name: String
+ * @param config: the graph config from react
+ * @param action: the update action, e.g. "focus" or "cluster_nodes"
  */
 export function update_graph(el, data, config, action) {
     if (action === 'focus') {
         update_focused_node(el, data, config);
     } else if (action === "cluster_nodes") {
-        initialize_force_sim(config, data);
+        // initialize_force_sim(config, data);
+        change_clusters(config, data);
     } else {
         //function update_unfocus_node (el, data, config) {
         const svg = d3.select(el);
@@ -349,7 +455,7 @@ export function update_graph(el, data, config, action) {
         const adj_data = data["adjacent_nodes"];
         svg.selectAll(".graph_node")
             .style("opacity", function (o) {
-                const other_name = o.name;
+                const other_name = o.name.toUpperCase();
                 if (other_name + "-" + name in adj_data) {
                     return 1;
                 } else if (other_name === name) {
@@ -359,8 +465,8 @@ export function update_graph(el, data, config, action) {
             });
         svg.selectAll(".graph_link")
             .style("opacity", function (o) {
-                const source = o.source.name;
-                const target = o.target.name;
+                const source = o.source.name.toUpperCase();
+                const target = o.target.name.toUpperCase();
 
                 if (name === source || name === target) {
                     return 1;
@@ -368,5 +474,4 @@ export function update_graph(el, data, config, action) {
                 return 0;
             });
     }
-
 }

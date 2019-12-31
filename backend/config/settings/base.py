@@ -15,6 +15,7 @@ import os
 CONFIG_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BACKEND_DIR = os.path.dirname(CONFIG_DIR)
 PROJECT_ROOT = os.path.dirname(BACKEND_DIR)
+DATA_PATH = os.path.join(PROJECT_ROOT, 'data')
 
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 

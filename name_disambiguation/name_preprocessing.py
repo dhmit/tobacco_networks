@@ -92,24 +92,25 @@ def parse_doc_metadata_csv_to_people_db(csv_path, people_db=None, output_people_
                 continue
             orgs.append(RAW_ORG_TO_CLEAN_ORG_DICT[org])
 
-        if len(orgs) == 0:
-            org = None
-        else:
-            org = list(orgs)[0]
-
-        aliases = person['person'] + person['general']
+        if len(orgs) != 1:
+            continue
+        org = list(orgs)[0]
+        aliases = Counter(person['person'])
+        aliases = aliases + Counter(person['general'])
         if not aliases or len(aliases) >= 4:
             continue
 
         for alias in aliases:
-            people_db.add_person_raw(alias, position=org)
+            alias = alias.upper()
+            if alias not in alias_to_person_dict:
+                person = Person(name_raw=alias, count=aliases[alias])
+                person.positions = Counter([org])
+                people_db.people.add(person)
+                alias_to_person_dict[alias] = person
+            else:
+                alias_to_person_dict[alias].positions[org] += 1
 
     people_db.merge_duplicates()
-
-    if output_people_db_path:
-        people_db.store_to_disk(output_people_db_path)
-
-    return people_db
 
 
 def get_au_and_rc_by_document(path, return_type='both') -> list:

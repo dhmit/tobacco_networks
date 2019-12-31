@@ -26,7 +26,7 @@ class Person:
         most_likely_org (str): most likely organization of the person
         positions (Counter of str): counter of all parsed organizations/extra information (must
                                     be clean official org names; can be in lower case)
-        aliases (list of str): list of raw names that correspond to the person
+        aliases (Counter of str): counter of raw names that correspond to the person
         count (int): number of times the person appeared in the data
     """
     def __init__(self, name_raw=None, last='', first='', middle='',       # pylint: disable=R0913
@@ -65,20 +65,38 @@ class Person:
 
         # by default, the raw name is an alias of the person
         # (we're changing the first/middle names based on new information, so keeping the original
-        # name as an alias is important
+        # name as an alias is important)
         if aliases is None:
             if name_raw is None:
                 aliases = Counter()
             else:
-                aliases = Counter([name_raw])
+                aliases = Counter({name_raw.upper(): count})
 
         # set last, first, middle, position, positions: all converted to upper case
         # set aliases and count
         self.last = last.upper()
         self.first = first.upper()
         self.middle = middle.upper()
+        self.most_likely_org = most_likely_org
+        # remove periods and convert to upper case
+        if isinstance(positions, Counter):
+            self.positions = positions
+        else:
+            # initialize positions as a Counter
+            self.positions = Counter()
+            for i in positions:
+                cleaned = re.sub(r'\.', '', i)
+                self.positions[cleaned.upper()] += count
 
-        self.aliases = aliases
+        # if aliases passed in is a Counter, directly use it
+        if isinstance(aliases, Counter):
+            self.aliases = aliases
+        # else, loop through aliases to set up the Counter
+        else:
+            self.aliases = Counter()
+            for i in aliases:
+                self.aliases[i.upper()] += count
+
         self.count = count
 
     def __repr__(self):
@@ -508,8 +526,6 @@ class TestNameParser(unittest.TestCase):
         """
         checks to see that a raw name is parsed correctly: comparison to 14
         """
-        print("positions: ", Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
-                                    "Pepples, E. ,  Stevens, A. ,  Witt, S.").positions)
         self.assertEqual(Person(last="Holtzman", first="A", middle="", positions=[],
                                 aliases=Counter(["Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
                                          "Pepples, E. ,  Stevens, A. ,  Witt, S."])),
@@ -539,7 +555,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly
         """
         self.assertEqual(Person(last="Smith", first="Andy", middle="B", positions=["JR"],
-                                aliases=Counter(["Smith, Andy B, J.R."])),
+                                aliases=["SMITH, ANDY B, J.R."]),
                          Person(name_raw="Smith, Andy B, J.R."))
 
     def test_parse_name_18(self):
@@ -547,8 +563,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly
         """
         self.assertEqual(Person(last="Cantrell", first="D", middle="",
-                                positions=["BROWN & WILLIAMSON"],
-                                aliases=Counter(["D Cantrell, B&W"])),
+                                positions=["BROWN & WILLIAMSON"], aliases=["D CANTRELL, B&W"]),
                          Person(name_raw="D Cantrell, B&W"))
 
     def test_parse_name_19(self):
@@ -556,8 +571,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly
         """
         self.assertEqual(Person(last="Cantrell", first="A", middle="B",
-                                positions=["BROWN & WILLIAMSON"],
-                                aliases=Counter(["A B Cantrell, BW"])),
+                                positions=["BROWN & WILLIAMSON"], aliases=["A B CANTRELL, BW"]),
                          Person(name_raw="A B Cantrell, BW"))
 
 
