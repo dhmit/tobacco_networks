@@ -14,7 +14,7 @@ from collections import Counter
 import pandas as pd
 from name_disambiguation.person import Person
 from name_disambiguation.people_db import PeopleDatabase
-from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
+from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 
 def merge_names_from_json_file(json_name_file, people_db_pickle_file):

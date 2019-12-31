@@ -186,7 +186,7 @@ def match_djangoperson_from_name(parsed_name):
                               middle=person_original.middle,
                               full_name=f'{person_original.first} '
                                         f'{person_original.middle} {person_original.last}',
-                              most_likely_org=person_original.most_likely_org,
+                              most_likely_org=person_original.most_likely_position,
                               # convert Counter object into json string
                               positions=json.dumps(person_original.positions),
                               aliases=json.dumps(person_original.aliases),
@@ -218,7 +218,7 @@ def import_peopledb_to_person_model(file_path):
                               first=person.first,
                               middle=person.middle,
                               full_name=f'{person.first} {person.middle} {person.last}',
-                              most_likely_org=person.most_likely_org,
+                              most_likely_org=person.most_likely_position,
                               # convert Counter object into json string
                               positions=json.dumps(person.positions),
                               aliases=json.dumps(person.aliases),
