@@ -72,6 +72,7 @@ class Person:
             else:
                 aliases = Counter({name_raw.upper(): count})
 
+        # TODO: SR: do we really want all the first/last/middle names to be ALL CAPS?
         # set last, first, middle, position, positions: all converted to upper case
         # set aliases and count
         self.last = last.upper()
