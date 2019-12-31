@@ -10,7 +10,8 @@ from pathlib import Path
 import pandas as pd
 
 from name_disambiguation.name_preprocessing import parse_column_person
-from people_db import PeopleDatabase
+from name_disambiguation.people_db import PeopleDatabase
+from IPython import embed
 
 
 def load_1970s_network():       # pylint: disable=R0914
@@ -149,13 +150,15 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
     people_db_path = Path('..', 'data', 'network_generation', 'people_db_1970s.pickle')
     people_db = PeopleDatabase()
     people_db.load_from_disk(Path(people_db_path))
+    alias_to_person_dict = people_db.get_alias_to_person_dict()
     for person in people_db.people:
-        people_db.alias_to_person_dict[person.full_name] = person
+        alias_to_person_dict[person.full_name] = person
 
+    # first, add the one or more people in the center of the network
     center_people = []
     for name in names:
         try:
-            center_people.append(people_db.alias_to_person_dict[name])
+            center_people.append(alias_to_person_dict[name])
         except KeyError:
             print(f'Could not find {name}. Possible candidates: ')
             possible_matches = search_possible_matches(name[:5], people_db)
@@ -166,10 +169,10 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
     network = load_1970s_network()
     edges = network['edges']
 
-    nodes_temp = Counter()
     edges_out = []
     nodes_out = []
 
+    # then, add all the edges between center people and everyone else
     for idx, edge in enumerate(edges.values()):
         if idx % 1000 == 0:
             print(idx, len(edges))
@@ -178,12 +181,16 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
             edges_out.append({'node1': person1.full_name, 'node2': person2.full_name,
                               'docs': edge['count'], 'words': 0})
 
-    edges_out = sorted(edges_out, key=lambda x: x['docs'], reverse=True)[:max_number_of_nodes]
+    # now, figure out the number of documents per node and
+    nodes_temp = Counter()
+    # edges_out = sorted(edges_out, key=lambda x: x['docs'], reverse=True)[:max_number_of_nodes]
     for edge in edges_out:
-        person1 = people_db.alias_to_person_dict[edge['node1']]
-        person2 = people_db.alias_to_person_dict[edge['node2']]
+        person1 = alias_to_person_dict[edge['node1']]
+        person2 = alias_to_person_dict[edge['node2']]
         nodes_temp[person1] += edge['docs']
         nodes_temp[person2] += edge['docs']
+
+    embed()
 
     for node in nodes_temp:
         nodes_out.append({'name': node.full_name, 'docs': nodes_temp[node], 'words': 0,
@@ -249,7 +256,7 @@ def generate_network_lawyers():
              'Hardy, David Ross'        # Shook, Hardy & Bacon (CTR law firm)
              ]
 
-    generate_people_network(names=names, network_name='lawyers',
+    generate_people_network(names=names, network_name='lawyers2',
                             max_number_of_nodes=300)
 
 def generate_network_research_directors():      # pylint: disable=C0103
@@ -273,4 +280,4 @@ def generate_network_research_directors():      # pylint: disable=C0103
 
 
 if __name__ == '__main__':
-    generate_network_research_directors()
+    generate_network_lawyers()

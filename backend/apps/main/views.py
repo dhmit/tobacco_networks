@@ -26,7 +26,7 @@ def get_network_data(request):
         'sterling': 'person_sterling.json',
         'top_100_edges': 'top_100_edges.json',
 
-        'test': 'person_sterling.json'
+        'test': 'person_lawyers.json'
     }
 
     if request.GET and 'dataset' in request.GET:

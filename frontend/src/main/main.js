@@ -23,31 +23,20 @@ class Controls extends React.Component {
         super(props);
     }
 
-    validate_input_and_maybe_search() {
+    validate_searchbar_input_and_maybe_search(search_string) {
         // Check if the person we're searching for actually exists
-        const search_string = this.props.searchbar_value;
-        this.props.update_searchbar_value(search_string);
-
         const nodes = this.props.nodes;
-        let is_name = false;
         for (const node of nodes) {
             const name = node.name;
             if (search_string.toLowerCase() === name.toLowerCase()) {
-                is_name = true;
-                this.props.handle_searchbar_query(search_string, true);
-                break;
-            } else {
-                // TODO: tell the user the name isn't in the list
-
+                this.props.handle_searchbar_query(name, "search");
+                return;
             }
         }
-        if (is_name === false) {
-            this.props.handle_searchbar_query(search_string, false);
-        }
+        this.props.handle_searchbar_query(search_string, "update_searchbar_value")
     }
 
     render() {
-        console.log("searchbar", this.props.searchbar_value);
         return (
             <div className="row">
                 <div className="col-4">
@@ -55,7 +44,8 @@ class Controls extends React.Component {
                         type="text"
                         maxLength="20" size="20"
                         value={this.props.searchbar_value}
-                        onChange={(e) => this.props.update_searchbar_value(e.target.value)}
+                        onChange={(e) =>
+                            this.validate_searchbar_input_and_maybe_search(e.target.value)}
                         placeholder={"Type a name here"}
                     />
                 </div>
@@ -72,13 +62,12 @@ class Controls extends React.Component {
                     </div>
                     <button
                         className="button"
-                        onClick={() => this.validate_input_and_maybe_search()}
+                        onClick={() => this.validate_searchbar_input_and_maybe_search()}
                     >Search</button>
                     <button
                         className="button"
                         onClick={() => {
-                            this.props.update_searchbar_value("");
-                            this.props.handle_searchbar_query("", false);
+                            this.props.handle_searchbar_query("", "clear");
                         }}
                     >Clear</button>
                 </div>
@@ -104,10 +93,9 @@ class Controls extends React.Component {
 
 
 Controls.propTypes = {
+    searchbar_value: PropTypes.string.isRequired,
     toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
-    searchbar_value: PropTypes.string.isRequired,
-    update_searchbar_value: PropTypes.func.isRequired,
     handle_searchbar_query: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
     dataset_name: PropTypes.string.isRequired,
@@ -252,13 +240,13 @@ class MainView extends React.Component {
                 width: window.innerWidth,
                 height: window.innerHeight - 100,
                 person_to_highlight: "",
-                searchbar_value: "test",
                 dataset_name: 'test',
                 cluster_nodes: true,
                 selection_active: false,
                 selection_name: undefined,
                 mouseover_active: false,
-                show_info_panel: false
+                show_info_panel: false,
+                searchbar_value: 'test'
             },  // initial configuration for the viz
             data: null,  // data for the viz
             data_bindings: {}, // data bindings for d3
@@ -348,22 +336,39 @@ class MainView extends React.Component {
     /**
      * Handles search bar update
      *
-     * @param event_name: String
+     * @param search_string: String
+     * @param action: String
      */
     handle_searchbar_query(search_string, action) {
         let config = {... this.state.config};
-        let data = {... this.state.data};
-
-        config.search_person_name = search_string;
-        if (action === true) {
-            config.viz_update_func = 'focus_node';
-            data = update_node_degrees(data, search_string);
-        } else {
-            config.viz_update_func = 'unfocus_node';
-            data = update_node_degrees(data);
-        }
         config.searchbar_value = search_string;
-        this.setState({config: config, data: data});
+
+        // update the searchbar but don't search because the name is not in our dataset
+        if (action === 'update_searchbar_value'){
+            this.setState({config: config})
+        } else if (action === 'search') {
+            config.selection_active = true;
+            config.selection_name = search_string;
+            config.show_info_panel = true;
+            const data = update_node_degrees({...this.state.data}, search_string);
+            this.setState({data: data, config: config});
+        } else if (action === 'clear') {
+            config.selection_active = false;
+            config.selection_name = undefined;
+            const data = update_node_degrees({...this.state.data});
+            this.setState({data: data, config: config});
+        }
+
+        // config.search_person_name = search_string;
+        // if (action === true) {
+        //     config.viz_update_func = 'focus_node';
+        //     data = update_node_degrees(data, search_string);
+        // } else {
+        //     config.viz_update_func = 'unfocus_node';
+        //     data = update_node_degrees(data);
+        // }
+        // config.searchbar_value = search_string;
+        // this.setState({config: config, data: data});
     }
 
     update_searchbar_value(search_string) {
@@ -439,10 +444,7 @@ class MainView extends React.Component {
                             (search_string, action) => this.handle_searchbar_query(search_string,
                                 action)
                         }
-                        update_searchbar_value={
-                            (search_string) => this.update_searchbar_value(search_string)
-                        }
-                        toggle_checkbox={() => this.toggle_checkbox()}
+                        toggle_checkbox={() => this.toggle_checkbox()}f
                         toggle_show_table={() => this.toggle_show_table()}
                         cluster_nodes={this.state.config.cluster_nodes}
                         nodes={this.state.data.nodes}
