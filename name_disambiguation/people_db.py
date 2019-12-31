@@ -2,6 +2,7 @@
 The People Database provides a class to add and merge persons
 """
 
+import copy
 import csv
 import pickle
 import unittest
@@ -9,9 +10,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from IPython import embed
 from nameparser.config import CONSTANTS  # pylint: disable=C0411
-from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
-from name_disambiguation.person import Person
-from name_disambiguation.config import DATA_PATH
+from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
+from person import Person
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
@@ -20,7 +20,6 @@ class PeopleDatabase:
     """
     A PeopleDatabase object represents the collection of person objects
     and contains functions that merge person objects
-
     Attributes:
         people (set): collection of all person objects in the database
     """
@@ -29,8 +28,9 @@ class PeopleDatabase:
         Intiailizes an empty PeopleDatabase
         """
         self.people = set()
+        self.alias_to_person_dict = {}
 
-    def add_person_raw(self, name_raw: str, count=1):
+    def add_person_raw(self, name_raw: str, count=1, position=None):
         """
         Adds Person object to the database from a raw name string & count
         :param name_raw: raw name (str)
@@ -38,8 +38,24 @@ class PeopleDatabase:
         :return: None
         """
         try:
+
             new_p = Person(name_raw=name_raw, count=count)
-            self.people.add(new_p)
+            if name_raw in self.alias_to_person_dict:
+                existing_p = self.alias_to_person_dict[name_raw]
+
+                # remove person temporarily as the hash value will change with the updates
+                self.people.remove(existing_p)
+                existing_p.positions += new_p.positions
+                if position:
+                    existing_p.positions += Counter([position])
+                existing_p.aliases += new_p.aliases
+                existing_p.count += new_p.count
+                self.alias_to_person_dict[name_raw] = existing_p
+                self.people.add(existing_p)
+            else:
+                self.people.add(new_p)
+                self.alias_to_person_dict[name_raw] = new_p
+
         except IndexError:
             print(f"Could not parse name_raw {name_raw} to Person.")
 
@@ -72,6 +88,26 @@ class PeopleDatabase:
         """
         return f"<PeopleDatabase with {len(self.people)} people:\n {self.people}>"
 
+    def copy(self):
+        """
+        Copies a people_db object
+        :return: a copied people_db object
+        """
+        people_db = PeopleDatabase()
+        people_db.people = copy.deepcopy(self.people)
+        return people_db
+
+    @property
+    def counter(self):
+        """
+        :return:
+        """
+        c = Counter()
+        for person in self.people:
+            c[person] = person.count
+        return c
+
+
     def get_alias_to_person_dict(self):
         """
         Returns a dict that corresponds aliases to person objects
@@ -103,8 +139,9 @@ class PeopleDatabase:
         with open(str(file_path), 'rb') as infile:
             loaded_db = pickle.load(infile)
             self.people = loaded_db.people
+            self.alias_to_person_dict = loaded_db.alias_to_person_dict
 
-    def create_positions_csv(self, out_file=Path(DATA_PATH, 'name_disambiguation',
+    def create_positions_csv(self, out_file=Path('..', 'data', 'name_disambiguation',
                                                  'all_organizations.csv')):
         """
         Makes a Counter of all positions appearing in db,
@@ -134,10 +171,8 @@ class PeopleDatabase:
         """
         Tries to merge all duplicates and only retain authoritative names.
         e.g. it will try to merge WL Dunn and William Dunn into Dunn, William L
-
         You can use print_merg_results_for_name to print out the merge results for one name for
         further inspection
-
         :param print_merge_results_for_name: str
         :return:
         """
@@ -161,7 +196,7 @@ class PeopleDatabase:
                     ):
                         print("\nSUMMARY")
                         for name in last_names_dict[last_name]:
-                            print("\n", name.count, name, name.aliases.most_common(100))
+                            print("\n", name.count, name, Counter(name.aliases).most_common(100))
                         print("\n")
                     break
 
@@ -169,7 +204,6 @@ class PeopleDatabase:
         """
         Iteratively tries to merge last names from the most common to the least common
         Returns true if it is finished,
-
         :param last_names_dict: dict mapping last_name strings to list of
         :param last_name:
         :return:
@@ -181,11 +215,21 @@ class PeopleDatabase:
 
         last_names_dict[last_name].sort(key=lambda x: x.count, reverse=True)
 
-        for p1 in last_names_dict[last_name]:           # pylint: disable=C0103
-            for p2 in last_names_dict[last_name]:       # pylint: disable=C0103
+        for p1_idx, p1 in enumerate(last_names_dict[last_name]):        # pylint: disable=C0103
+            for p2_idx, p2 in enumerate(last_names_dict[last_name]):    # pylint: disable=C0103
 
-                if p1 == p2:                            # pylint: disable=R1724
+                # p1/2_idx indicate the index of the person. If they are the same, we are dealing
+                # with the same person and should skip.
+                if p1_idx == p2_idx:                                    # pylint: disable=R1724
                     continue
+
+                # If p1 and p2 share at least one alias, we can merge them
+                # the primary use of this is to merge cases where the same author was added
+                # multiple times
+                elif len(set(p1.aliases).intersection(set(p2.aliases))) > 0:
+                    self.merge_two_persons(p1, p2)
+                    return False
+
 
                 # if no first and middle name -> continue
                 elif p1.first == '' and p1.middle == '':
@@ -240,24 +284,26 @@ class PeopleDatabase:
         :param person2: another person object to be merged
         :return:
         """
+        print("\nmerging", person1, person2)
+
         new_p = person1.copy()
 
         for attr in ['first', 'middle']:
             if len(getattr(person2, attr)) > len(getattr(person1, attr)):
                 setattr(new_p, attr, getattr(person2, attr))
-        try:
-            new_p.positions = person1.positions + person2.positions
-        except TypeError:
-            embed()
+
+        new_p.positions = person1.positions + person2.positions
         new_p.aliases = person1.aliases + person2.aliases
         new_p.count = person1.count + person2.count
+
+        for alias in new_p.aliases:
+            self.alias_to_person_dict[alias] = new_p
 
         try:
             self.people.remove(person1)
             self.people.remove(person2)
             self.people.add(new_p)
         except KeyError:
-            print('k')
             embed()
 
     def set_people_position(self, official_org=True):
@@ -278,20 +324,47 @@ class TestPeopleDB(unittest.TestCase):
     """
     def setUp(self):
         self.people_db = PeopleDatabase()
-        for name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan']:
+        for name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan', 'Dunn, WL', 'Dunn, William L',
+                     'Garcia, Raquel']:
             self.people_db.add_person_raw(name, 1)
 
     def test_pickle(self):
         """
         Test if pickling works
         """
-        self.people_db.store_to_disk(Path(DATA_PATH, 'name_disambiguation',
+        self.people_db.store_to_disk(Path('..', 'data', 'name_disambiguation',
                                           'test_peopledb.pickle'))
         loaded_db = PeopleDatabase()
-        loaded_db.load_from_disk(Path(DATA_PATH, 'name_disambiguation',
+        loaded_db.load_from_disk(Path('..', 'data', 'name_disambiguation',
                                       'test_peopledb.pickle'))
         self.assertEqual(self.people_db, loaded_db)
 
+    def test_merge1(self):
+
+        self.people_db.merge_duplicates()
+        self.assertEqual(len(self.people_db), 3)
+        self.assertEqual(len(self.people_db), len(set(self.people_db.alias_to_person_dict)))
+
+    def test_merge2(self):
+
+        people_db = PeopleDatabase()
+        for name in ['DUNN,W', 'DUNN,WL', 'DUNN,WL JR', 'DUNN, W. L.', 'Dunn, FW,'
+                     'Dunn, William L', 'Dunn,WL', 'DUNN,WL Jr', 'DUNN, WL', 'Dunn, Frank',
+                     'Dunn, Frank W']:
+            people_db.add_person_raw(name, 1)
+        people_db.merge_duplicates()
+        print(people_db.people)
+        self.assertEqual(len(self.people_db), 4)
+        self.assertEqual(len(people_db), len(set(people_db.alias_to_person_dict)))
+
 
 if __name__ == '__main__':
+    # people_db = PeopleDatabase()
+    # for name in ['DUNN,W', 'DUNN,WL', 'DUNN,WL JR', 'DUNN, W. L.', 'Dunn, FW,'
+    #                                                                'Dunn, William L', 'Dunn,WL',
+    #              'DUNN,WL Jr', 'DUNN, WL', 'Dunn, Frank',
+    #              'Dunn, Frank W']:
+    #     people_db.add_person_raw(name, 1)
+    # people_db.merge_duplicates()
+    # embed()
     unittest.main()

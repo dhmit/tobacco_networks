@@ -152,6 +152,7 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
     people_db.load_from_disk(Path(people_db_path))
     alias_to_person_dict = people_db.get_alias_to_person_dict()
     for person in people_db.people:
+        embed()
         alias_to_person_dict[person.full_name] = person
 
     # first, add the one or more people in the center of the network
