@@ -11,14 +11,12 @@ import pandas as pd
 
 from name_disambiguation.name_preprocessing import parse_column_person
 from name_disambiguation.people_db import PeopleDatabase
-from IPython import embed
 
 
 def load_1970s_network():       # pylint: disable=R0914
     """
     Loads (or, if necessary, generates, the entire network for the 1970s, which is the basis
     for generating sub-networks
-
     :return:
     """
 
@@ -88,7 +86,6 @@ def load_1970s_network():       # pylint: disable=R0914
 def store_network_for_visualization(nodes, edges, network_name, file_name):
     """
     Stores the data for one backend in backend/data
-
     :param nodes: dict
     :param edges: dict
     :param network_name: str
@@ -109,7 +106,6 @@ def store_network_for_visualization(nodes, edges, network_name, file_name):
 def generate_network_of_top_n_edges(n_edges=100):
     """
     Generate the network consisting of the n strongest edges
-
     :param n_edges:
     :return:
     """
@@ -135,31 +131,30 @@ def generate_network_of_top_n_edges(n_edges=100):
     store_network_for_visualization(nodes_out, edges_out, f'top_{n_edges}_edges',
                                     f'top_{n_edges}_edges.json')
 
-def generate_people_network(names, network_name, max_number_of_nodes=100):  # pylint: disable=R0914
+def generate_people_network(names, network_name, max_number_of_nodes=100,   # pylint: disable=R0914
+                            include_2nd_degree_connections=False):
 
     """
     Generate the network of one or multiple people. The resulting json is stored in
     backend/data
-
     :param names: list
     :param network_name: str
     :param max_number_of_nodes: int
     :return:
     """
 
+    # Load people db
     people_db_path = Path('..', 'data', 'network_generation', 'people_db_1970s.pickle')
     people_db = PeopleDatabase()
     people_db.load_from_disk(Path(people_db_path))
-    alias_to_person_dict = people_db.get_alias_to_person_dict()
     for person in people_db.people:
-        embed()
-        alias_to_person_dict[person.full_name] = person
+        people_db.alias_to_person_dict[person.full_name] = person
 
-    # first, add the one or more people in the center of the network
+    # initialize the center group of people
     center_people = []
     for name in names:
         try:
-            center_people.append(alias_to_person_dict[name])
+            center_people.append(people_db.alias_to_person_dict[name])
         except KeyError:
             print(f'Could not find {name}. Possible candidates: ')
             possible_matches = search_possible_matches(name[:5], people_db)
@@ -167,13 +162,15 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
                 print(result)
             raise KeyError
 
+    # load the whole 1970s network
     network = load_1970s_network()
     edges = network['edges']
 
+    nodes_temp = Counter()
     edges_out = []
     nodes_out = []
 
-    # then, add all the edges between center people and everyone else
+    # first identify all the primary edges including at least one person from center_people
     for idx, edge in enumerate(edges.values()):
         if idx % 1000 == 0:
             print(idx, len(edges))
@@ -181,32 +178,48 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
         if (person1 in center_people or person2 in center_people) and edge['count'] > 1:
             edges_out.append({'node1': person1.full_name, 'node2': person2.full_name,
                               'docs': edge['count'], 'words': 0})
+    edges_out = sorted(edges_out, key=lambda x: x['docs'], reverse=True)[:max_number_of_nodes]
 
-    # now, figure out the number of documents per node and
-    nodes_temp = Counter()
-    # edges_out = sorted(edges_out, key=lambda x: x['docs'], reverse=True)[:max_number_of_nodes]
+    # then gather data on the individual nodes
     for edge in edges_out:
-        person1 = alias_to_person_dict[edge['node1']]
-        person2 = alias_to_person_dict[edge['node2']]
+        person1 = people_db.alias_to_person_dict[edge['node1']]
+        person2 = people_db.alias_to_person_dict[edge['node2']]
         nodes_temp[person1] += edge['docs']
         nodes_temp[person2] += edge['docs']
-
-    embed()
 
     for node in nodes_temp:
         nodes_out.append({'name': node.full_name, 'docs': nodes_temp[node], 'words': 0,
                           'affiliation': node.most_likely_position})
         print(node.full_name, node.most_likely_position)
 
-    print(len(nodes_out))
+    # add connections between non-main nodes
+    # we now know all the nodes, we just need to re-generate edges
+    # TODO: this is highly inefficient--we should first figure out all of the nodes and only then
+    # TODO: generate edges. but it works for the time being.
+    if include_2nd_degree_connections:
 
-    store_network_for_visualization(nodes_out, edges_out, f'person_{network_name}',
+        network_name += '_including_2nd_degree_edges'
+
+        node_names_set = set(node['name'] for node in nodes_out)
+        edges_final = []
+        for idx, edge in enumerate(edges.values()):
+            if idx % 1000 == 0:
+                print(idx, len(edges))
+            person1, person2 = edge['edge']
+            if (person1.full_name in node_names_set and
+                    person2.full_name in node_names_set):
+                edges_final.append({'node1': person1.full_name, 'node2': person2.full_name,
+                                    'docs': edge['count'], 'words': 0})
+        edges_final = sorted(edges_final, key=lambda x: x['docs'], reverse=True)
+    else:
+        edges_final = edges_out
+
+    store_network_for_visualization(nodes_out, edges_final, f'person_{network_name}',
                                     f'person_{network_name}.json')
 
 def search_possible_matches(name, people_db=None):
     """
     Search for possible alias matches given a name
-
     :param name:
     :param people_db:
     :return: Counter
@@ -230,17 +243,17 @@ def generate_network_thedore_sterling():        # pylint: disable=C0103
     """
     Generate the network of Theodore Sterling, the largest recipient of CTR Special Project Grants
     For more on Stering, see http://tobacco-analytics.org/case/ctr
-
     """
     generate_people_network(names=['STERLING,TD'], network_name='sterling',
                             max_number_of_nodes=100)
 
 
-def generate_network_lawyers():
+def generate_network_lawyers(include_2nd_degree_connections=True):
     """
     Generates the network for the industry's general counsels, ca. 1972
     For more on them and in particular the CTR, see http://tobacco-analytics.org/case/ctr
-
+    :param: include_second_degree_connections: if true, include edges between nodes that are
+                                                in the network but not main nades.
     :return:
     """
 
@@ -257,13 +270,13 @@ def generate_network_lawyers():
              'Hardy, David Ross'        # Shook, Hardy & Bacon (CTR law firm)
              ]
 
-    generate_people_network(names=names, network_name='lawyers2',
-                            max_number_of_nodes=300)
+    generate_people_network(names=names, network_name='lawyers',
+                            max_number_of_nodes=300,
+                            include_2nd_degree_connections=include_2nd_degree_connections)
 
 def generate_network_research_directors():      # pylint: disable=C0103
     """
     Generates the network of industry research directors, ca. 1970
-
     """
 
     names = [

@@ -10,8 +10,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from IPython import embed
 from nameparser.config import CONSTANTS  # pylint: disable=C0411
-from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
-from person import Person
+from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
+from name_disambiguation.person import Person
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
@@ -38,23 +38,26 @@ class PeopleDatabase:
         :return: None
         """
         try:
-
-            new_p = Person(name_raw=name_raw, count=count)
+            if position:
+                positions = Counter([position])
+            else:
+                positions = None
+            new_p = Person(name_raw=name_raw, count=count, positions=Counter(positions))
             if name_raw in self.alias_to_person_dict:
                 existing_p = self.alias_to_person_dict[name_raw]
 
                 # remove person temporarily as the hash value will change with the updates
                 self.people.remove(existing_p)
                 existing_p.positions += new_p.positions
-                if position:
-                    existing_p.positions += Counter([position])
+#                if position:
+#                    existing_p.positions += Counter([position])
                 existing_p.aliases += new_p.aliases
                 existing_p.count += new_p.count
-                self.alias_to_person_dict[name_raw] = existing_p
+                self.alias_to_person_dict[name_raw.upper()] = existing_p
                 self.people.add(existing_p)
             else:
                 self.people.add(new_p)
-                self.alias_to_person_dict[name_raw] = new_p
+                self.alias_to_person_dict[name_raw.upper()] = new_p
 
         except IndexError:
             print(f"Could not parse name_raw {name_raw} to Person.")
@@ -74,9 +77,9 @@ class PeopleDatabase:
         """
         hash1 = []
         hash2 = []
-        for person in self.people:
+        for person in sorted(list(self.people)):
             hash1.append(hash(person))
-        for person in other.people:
+        for person in sorted(list(other.people)):
             hash2.append(hash(person))
         return sorted(hash1) == sorted(hash2)
 
@@ -102,10 +105,10 @@ class PeopleDatabase:
         """
         :return:
         """
-        c = Counter()
+        person_counter = Counter()
         for person in self.people:
-            c[person] = person.count
-        return c
+            person_counter[person] = person.count
+        return person_counter
 
 
     def get_alias_to_person_dict(self):
@@ -196,7 +199,7 @@ class PeopleDatabase:
                     ):
                         print("\nSUMMARY")
                         for name in last_names_dict[last_name]:
-                            print("\n", name.count, name, Counter(name.aliases).most_common(100))
+                            print("\n", name.count, name, name.aliases.most_common(100))
                         print("\n")
                     break
 
@@ -324,9 +327,9 @@ class TestPeopleDB(unittest.TestCase):
     """
     def setUp(self):
         self.people_db = PeopleDatabase()
-        for name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan', 'Dunn, WL', 'Dunn, William L',
-                     'Garcia, Raquel']:
-            self.people_db.add_person_raw(name, 1)
+        for initial_name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan', 'Dunn, WL',
+                             'Dunn, William L', 'Garcia, Raquel']:
+            self.people_db.add_person_raw(initial_name, 1)
 
     def test_pickle(self):
         """
@@ -340,12 +343,19 @@ class TestPeopleDB(unittest.TestCase):
         self.assertEqual(self.people_db, loaded_db)
 
     def test_merge1(self):
+        """
+        Test people_db merge 1
+        """
 
         self.people_db.merge_duplicates()
         self.assertEqual(len(self.people_db), 3)
-        self.assertEqual(len(self.people_db), len(set(self.people_db.alias_to_person_dict)))
+        self.assertEqual(len(self.people_db),
+                         len(set(self.people_db.alias_to_person_dict.values())))
 
     def test_merge2(self):
+        """
+        Test people_db merge 2
+        """
 
         people_db = PeopleDatabase()
         for name in ['DUNN,W', 'DUNN,WL', 'DUNN,WL JR', 'DUNN, W. L.', 'Dunn, FW,'
@@ -354,17 +364,20 @@ class TestPeopleDB(unittest.TestCase):
             people_db.add_person_raw(name, 1)
         people_db.merge_duplicates()
         print(people_db.people)
-        self.assertEqual(len(self.people_db), 4)
-        self.assertEqual(len(people_db), len(set(people_db.alias_to_person_dict)))
+        print("Here", len(people_db))
+        self.assertEqual(len(people_db), 4)
+        self.assertEqual(len(people_db), len(set(people_db.alias_to_person_dict.values())))
 
 
 if __name__ == '__main__':
+
     # people_db = PeopleDatabase()
-    # for name in ['DUNN,W', 'DUNN,WL', 'DUNN,WL JR', 'DUNN, W. L.', 'Dunn, FW,'
-    #                                                                'Dunn, William L', 'Dunn,WL',
-    #              'DUNN,WL Jr', 'DUNN, WL', 'Dunn, Frank',
-    #              'Dunn, Frank W']:
-    #     people_db.add_person_raw(name, 1)
+    # for initial_name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan', 'Dunn, WL',
+    #                      'Dunn, William L', 'Garcia, Raquel']:
+    #     people_db.add_person_raw(initial_name, 1)
     # people_db.merge_duplicates()
+    # print(len(people_db))
+    # print(set(people_db.alias_to_person_dict.values()))
     # embed()
+
     unittest.main()

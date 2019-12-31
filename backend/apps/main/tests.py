@@ -48,28 +48,22 @@ class ModelsTests(TestCase):
         #  try to compare aliases Counters -- should we alphabetize when we json.dumps?
         DjangoPerson.objects.get(last="DUNN", first="WILLIAM", middle="L",
                                  full_name="WILLIAM L DUNN",
-                                 most_likely_org="not calculated",
+                                 most_likely_org="no positions available",
                                  positions=json.dumps(Counter()),
                                  aliases=json.dumps(Counter({"DUNN, WILLIAM L": 4, "DUNN, WL": 2})),
                                  count=6
                                  )
         DjangoPerson.objects.get(last="TEAGUE", first="C", middle="E",
                                  full_name="C E TEAGUE",
-                                 most_likely_org="not calculated",
+                                 most_likely_org="JR",
                                  positions=json.dumps(Counter({"JR": 3})),
                                  aliases=json.dumps(Counter({"TEAGUE CE JR": 3})),
                                  count=3
                                  )
         DjangoPerson.objects.get(last="TEMKO", first="S", middle="L",
                                  full_name="S L TEMKO",
-                                 most_likely_org="not calculated",
-                                 positions=json.dumps(Counter({"COVINGTON & BURLING": 8})),
-                                 aliases=json.dumps(Counter({
-                                     "TEMKO SL, COVINGTON AND BURLING": 5,
-                                     "TEMKO SL, COVINGTON BURLING": 3
-                                 })),
-                                 count=8
-                                 )
+                                 most_likely_org="Covington & Burling",
+                                 positions=json.dumps(Counter({"COVINGTON & BURLING": 11})))
 
     def test_import_csv_to_document(self):
         """
@@ -123,21 +117,18 @@ class ModelsTests(TestCase):
 
         DjangoPerson.objects.get(last="DUNN", first="W", middle="L",
                                  full_name="W L DUNN",
-                                 most_likely_org="not calculated",
                                  positions=json.dumps(Counter()),
                                  aliases=json.dumps(Counter(["DUNN, WL"])),
                                  count=1
                                  )
         DjangoPerson.objects.get(last="TEAGUE", first="C", middle="E",
                                  full_name="C E TEAGUE",
-                                 most_likely_org="not calculated",
                                  positions=json.dumps(Counter(["JR"])),
                                  aliases=json.dumps(Counter(["TEAGUE CE JR"])),
                                  count=1
                                  )
         DjangoPerson.objects.get(last="TEMKO", first="S", middle="L",
                                  full_name="S L TEMKO",
-                                 most_likely_org="not calculated",
                                  positions=json.dumps(Counter()),
                                  aliases=json.dumps(Counter(["TEMKO SL"])),
                                  count=1
