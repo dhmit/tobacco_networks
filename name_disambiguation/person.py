@@ -30,28 +30,38 @@ class Person:
         count (int): number of times the person appeared in the data
     """
     def __init__(self, name_raw=None, last='', first='', middle='',       # pylint: disable=R0913
-                 most_likely_org='not calculated', positions=None, aliases=None, count=1):
+                 positions=None, aliases=None, count=1):
         """
         Returns a person object
         :param name_raw: raw string for the name (str)
         :param last: official parsed last name (if known) (str)
         :param first: official parsed first name (if known) (str)
         :param middle: official parsed middle name (if known) (str)
-        :param most_likely_org: most likely org (if known; default "not calculated") (str)
         :param positions: compilation of organizations/other information (if known) (Counter of str)
-        :param aliases: list of raw strings that correspond to this person object (if known) (
+        :param aliases: Counter of raw strings that correspond to this person object (if known) (
         list of str)
         :param count: number of times the alias appeared in the data (int)
         """
 
-        # if raw name is given, parse it using parse_raw_name() to get first, middle, last,
-        # and positions
-        if name_raw:
-            first, middle, last, positions = self.parse_raw_name(name_raw, count)
-
         # initialize positions as an empty Counter if it is not given
         if positions is None:
             positions = Counter()
+
+        if isinstance(positions, Counter):
+            self.positions = positions
+        else:
+            # initialize positions as a Counter
+            self.positions = Counter()
+            for i in positions:
+                cleaned = re.sub(r'\.', '', i)
+                self.positions[cleaned.upper()] += count
+
+        # if raw name is given, parse it using parse_raw_name() to get first, middle, last,
+        # and positions
+        if name_raw:
+            first, middle, last, pos_raw = self.parse_raw_name(name_raw, count)
+            if pos_raw:
+                self.positions += pos_raw
 
         # by default, the raw name is an alias of the person
         # (we're changing the first/middle names based on new information, so keeping the original
@@ -62,12 +72,13 @@ class Person:
             else:
                 aliases = Counter({name_raw.upper(): count})
 
+        # TODO: SR: do we really want all the first/last/middle names to be ALL CAPS?
         # set last, first, middle, position, positions: all converted to upper case
         # set aliases and count
         self.last = last.upper()
         self.first = first.upper()
         self.middle = middle.upper()
-        self.most_likely_org = most_likely_org
+        #self.most_likely_org = most_likely_org
         # remove periods and convert to upper case
         if isinstance(positions, Counter):
             self.positions = positions
@@ -97,7 +108,7 @@ class Person:
         """
         str_name = f'{self.first} {self.middle} {self.last}'
         str_name = str_name + ", Position: " + str(self.positions) + ", Aliases: " + \
-            str(self.aliases) + ", count: " + str(self.count)
+            str(self.aliases.most_common()) + ", count: " + str(self.count)
         return str_name
 
     def __eq__(self, other):
@@ -109,13 +120,16 @@ class Person:
         """
         return hash(self) == hash(other)
 
+    def __lt__(self, other):
+
+        return self.stemmed() < other.stemmed()
+
     def copy(self):
         """
         Copies a person object
         :return: a copied person object
         """
         return Person(last=self.last, first=self.first, middle=self.middle,
-                      most_likely_org=self.most_likely_org,
                       positions=copy.deepcopy(self.positions),
                       aliases=copy.deepcopy(self.aliases), count=self.count)
 
@@ -133,7 +147,38 @@ class Person:
         """
         return f'{self.last} {self.first} {self.middle}'
 
-    def set_likely_position(self, official_org=True):
+    @property
+    def full_name(self):
+        """
+        >>> from person import Person
+        >>> Person(name_raw='DUNN,WL').full_name
+        'W. L. Dunn'
+
+        >>> Person(name_raw='Dunn, William Lee').full_name
+        'William Lee Dunn'
+
+        :return:
+        """
+        components = []
+        if self.first:
+            if len(self.first) == 1:
+                components.append(self.first + '.')
+            else:
+                components.append(self.first.capitalize())
+
+        if self.middle:
+            if len(self.first) == 1:
+                components.append(self.middle + '.')
+            else:
+                components.append(self.middle.capitalize())
+
+        if self.last:
+            components.append(self.last.capitalize())
+
+        return " ".join(components)
+
+    @property
+    def most_likely_position(self, official_org=True):      # pylint: disable=R0206
         """
         Calculates and sets most_likely_org as the organization with the highest number of count
         If official_org=True, returns official name of most common organization that is in
@@ -141,13 +186,21 @@ class Person:
         :param official_org: if consider only orgs in RAW_ORG_TO_CLEAN_ORG_DICT
         :return: None
         """
-        likely_position = self.positions.most_common(1)[0][0]
-        if official_org:
-            for name in self.positions.most_common():
-                if name[0] in RAW_ORG_TO_CLEAN_ORG_DICT:
-                    likely_position = RAW_ORG_TO_CLEAN_ORG_DICT[name[0]]
-                    break
-        self.most_likely_org = likely_position
+        if len(self.positions) == 0:
+            return 'no positions available'
+        else:
+            likely_position = self.positions.most_common(1)[0][0]
+            if official_org:
+                for name in self.positions.most_common():
+                    if name[0] in RAW_ORG_TO_CLEAN_ORG_DICT and name[0] != '@skip@':
+                        likely_position = RAW_ORG_TO_CLEAN_ORG_DICT[name[0]]
+                        break
+            if likely_position == "@skip@":
+                likely_position = 'no positions available'
+                if len(self.positions) > 1:
+                    print(self.positions)
+
+            return likely_position
 
     @staticmethod
     def remove_privlog_info(name_raw):
@@ -282,6 +335,7 @@ class Person:
                 # this is a bit of an ugly hack to get the last (rather than the first) search hit
                 # for a string: we iterate over all matches and the last one gets stored in
                 # search_hit
+
                 for search_hit in re.finditer(r'\b' + raw_org + r'\b', name_raw):
                     pass
 
@@ -337,7 +391,7 @@ class TestNameParser(unittest.TestCase):
         """
         # Also test Person constructor: use list as positions
         self.assertEqual(Person(last="Teague", first="C", middle="E", positions=["JR"],
-                                aliases=["TEAGUE CE JR"]),
+                                aliases=Counter(["TEAGUE CE JR"])),
                          Person(name_raw="TEAGUE CE JR"))
 
     def test_parse_name_2(self):
@@ -346,7 +400,7 @@ class TestNameParser(unittest.TestCase):
         """
         # Also test Person constructor: use Counter as positions
         self.assertEqual(Person(last="Teague", first="C", middle="E", positions=Counter(["JR"]),
-                                aliases=["teague ce jr"]),
+                                aliases=Counter(["TEAGUE CE JR"])),
                          Person(name_raw="teague ce jr"))
 
     # TODO parse JR & PHD in positions into two separate strings
@@ -366,7 +420,8 @@ class TestNameParser(unittest.TestCase):
         """
         self.assertEqual(Person(last="Baker", first="T", middle="E",
                                 positions={"NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"},
-                                aliases=["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"]
+                                aliases=Counter(["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS "
+                                                 "GENERAL"])
                                ),
                          Person(name_raw="BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"))
 
@@ -375,7 +430,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly: test parsing of dashes
         """
         self.assertEqual(Person(last="Baker", first="C", middle="J", positions={},
-                                aliases=["BAKER-cj"]),
+                                aliases=Counter(["BAKER-CJ"])),
                          Person(name_raw="BAKER-cj"))
 
     def test_parse_name_6(self):
@@ -384,21 +439,24 @@ class TestNameParser(unittest.TestCase):
         """
         # Not specify positions: test to make sure Person constructor can handle no data
         # Here we assume for "Baker, JR", it is more likely that JR are initials and not junior
-        self.assertEqual(Person(last="Baker", first="J", middle="R", aliases=["Baker, JR"]),
+        self.assertEqual(Person(last="Baker", first="J", middle="R",
+                                aliases=Counter(["BAKER, JR"])),
                          Person(name_raw="Baker, JR"))
 
     def test_parse_name_7(self):
         """
         checks to see that a raw name is parsed correctly: test if parser ignores "#"
         """
-        self.assertEqual(Person(last="Dunn", first="W", middle="L", aliases=["DUNN WL #"]),
+        self.assertEqual(Person(last="Dunn", first="W", middle="L",
+                                aliases=Counter(["DUNN WL #"])),
                          Person(name_raw="DUNN WL #"))
 
     def test_parse_name_8(self):
         """
         checks to see that a raw name is parsed correctly
         """
-        self.assertEqual(Person(last="Dunn", first="W", middle="L", aliases=["Dunn, W. L."]),
+        self.assertEqual(Person(last="Dunn", first="W", middle="L",
+                                aliases=Counter(["DUNN, W. L."])),
                          Person(name_raw="Dunn, W. L."))
 
     def test_parse_name_9(self):
@@ -407,7 +465,7 @@ class TestNameParser(unittest.TestCase):
         """
         self.assertEqual(Person(last="Temko", first="S", middle="L",
                                 positions=["COVINGTON & BURLING"],
-                                aliases=["TEMKO SL, COVINGTON AND BURLING"]),
+                                aliases=Counter(["TEMKO SL, COVINGTON AND BURLING"])),
                          Person(name_raw="TEMKO SL, COVINGTON AND BURLING"))
 
     def test_parse_name_10(self):
@@ -415,7 +473,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly: test if Privlog is handled correctly
         """
         self.assertEqual(Person(last="Temko", first="Stanley", middle="L",
-                                aliases=["Temko, Stanley L [Privlog:] TEMKO,SL"]),
+                                aliases=Counter(["TEMKO, STANLEY L [PRIVLOG:] TEMKO,SL"])),
                          Person(name_raw="Temko, Stanley L [Privlog:] TEMKO,SL"))
 
     def test_parse_name_11(self):
@@ -424,7 +482,7 @@ class TestNameParser(unittest.TestCase):
         """
         self.assertEqual(Person(last="Temko", first="S", middle="L",
                                 positions=["Covington & Burling"],
-                                aliases=["Temko-SL, Covington & Burling"]),
+                                aliases=Counter(["TEMKO-SL, COVINGTON & BURLING"])),
                          Person(name_raw="Temko-SL, Covington & Burling"))
 
     def test_parse_name_12(self):
@@ -434,8 +492,8 @@ class TestNameParser(unittest.TestCase):
         """
         self.assertEqual(Person(last="Henson", first="A", middle="",
                                 positions=["AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL"],
-                                aliases=["HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL "
-                                         "COUNSEL)"]),
+                                aliases=Counter(["HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND "
+                                                 "GENERAL COUNSEL)"])),
                          Person(name_raw="HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL "
                                          "COUNSEL)"))
 
@@ -446,8 +504,9 @@ class TestNameParser(unittest.TestCase):
         """
         self.assertEqual(Person(last="Henson", first="A", middle="",
                                 positions=["CHADBOURNE, PARK, WHITESIDE & WOLFF"],
-                                aliases=["HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, "
-                                         "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"]),
+                                aliases=Counter(["HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & "
+                                                 "WOLFF, "
+                                                 "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"])),
                          Person(name_raw="HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, "
                                          "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"))
 
@@ -469,8 +528,8 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly: comparison to 14
         """
         self.assertEqual(Person(last="Holtzman", first="A", middle="", positions=[],
-                                aliases=["Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
-                                         "Pepples, E. ,  Stevens, A. ,  Witt, S."]),
+                                aliases=Counter(["HOLTZMAN, A.,  MURRAY, J. ,  HENSON, A. ,  "
+                                                 "PEPPLES, E. ,  STEVENS, A. ,  WITT, S."])),
                          Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
                                          "Pepples, E. ,  Stevens, A. ,  Witt, S."))
 
@@ -480,7 +539,7 @@ class TestNameParser(unittest.TestCase):
         """
         self.assertEqual(Person(last="Holtz", first="Jacob", middle="",
                                 positions=["Jacob & Medinger"],
-                                aliases=["Holtz, Jacob, Jacob & Medinger"]),
+                                aliases=Counter(["HOLTZ, JACOB, JACOB & MEDINGER"])),
                          Person(name_raw="Holtz, Jacob, Jacob & Medinger"))
 
     def test_parse_name_16(self):
@@ -489,7 +548,7 @@ class TestNameParser(unittest.TestCase):
         """
         self.assertEqual(Person(last="Proctor", first="D", middle="F",
                                 positions=["Johns Hopkins University"],
-                                aliases=["PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"]),
+                                aliases=Counter(["PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"])),
                          Person(name_raw="PROCTOR DF, JOHNS HOPKINS SCHOOL OF HYGIENE"))
 
     def test_parse_name_17(self):
