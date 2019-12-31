@@ -134,7 +134,8 @@ def generate_network_of_top_n_edges(n_edges=100):
     store_network_for_visualization(nodes_out, edges_out, f'top_{n_edges}_edges',
                                     f'top_{n_edges}_edges.json')
 
-def generate_people_network(names, network_name, max_number_of_nodes=100):  # pylint: disable=R0914
+def generate_people_network(names, network_name, max_number_of_nodes=100,   # pylint: disable=R0914
+                            include_2nd_degree_connections=False):
 
     """
     Generate the network of one or multiple people. The resulting json is stored in
@@ -195,12 +196,29 @@ def generate_people_network(names, network_name, max_number_of_nodes=100):  # py
                           'affiliation': node.most_likely_position})
         print(node.full_name, node.most_likely_position)
 
-    # finally, add edges between people
-    from IPython import embed;embed()
+    # add connections between non-main nodes
+    # we now know all the nodes, we just need to re-generate edges
+    # TODO: this is highly inefficient--we should first figure out all of the nodes and only then
+    # TODO: generate edges. but it works for the time being.
+    if include_2nd_degree_connections:
 
-    print(len(nodes_out))
+        network_name += '_including_2nd_degree_edges'
 
-    store_network_for_visualization(nodes_out, edges_out, f'person_{network_name}',
+        node_names_set = set(node['name'] for node in nodes_out)
+        edges_final = []
+        for idx, edge in enumerate(edges.values()):
+            if idx % 1000 == 0:
+                print(idx, len(edges))
+            person1, person2 = edge['edge']
+            if (person1.full_name in node_names_set and
+                    person2.full_name in node_names_set):
+                edges_final.append({'node1': person1.full_name, 'node2': person2.full_name,
+                                    'docs': edge['count'], 'words': 0})
+        edges_final = sorted(edges_final, key=lambda x: x['docs'], reverse=True)
+    else:
+        edges_final = edges_out
+
+    store_network_for_visualization(nodes_out, edges_final, f'person_{network_name}',
                                     f'person_{network_name}.json')
 
 def search_possible_matches(name, people_db=None):
@@ -236,10 +254,13 @@ def generate_network_thedore_sterling():        # pylint: disable=C0103
                             max_number_of_nodes=100)
 
 
-def generate_network_lawyers():
+def generate_network_lawyers(include_2nd_degree_connections=True):
     """
     Generates the network for the industry's general counsels, ca. 1972
     For more on them and in particular the CTR, see http://tobacco-analytics.org/case/ctr
+
+    :param: include_second_degree_connections: if true, include edges between nodes that are
+                                                in the network but not main nades.
 
     :return:
     """
@@ -258,7 +279,8 @@ def generate_network_lawyers():
              ]
 
     generate_people_network(names=names, network_name='lawyers',
-                            max_number_of_nodes=300)
+                            max_number_of_nodes=300,
+                            include_2nd_degree_connections=include_2nd_degree_connections)
 
 def generate_network_research_directors():      # pylint: disable=C0103
     """
@@ -281,4 +303,4 @@ def generate_network_research_directors():      # pylint: disable=C0103
 
 
 if __name__ == '__main__':
-    generate_network_research_directors()
+    generate_network_lawyers()

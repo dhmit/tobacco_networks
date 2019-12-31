@@ -15,7 +15,6 @@ import pandas as pd
 from name_disambiguation.person import Person
 from name_disambiguation.people_db import PeopleDatabase
 from clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
-from IPython import embed
 
 
 def merge_names_from_json_file(json_name_file, people_db_pickle_file):
@@ -102,15 +101,17 @@ def parse_doc_metadata_csv_to_people_db(csv_path, people_db=None, output_people_
 
         for alias in aliases:
             alias = alias.upper()
-            if alias not in alias_to_person_dict:
+            if alias not in people_db.alias_to_person_dict:
                 person = Person(name_raw=alias, count=aliases[alias])
                 person.positions = Counter([org])
                 people_db.people.add(person)
-                alias_to_person_dict[alias] = person
+                people_db.alias_to_person_dict[alias] = person
             else:
-                alias_to_person_dict[alias].positions[org] += 1
+                people_db.alias_to_person_dict[alias].positions[org] += 1
 
     people_db.merge_duplicates()
+
+    return people_db
 
 
 def get_au_and_rc_by_document(path, return_type='both') -> list:
@@ -229,4 +230,26 @@ class TestAddPositions(unittest.TestCase):
 
 if __name__ == '__main__':
 
-    unittest.main()
+    people_db = PeopleDatabase()
+    csv_path = Path('..', 'data', 'name_disambiguation', 'test_docs.csv')
+    people_db = parse_doc_metadata_csv_to_people_db(csv_path, people_db=people_db)
+
+    expected_people_db = PeopleDatabase()
+    raquel = Person('Garcia, Raquel', count=4)
+    raquel.positions = Counter({"British American Tobacco": 1, "Brown & Williamson": 1})
+    raquel.aliases = Counter({'Garcia, Raquel': 4})
+    expected_people_db.people.add(raquel)
+
+    dunn = Person('Dunn, WL', count=4)
+    dunn.positions = Counter({"British American Tobacco": 1, "Brown & Williamson": 1})
+    dunn.aliases = Counter({'Dunn, WL': 4})
+    expected_people_db.people.add(dunn)
+
+    stephan = Person('Risi, Stephan', count=4)
+    stephan.positions = Counter({"Philip Morris": 2})
+    stephan.aliases = Counter({'Risi, Stephan': 4})
+    expected_people_db.people.add(stephan)
+
+    from IPython import embed;embed()
+
+#    unittest.main()

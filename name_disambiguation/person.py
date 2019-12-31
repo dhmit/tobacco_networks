@@ -77,7 +77,7 @@ class Person:
         self.last = last.upper()
         self.first = first.upper()
         self.middle = middle.upper()
-        self.most_likely_org = most_likely_org
+        #self.most_likely_org = most_likely_org
         # remove periods and convert to upper case
         if isinstance(positions, Counter):
             self.positions = positions
@@ -177,7 +177,7 @@ class Person:
         return " ".join(components)
 
     @property
-    def most_likely_position(self, official_org=True):
+    def most_likely_position(self, official_org=True):      # pylint: disable=R0206
         """
         Calculates and sets most_likely_org as the organization with the highest number of count
         If official_org=True, returns official name of most common organization that is in
@@ -335,7 +335,7 @@ class Person:
                 # for a string: we iterate over all matches and the last one gets stored in
                 # search_hit
 
-                for idx, search_hit in enumerate(re.finditer(r'\b' + raw_org + r'\b', name_raw)):
+                for search_hit in re.finditer(r'\b' + raw_org + r'\b', name_raw):
                     pass
 
                 if not search_hit:
@@ -399,7 +399,7 @@ class TestNameParser(unittest.TestCase):
         """
         # Also test Person constructor: use Counter as positions
         self.assertEqual(Person(last="Teague", first="C", middle="E", positions=Counter(["JR"]),
-                                aliases=Counter(["teague ce jr"])),
+                                aliases=Counter(["TEAGUE CE JR"])),
                          Person(name_raw="teague ce jr"))
 
     # TODO parse JR & PHD in positions into two separate strings
@@ -420,7 +420,7 @@ class TestNameParser(unittest.TestCase):
         self.assertEqual(Person(last="Baker", first="T", middle="E",
                                 positions={"NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"},
                                 aliases=Counter(["BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS "
-                                            "GENERAL"])
+                                                 "GENERAL"])
                                ),
                          Person(name_raw="BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS GENERAL"))
 
@@ -429,7 +429,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly: test parsing of dashes
         """
         self.assertEqual(Person(last="Baker", first="C", middle="J", positions={},
-                                aliases=Counter(["BAKER-cj"])),
+                                aliases=Counter(["BAKER-CJ"])),
                          Person(name_raw="BAKER-cj"))
 
     def test_parse_name_6(self):
@@ -439,7 +439,7 @@ class TestNameParser(unittest.TestCase):
         # Not specify positions: test to make sure Person constructor can handle no data
         # Here we assume for "Baker, JR", it is more likely that JR are initials and not junior
         self.assertEqual(Person(last="Baker", first="J", middle="R",
-                                aliases=Counter(["Baker, JR"])),
+                                aliases=Counter(["BAKER, JR"])),
                          Person(name_raw="Baker, JR"))
 
     def test_parse_name_7(self):
@@ -455,7 +455,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly
         """
         self.assertEqual(Person(last="Dunn", first="W", middle="L",
-                                aliases=Counter(["Dunn, W. L."])),
+                                aliases=Counter(["DUNN, W. L."])),
                          Person(name_raw="Dunn, W. L."))
 
     def test_parse_name_9(self):
@@ -472,7 +472,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly: test if Privlog is handled correctly
         """
         self.assertEqual(Person(last="Temko", first="Stanley", middle="L",
-                                aliases=Counter(["Temko, Stanley L [Privlog:] TEMKO,SL"])),
+                                aliases=Counter(["TEMKO, STANLEY L [PRIVLOG:] TEMKO,SL"])),
                          Person(name_raw="Temko, Stanley L [Privlog:] TEMKO,SL"))
 
     def test_parse_name_11(self):
@@ -481,7 +481,7 @@ class TestNameParser(unittest.TestCase):
         """
         self.assertEqual(Person(last="Temko", first="S", middle="L",
                                 positions=["Covington & Burling"],
-                                aliases=Counter(["Temko-SL, Covington & Burling"])),
+                                aliases=Counter(["TEMKO-SL, COVINGTON & BURLING"])),
                          Person(name_raw="Temko-SL, Covington & Burling"))
 
     def test_parse_name_12(self):
@@ -492,7 +492,7 @@ class TestNameParser(unittest.TestCase):
         self.assertEqual(Person(last="Henson", first="A", middle="",
                                 positions=["AMERICAN SENIOR VICE PRESIDENT AND GENERAL COUNSEL"],
                                 aliases=Counter(["HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND "
-                                            "GENERAL COUNSEL)"])),
+                                                 "GENERAL COUNSEL)"])),
                          Person(name_raw="HENSON, A. (AMERICAN SENIOR VICE PRESIDENT AND GENERAL "
                                          "COUNSEL)"))
 
@@ -505,7 +505,7 @@ class TestNameParser(unittest.TestCase):
                                 positions=["CHADBOURNE, PARK, WHITESIDE & WOLFF"],
                                 aliases=Counter(["HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & "
                                                  "WOLFF, "
-                                         "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"])),
+                                                 "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"])),
                          Person(name_raw="HENSON, A. (CHADBOURNE, PARKE, WHITESIDE & WOLFF, "
                                          "AMERICAN OUTSIDE COUNSEL) (HANDWRITTEN NOTES)"))
 
@@ -527,8 +527,8 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly: comparison to 14
         """
         self.assertEqual(Person(last="Holtzman", first="A", middle="", positions=[],
-                                aliases=Counter(["Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
-                                         "Pepples, E. ,  Stevens, A. ,  Witt, S."])),
+                                aliases=Counter(["HOLTZMAN, A.,  MURRAY, J. ,  HENSON, A. ,  "
+                                                 "PEPPLES, E. ,  STEVENS, A. ,  WITT, S."])),
                          Person(name_raw="Holtzman, A.,  Murray, J. ,  Henson, A. ,  "
                                          "Pepples, E. ,  Stevens, A. ,  Witt, S."))
 
@@ -538,7 +538,7 @@ class TestNameParser(unittest.TestCase):
         """
         self.assertEqual(Person(last="Holtz", first="Jacob", middle="",
                                 positions=["Jacob & Medinger"],
-                                aliases=Counter(["Holtz, Jacob, Jacob & Medinger"])),
+                                aliases=Counter(["HOLTZ, JACOB, JACOB & MEDINGER"])),
                          Person(name_raw="Holtz, Jacob, Jacob & Medinger"))
 
     def test_parse_name_16(self):
