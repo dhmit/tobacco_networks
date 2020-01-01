@@ -22,11 +22,12 @@ def get_network_data(request):
 
     datasets = {
         'lawyers': 'person_lawyers.json',
-        'research_directors': 'person_research_directors.json',
+        'research_directors': 'person_research_directors_including_2nd_degree_edges.json',
         'sterling': 'person_sterling.json',
         'top_100_edges': 'top_100_edges.json',
 
-        'test': 'person_lawyers.json'
+        'test': 'person_lawyers_including_2nd_degree_edges.json',
+        #'test': 'person_lawyers.json'
     }
 
     if request.GET and 'dataset' in request.GET:
@@ -56,6 +57,8 @@ def get_network_data(request):
     clusters, nodes = get_clusters_data(nodes)
     data['clusters'] = clusters
     data['nodes'] = nodes
+
+
 
     return JsonResponse(data)
 
@@ -153,11 +156,10 @@ def get_clusters_data(nodes):
     affiliation_to_cluster_dict = {
         'No Positions Available': len(clusters) -1
     }
-    for affiliation in others_group:
-        # id of "Others" is the second to last cluster
-        affiliation_to_cluster_dict[affiliation] = len(clusters) -2
     for cluster in clusters.values():
         affiliation_to_cluster_dict[cluster['name']] = cluster['id']
+    for affiliation in others_group:
+        affiliation_to_cluster_dict[affiliation] = affiliation_to_cluster_dict['Others']
 
     for node in nodes:
         node['cluster'] = affiliation_to_cluster_dict[node['affiliation']]

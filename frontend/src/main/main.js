@@ -246,7 +246,8 @@ class MainView extends React.Component {
                 selection_name: undefined,
                 mouseover_active: false,
                 show_info_panel: false,
-                searchbar_value: 'test'
+                searchbar_value: 'test',
+                current_center_node_names : []
             },  // initial configuration for the viz
             data: null,  // data for the viz
             data_bindings: {}, // data bindings for d3
@@ -275,8 +276,6 @@ class MainView extends React.Component {
      */
     handle_viz_events(event_name, data) { // eslint-disable-line no-unused-vars
 
-        console.log(event_name, data);
-
         if (event_name === 'update_data_bindings'){
             if (!data === null) {
                 console.log(data.clusters === this.state.data_bindings.clusters);
@@ -289,7 +288,6 @@ class MainView extends React.Component {
         let config = {... this.state.config};
         let node = data;
         if (event_name === "mouseover") {
-            console.log("mouseover", config.selection_active);
             // if a selection is already active, don't change to mouseover target
             if (!config.selection_active){
                 config.viz_update_func = 'update_focus';
@@ -298,14 +296,12 @@ class MainView extends React.Component {
             }
 
         } else if (event_name === "mouseout") {
-            console.log("mouseout");
             if (!config.selection_active){
                 config.viz_update_func = 'update_focus';
                 const data = update_node_degrees({... this.state.data});
                 this.setState({data: data, config: config});
             }
         } else if (event_name === "click") {
-            config.viz_update_func = 'update_focus';
             let data;
 
             // select new person
@@ -408,6 +404,7 @@ class MainView extends React.Component {
                     .json()
                     .then((data) => {
                         console.log("new data", data);
+                        data = update_node_degrees(data);
                         this.setState({data:data});
                         return true
                     })

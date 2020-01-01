@@ -2,6 +2,7 @@
  * Graph code mostly in D3.js for the visualization
  */
 import * as d3 from 'd3';
+import './graph.css';
 
 // D3 code is much more readable with non-standard indentation,
 // so turning off standard eslint indent rules just for this file
@@ -306,9 +307,12 @@ function render_simulation(config, data, data_bindings) {
         cluster_centers[d.cluster]['y_pos'].push(d.y);
     });
 
+
     // then calculate the center of each cluster and move the text to the new center
     data_bindings.clusters.selectAll('text')
-        .attr('x', (d) => d3.mean(cluster_centers[d.id]['x_pos']))
+        .attr('x', (d) => {
+            return d3.mean(cluster_centers[d.id]['x_pos'])
+        })
         .attr('y', (d) => d3.mean(cluster_centers[d.id]['y_pos']));
 }
 
@@ -446,12 +450,49 @@ export function get_information(data, name){
 export function update_graph(el, data, config, data_bindings, action) {
     if (action === 'update_focus') {
 
-        data_bindings.nodes.transition().duration(500).style('opacity', (d) =>{
-        //data_bindings.nodes.style('opacity', (d) => {
-            if (d.degree === 3){ return 0 } else { return 1}
+        console.log("update focus");
+
+        const max_docs = d3.max(data['nodes'], function(d) { return d.docs; });
+        const node_size_scale = d3.scaleLinear()
+            .domain([0, max_docs])
+            .range([5, config.width * config.height / 80000]);
+
+        data_bindings.nodes
+            .style('opacity', (d) =>{
+            //data_bindings.nodes.style('opacity', (d) => {
+            if (d.degree === -1){ return 0 } else { return 1}
         });
+
+        // data_bindings.nodes.selectAll('circle')
+        //     .attr('class', (d) => `node_degree_${d.degree}`);
+
+        data_bindings.nodes.selectAll('circle').transition().duration(1000)
+            .attr('r', (d) => {
+                let radius = node_size_scale(d.docs);
+                if (d.degree === 0) { return 20} else {return radius}
+            })
+            .attr('class', (d) => `node degree_${d.degree}`)
+
+            .attr('fill', (d) => {
+                if(d.degree === 0 || d.degree === 1){
+                    return data.clusters[d.cluster].color
+                } else {
+                    return 'white'
+                }
+            })
+            .attr('stroke', (d) =>{
+                if(d.degree === 0 || d.degree === 1){
+                    return 'white'
+                } else {
+                    return data.clusters[d.cluster].color
+                }
+            });
+
+
+
+
         data_bindings.links.transition().duration(500).style('opacity', (d) =>{
-            if (d.degree === 3){return 0 } else {return 1}
+            if (d.degree === -1){return 0 } else {return 1}
         });
 
         // update_focused_node(el, data, config, data_bindings);

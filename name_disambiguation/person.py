@@ -166,7 +166,7 @@ class Person:
                 components.append(self.first.capitalize())
 
         if self.middle:
-            if len(self.first) == 1:
+            if len(self.middle) == 1:
                 components.append(self.middle + '.')
             else:
                 components.append(self.middle.capitalize())

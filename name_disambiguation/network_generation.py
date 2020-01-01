@@ -7,10 +7,16 @@ import pickle
 from collections import Counter
 from pathlib import Path
 
+from IPython import embed
+
 import pandas as pd
 
 from name_disambiguation.name_preprocessing import parse_column_person
 from name_disambiguation.people_db import PeopleDatabase
+
+
+
+
 
 
 def load_1970s_network():       # pylint: disable=R0914
@@ -34,6 +40,7 @@ def load_1970s_network():       # pylint: disable=R0914
 
         people_db = PeopleDatabase()
         people_db.load_from_disk(Path(people_db_path))
+
 
         df = pd.read_csv(docs_csv_path).fillna('')  # pylint: disable=C0103
 
@@ -83,11 +90,12 @@ def load_1970s_network():       # pylint: disable=R0914
 
         return network
 
-def store_network_for_visualization(nodes, edges, network_name, file_name):
+def store_network_for_visualization(nodes, edges, center_names, network_name, file_name):
     """
     Stores the data for one backend in backend/data
     :param nodes: dict
     :param edges: dict
+    :param center_names: list   The names at the center of the network that should be highlighted.
     :param network_name: str
     :param file_name: str
     :return:
@@ -97,6 +105,7 @@ def store_network_for_visualization(nodes, edges, network_name, file_name):
         'name': network_name,
         'nodes': nodes,
         'links': edges,
+        'center_names': {name:True for name in center_names}    # dict bc set can't be jsoned.
     }
     out_path = Path('..', 'backend', 'data', file_name)
     with open(out_path, 'w') as out:
@@ -147,6 +156,7 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
     people_db_path = Path('..', 'data', 'network_generation', 'people_db_1970s.pickle')
     people_db = PeopleDatabase()
     people_db.load_from_disk(Path(people_db_path))
+
     for person in people_db.people:
         people_db.alias_to_person_dict[person.full_name] = person
 
@@ -155,6 +165,7 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
     for name in names:
         try:
             center_people.append(people_db.alias_to_person_dict[name])
+
         except KeyError:
             print(f'Could not find {name}. Possible candidates: ')
             possible_matches = search_possible_matches(name[:5], people_db)
@@ -178,6 +189,7 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
         if (person1 in center_people or person2 in center_people) and edge['count'] > 1:
             edges_out.append({'node1': person1.full_name, 'node2': person2.full_name,
                               'docs': edge['count'], 'words': 0})
+
     edges_out = sorted(edges_out, key=lambda x: x['docs'], reverse=True)[:max_number_of_nodes]
 
     # then gather data on the individual nodes
@@ -205,6 +217,9 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
         for idx, edge in enumerate(edges.values()):
             if idx % 1000 == 0:
                 print(idx, len(edges))
+            if edge['count'] < 5:
+                continue
+
             person1, person2 = edge['edge']
             if (person1.full_name in node_names_set and
                     person2.full_name in node_names_set):
@@ -214,8 +229,10 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
     else:
         edges_final = edges_out
 
-    store_network_for_visualization(nodes_out, edges_final, f'person_{network_name}',
-                                    f'person_{network_name}.json')
+    store_network_for_visualization(nodes_out, edges_final,
+                                    center_names=names,
+                                    network_name=f'person_{network_name}',
+                                    file_name=f'person_{network_name}.json')
 
 def search_possible_matches(name, people_db=None):
     """
@@ -259,41 +276,46 @@ def generate_network_lawyers(include_2nd_degree_connections=True):
     :return:
     """
 
-    names = ['Ahrensfeld, Thomas F',    # Philip Morris
-             'Holtzman, A',             # Philip Morris (Alexander)
-             'BRYANT,D',                # Brown & Williamson
-             'Haas, Frederick P.',      # Liggett & Myers
-             'Hetsko, Cyril F.',        # American Tobacco
-             'Roemer, Henry C. (Jack)', # R.J. Reynolds
-             'Stevens, Arthur J',       # Lorillard
-             'Yeaman, A',               # Brown & Williamson ??possibly also CTR??
-
-             'Shinn, William W',        # Shook, Hardy & Bacon (CTR law firm)
-             'Hardy, David Ross'        # Shook, Hardy & Bacon (CTR law firm)
+    names = ['Thomas F. Ahrensfeld',     # Philip Morris
+             'Alexander Holtzman',      # Philip Morris
+             'H. Debaun Bryant',         # Brown & Williamson
+             'Frederick P. Haas',        # Liggett & Myers
+             'Cyril F. Hetsko',          # American Tobacco
+             'Henry C. Roemer',          # R.J. Reynolds
+             'Arthur Joseph Stevens',   # Lorillard
+             'Addison Y. Yeaman',        # Brown & Williamson ??possibly also CTR??
+             'William W. Shinn',        # Shook, Hardy & Bacon (CTR law firm)
+             'David Ross Hardy'        # Shook, Hardy & Bacon (CTR law firm)
              ]
 
     generate_people_network(names=names, network_name='lawyers',
                             max_number_of_nodes=300,
                             include_2nd_degree_connections=include_2nd_degree_connections)
 
-def generate_network_research_directors():      # pylint: disable=C0103
+def generate_network_research_directors(include_2nd_degree_connections=True):# pylint: disable=C0103
     """
     Generates the network of industry research directors, ca. 1970
     """
 
     names = [
-        'Hughes, Ivor Wallace, Dr.',    # Brown & Williamson
-        'Senkus, M.',                   # R.J. Reynolds
-        'Spears, Alexander White, III', # Lorillard
-        'Wakeham, H',                   # Philip Morris
-
-        'Ramm, Henry H.',               # Council for Tobacco Research
-        'Hockett, Robert Casad, Ph.D.'  # Council for Tobacco Research
+        'Ivor Wallace Hughes',          # Brown & Williamson
+        'Murray Senkus',                # R. J. Reynolds
+        'Alexander White Spears',       # Lorillard
+        'Helmut R. Wakeham',            # Philip Morris
+        'Henry H. Ramm',                # Council for Tobacco Research
+        'Robert Casad Hockett'          # Council for Tobacco Research
     ]
 
     generate_people_network(names=names, network_name='research_directors',
-                            max_number_of_nodes=300)
+                            max_number_of_nodes=300,
+                            include_2nd_degree_connections=include_2nd_degree_connections)
 
 
 if __name__ == '__main__':
-    generate_network_lawyers()
+
+    # for match in search_possible_matches('hockett').most_common(10):
+    #     print()
+    #     print(match[0].full_name, match[1])
+    #     print(match[0].positions)
+    #     print(match[0].aliases)
+    generate_network_research_directors(include_2nd_degree_connections=True)

@@ -1,0 +1,16 @@
+
+.node{
+    stroke-width: 2px;
+}
+
+.node.degree_0{
+    stroke: white;
+}
+
+.node.degree_1{
+    stroke-width: 1px;
+}
+
+.node.degree_2{
+    stroke-width: 1px;
+}

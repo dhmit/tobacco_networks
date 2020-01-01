@@ -145,6 +145,31 @@ class PeopleDatabase:
             self.people = loaded_db.people
             self.alias_to_person_dict = loaded_db.alias_to_person_dict
 
+            self.add_manually_merged_names()
+
+    def add_manually_merged_names(self):
+        """
+        The automatic merging works reasonably well but in some cases, it is worth to merge
+        people by hand.
+        These manual merges are defined in MANUALLY_MERGED_NAMES in config.py
+        This script tries to add them
+        """
+
+        from name_disambiguation.config import MANUALLY_MERGED_NAMES
+
+        for person in MANUALLY_MERGED_NAMES:
+
+            for i in range(len(person['aliases_to_merge']) - 1):
+                alias1 = person['aliases_to_merge'][i]
+                alias2 = person['aliases_to_merge'][i + 1]
+                try:
+                    p1 = self.alias_to_person_dict[alias1]
+                    p2 = self.alias_to_person_dict[alias2]
+                    self.merge_two_persons(p1, p2, person['authoritative_name'])
+                except KeyError:
+                    print(f'Could not find {alias1} or {alias2} in people db')
+                    continue
+
     def create_positions_csv(self, out_file=Path('..', 'data', 'name_disambiguation',
                                                  'all_organizations.csv')):
         """
@@ -280,7 +305,7 @@ class PeopleDatabase:
         # if no merges could be made return True to indicate that merge process is finished
         return True
 
-    def merge_two_persons(self, person1, person2):
+    def merge_two_persons(self, person1, person2, authoritative_name=None):
         """
         Create a new person by merging data of person1 and person2, and replace person1 and
         person2 in the people db with the new person
@@ -288,20 +313,35 @@ class PeopleDatabase:
         :param person2: another person object to be merged
         :return:
         """
-        print("\nmerging", person1, person2)
 
         new_p = person1.copy()
 
-        for attr in ['first', 'middle']:
-            if len(getattr(person2, attr)) > len(getattr(person1, attr)):
-                setattr(new_p, attr, getattr(person2, attr))
+        if authoritative_name:
+            new_p.last = authoritative_name['last']
+            new_p.first = authoritative_name['first']
+            new_p.middle = authoritative_name['middle']
+
+            # TODO: create implementation without ugly default value
+            if 'affilation' in authoritative_name:
+                new_p.positions[authoritative_name['affiliation']] = 9999
+        else:
+            for attr in ['first', 'middle']:
+                if len(getattr(person2, attr)) > len(getattr(person1, attr)):
+                    setattr(new_p, attr, getattr(person2, attr))
 
         new_p.positions = person1.positions + person2.positions
         new_p.aliases = person1.aliases + person2.aliases
         new_p.count = person1.count + person2.count
 
+
+
         for alias in new_p.aliases:
             self.alias_to_person_dict[alias] = new_p
+            self.alias_to_person_dict[alias.upper()] = new_p
+        self.alias_to_person_dict[new_p.full_name] = new_p
+        self.alias_to_person_dict[new_p.full_name.upper()] = new_p
+
+
 
         try:
             self.people.remove(person1)
