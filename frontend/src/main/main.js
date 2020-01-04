@@ -10,7 +10,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { getCookie } from '../common'
 import * as d3 from 'd3';
 import { create_graph, update_graph} from './graph.js'
-import {update_node_degrees} from "./node_degree_calculation";
+import {update_node_degree_and_visibility} from "./node_degree_calculation";
 import './main.css';
 
 
@@ -247,7 +247,7 @@ class MainView extends React.Component {
                 mouseover_active: false,
                 show_info_panel: false,
                 searchbar_value: 'test',
-                current_center_node_names : []
+                selected_viz_degree: 2
             },  // initial configuration for the viz
             data: null,  // data for the viz
             data_bindings: {}, // data bindings for d3
@@ -276,6 +276,8 @@ class MainView extends React.Component {
      */
     handle_viz_events(event_name, data) { // eslint-disable-line no-unused-vars
 
+        console.log("viz event", event_name);
+
         if (event_name === 'update_data_bindings'){
             if (!data === null) {
                 console.log(data.clusters === this.state.data_bindings.clusters);
@@ -291,14 +293,16 @@ class MainView extends React.Component {
             // if a selection is already active, don't change to mouseover target
             if (!config.selection_active){
                 config.viz_update_func = 'update_focus';
-                const data = update_node_degrees({... this.state.data}, node.name);
+                const data = update_node_degree_and_visibility(
+                    {... this.state.data}, {... this.state.config}, node.name);
                 this.setState({data: data, config: config});
             }
 
         } else if (event_name === "mouseout") {
             if (!config.selection_active){
                 config.viz_update_func = 'update_focus';
-                const data = update_node_degrees({... this.state.data});
+                const data = update_node_degree_and_visibility(
+                    {... this.state.data}, {... this.state.config});
                 this.setState({data: data, config: config});
             }
         } else if (event_name === "click") {
@@ -306,16 +310,31 @@ class MainView extends React.Component {
 
             // select new person
             if (!config.selection_active || node.name !== this.state.config.selection_name){
+
+                // update center names to selected node
+                data = {... this.state.data};
+                // turning the next two lines into a one-liner gives an error. unclear why.
+                data.center_names = {};
+                data.center_names[node.name] = true;
+                this.setState({data: data});
+
                 config.selection_active = true;
                 config.selection_name = node.name;
                 config.show_info_panel = true;
                 config.searchbar_value = node.name;
-                data = update_node_degrees({...this.state.data}, node.name)
+                data = update_node_degree_and_visibility(
+                    {... this.state.data}, {... this.state.config}, node.name);
             } else {
+
+                data = {... this.state.data};
+                data.center_names = data.center_names_backup;
+                this.setState({data: data});
+
                 config.selection_active = false;
                 config.selection_name = undefined;
                 config.show_info_panel = false;
-                data = update_node_degrees({...this.state.data})
+                data = update_node_degree_and_visibility(
+                    {... this.state.data}, {... this.state.config});
             }
             this.setState({data: data, config: config});
         }
@@ -346,12 +365,14 @@ class MainView extends React.Component {
             config.selection_active = true;
             config.selection_name = search_string;
             config.show_info_panel = true;
-            const data = update_node_degrees({...this.state.data}, search_string);
+            const data = update_node_degree_and_visibility(
+                {... this.state.data}, {... this.state.config}, search_string);
             this.setState({data: data, config: config});
         } else if (action === 'clear') {
             config.selection_active = false;
             config.selection_name = undefined;
-            const data = update_node_degrees({...this.state.data});
+            const data = update_node_degree_and_visibility(
+                {... this.state.data}, {... this.state.config});
             this.setState({data: data, config: config});
         }
 
@@ -404,7 +425,8 @@ class MainView extends React.Component {
                     .json()
                     .then((data) => {
                         console.log("new data", data);
-                        data = update_node_degrees(data);
+                        // create a copy of the center names so we can restore them on unfocus.
+                        data.center_names_backup = {... data.center_names};
                         this.setState({data:data});
                         return true
                     })

@@ -1,16 +1,32 @@
 
 .node{
+    transition:visibility 0.3s linear,opacity 0.3s linear;
     stroke-width: 2px;
 }
 
-.node.degree_0{
-    stroke: white;
+.graph_link{
+
 }
 
-.node.degree_1{
-    stroke-width: 1px;
+.graph_link.degree_1{
+    stroke: #666666;
 }
 
-.node.degree_2{
-    stroke-width: 1px;
+.graph_link.degree_2{
+    stroke: #aaa9;
 }
+
+.graph_link.degree_3{
+    stroke: #aaa9;
+}
+
+
+.node_label{
+    /*opacity: 0.8;*/
+}
+
+.node_label_rect_background{
+    stroke-width: 3px;
+}
+
+

@@ -51,10 +51,21 @@ MANUALLY_MERGED_NAMES = [
         'authoritative_name': {'last': 'Ramm', 'first': 'Henry', 'middle': 'H'},
         'aliases_to_merge': ['RAMM HH', 'RAMM H, CTR', 'Ramm-HH Council For Tobacco Research']
     },
+
+    {
+        'authoritative_name': {'last': 'Roemer', 'first': 'Henry', 'middle': 'C',
+                               'affiliation': "R.J. Reynolds"},
+        'aliases_to_merge': ['ROEMER HC JR', 'Roemer, H']
+    },
     {
         'authoritative_name': {'last': 'Shinn', 'first': 'William', 'middle': 'W'},
         'aliases_to_merge': ['SHINN,WW', 'SHINN,W', 'SHINN,WW/SHOOK, HARDY & BACON',
                              'Shinn-WW, Shook Hardy']
+    },
+    {
+        'authoritative_name': {'last': 'Teague', 'first': 'Claude', 'middle': 'Edward',
+                               'affiliation': "R.J. Reynolds"},
+        'aliases_to_merge': ['TEAGUE CE JR', 'TEAGUE,C']
     },
     {
         'authoritative_name': {'last': 'Wakeham', 'first': 'Helmut', 'middle': 'R'},

@@ -182,24 +182,59 @@ class Person:
         Calculates and sets most_likely_org as the organization with the highest number of count
         If official_org=True, returns official name of most common organization that is in
         RAW_ORG_TO_CLEAN_ORG_DICT (if none of the raw orgs are in the dict, return the most common)
+
+
         :param official_org: if consider only orgs in RAW_ORG_TO_CLEAN_ORG_DICT
         :return: None
         """
-        if len(self.positions) == 0:
-            return 'no positions available'
-        else:
-            likely_position = self.positions.most_common(1)[0][0]
-            if official_org:
-                for name in self.positions.most_common():
-                    if name[0] in RAW_ORG_TO_CLEAN_ORG_DICT and name[0] != '@skip@':
-                        likely_position = RAW_ORG_TO_CLEAN_ORG_DICT[name[0]]
-                        break
-            if likely_position == "@skip@":
-                likely_position = 'no positions available'
-                if len(self.positions) > 1:
-                    print(self.positions)
 
-            return likely_position
+        if not official_org:
+            print("WARNING! most_likely_position should always be run with official_org=True, even"
+                  "just to correct spelling mistakes. Keeping around for compatibility and "
+                  "possibly to see what organizations our offical list misses.")
+
+        for position, position_count in self.positions.most_common():
+            # a single mention of an affiliation is not enough to count. need at least 2
+            if position_count == 1:
+                return 'no positions available'
+
+            # if we use the official orgs only and the position is in the official dict, then
+            # we update the position to the corrected version.
+            # otherwise, skip this position. w/o official position, just use the raw position.
+            if official_org:
+                if (position in RAW_ORG_TO_CLEAN_ORG_DICT and
+                        RAW_ORG_TO_CLEAN_ORG_DICT[position] != "@skip@"):
+                    return RAW_ORG_TO_CLEAN_ORG_DICT[position]
+                else:
+                    continue
+            else:
+                return position
+
+        # if nothing found, return nothing found
+        if len(self.positions) > 0:
+            for position, _ in self.positions.most_common():
+                if (position in RAW_ORG_TO_CLEAN_ORG_DICT and
+                    RAW_ORG_TO_CLEAN_ORG_DICT[position] == '@skip@'):
+                    continue
+                # else:
+                    # print(self.positions.most_common())
+
+        return 'no positions available'
+
+
+
+            # likely_position = self.positions.most_common(1)[0][0]
+            # if official_org:
+            #     for name in self.positions.most_common():
+            #         if name[0] in RAW_ORG_TO_CLEAN_ORG_DICT and name[0] != '@skip@':
+            #             likely_position = RAW_ORG_TO_CLEAN_ORG_DICT[name[0]]
+            #             break
+            # if likely_position == "@skip@":
+            #     likely_position = 'no positions available'
+            #     if len(self.positions) > 1:
+            #         print(self.positions)
+            #
+            # return likely_position
 
     @staticmethod
     def remove_privlog_info(name_raw):
@@ -387,7 +422,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly
         """
         # Also test Person constructor: use list as positions
-        self.assertEqual(Person(last="Teague", first="C", middle="E", positions=["JR"],
+        self.assertEqual(Person(last="Teague", first="C", middle="E", positions=Counter(),
                                 aliases=Counter(["TEAGUE CE JR"])),
                          Person(name_raw="TEAGUE CE JR"))
 
@@ -606,4 +641,5 @@ class TestOrgParser(unittest.TestCase):
 
 
 if __name__ == '__main__':
+
     unittest.main()

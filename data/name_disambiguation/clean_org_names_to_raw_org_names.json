@@ -5,17 +5,30 @@
         "R&D"
     ],
     "@skip@": [
-        "UNK",
-        "INFERRED",
-        "E-MAIL",
-        "MEMORANDUM",
-        "INC",
-        "HANDWRITTEN NOTES",
-        "HANDWRITTEN NOTE",
-        "LETTER",
-        "HANDWRITTEN NOTES OF COUNSEL",
+        "@skip@",
+
+        "AS TO MARGINALIA",
         "CONTRACTOR",
-        "DRAFT LETTER"
+        "DR",
+        "DRAFT LETTER",
+        "E-MAIL",
+        "ESQ",
+        "HANDWRITTEN NOTE",
+        "HANDWRITTEN NOTES",
+        "HANDWRITTEN NOTES OF COUNSEL",
+        "II",
+        "III",
+        "INC",
+        "INFERRED",
+        "JD",
+        "JR",
+        "LETTER",
+        "MA",
+        "MD",
+        "MEMORANDUM",
+        "PHD",
+        "SR",
+        "UNK"
     ],
     "Affinity Management Group": [
         "AFFINITY MANAGEMENT GROUP"
@@ -108,7 +121,8 @@
         "CORNELL UNIV"
     ],
     "Council for Tobacco Research": [
-        "CTR"
+        "CTR",
+        "COUNCIL FOR TOBACCO RESEARCH"
     ],
     "Covington & Burling": [
         "COVINGTON BURLING",

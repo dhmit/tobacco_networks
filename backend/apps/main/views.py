@@ -21,7 +21,7 @@ def get_network_data(request):
     """
 
     datasets = {
-        'lawyers': 'person_lawyers.json',
+        'lawyers': 'person_lawyers_including_2nd_degree_edges.json',
         'research_directors': 'person_research_directors_including_2nd_degree_edges.json',
         'sterling': 'person_sterling.json',
         'top_100_edges': 'top_100_edges.json',
@@ -47,18 +47,14 @@ def get_network_data(request):
     links = data['links']
     adjacent_nodes = {}
     for link in links:
-        link['degree'] = -1
         link['source'] = link['node1']
         link['target'] = link['node2']
-        adjacent_nodes[link['node1'].upper() + "-" + link['node2'].upper()] = True
-        adjacent_nodes[link['node2'].upper() + "-" + link['node1'].upper()] = True
+
     data["adjacent_nodes"] = adjacent_nodes
 
     clusters, nodes = get_clusters_data(nodes)
     data['clusters'] = clusters
     data['nodes'] = nodes
-
-
 
     return JsonResponse(data)
 

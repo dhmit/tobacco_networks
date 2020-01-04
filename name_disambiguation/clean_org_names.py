@@ -24,6 +24,11 @@ def get_clean_org_names(file_name=Path(DATA_PATH, 'name_disambiguation',
         for j in name_dict[official]:
             inv_name_dict[j] = official
         inv_name_dict[official] = official
+
+    # add all-caps versions of all keys so we catch both "Harvard" and "HARVARD"
+    for key, val in list(inv_name_dict.items()):
+        inv_name_dict[key.upper()] = val
+
     return inv_name_dict
 
 RAW_ORG_TO_CLEAN_ORG_DICT = get_clean_org_names()

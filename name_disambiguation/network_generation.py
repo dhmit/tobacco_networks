@@ -28,6 +28,8 @@ def load_1970s_network():       # pylint: disable=R0914
 
     network_path = Path('..', 'data', 'network_generation', 'network_1970s.pickle')
 
+    count_missing = 0
+
     try:
         with open(network_path, 'rb') as infile:
             return pickle.load(infile)
@@ -53,15 +55,20 @@ def load_1970s_network():       # pylint: disable=R0914
             doc_authors = []
             doc_recipients = []
             for person in parse_column_person(doc['au']) + parse_column_person(doc['au_person']):
-                try:
-                    doc_authors.append(people_db.alias_to_person_dict[person])
-                except KeyError:
-                    print(f"missing: {person}")
+
+                db_person = people_db.get_person_from_alias(person)
+                if db_person:
+                    doc_authors.append(db_person)
+                else:
+                    print(f"Missing: {person}")
+                    count_missing += 1
             for person in parse_column_person(doc['rc']) + parse_column_person(doc['rc_person']):
-                try:
-                    doc_recipients.append(people_db.alias_to_person_dict[person])
-                except KeyError:
+                db_person = people_db.get_person_from_alias(person)
+                if db_person:
+                    doc_recipients.append(db_person)
+                else:
                     print(f'Missing: {person}')
+                    count_missing += 1
 
             for author in doc_authors:
                 if author in nodes:
@@ -83,6 +90,8 @@ def load_1970s_network():       # pylint: disable=R0914
                         edges[edge]['count'] += 1
                     else:
                         edges[edge] = {'edge': edge, 'count': 1}
+
+        print(f'Total names missing: {count_missing}')
 
         with open(network_path, 'wb') as out:
             network = {'nodes': nodes, 'edges': edges}
@@ -157,16 +166,14 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
     people_db = PeopleDatabase()
     people_db.load_from_disk(Path(people_db_path))
 
-    for person in people_db.people:
-        people_db.alias_to_person_dict[person.full_name] = person
 
     # initialize the center group of people
     center_people = []
     for name in names:
-        try:
-            center_people.append(people_db.alias_to_person_dict[name])
-
-        except KeyError:
+        db_person = people_db.get_person_from_alias(name)
+        if db_person:
+            center_people.append(db_person)
+        else:
             print(f'Could not find {name}. Possible candidates: ')
             possible_matches = search_possible_matches(name[:5], people_db)
             for result in possible_matches.most_common(5):
@@ -186,16 +193,37 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
         if idx % 1000 == 0:
             print(idx, len(edges))
         person1, person2 = edge['edge']
+
+
+
         if (person1 in center_people or person2 in center_people) and edge['count'] > 1:
+
+            if person1.full_name.lower().find('teague') > -1 or person2.full_name.lower().find(
+                'teague') > -1:
+                embed()
+
             edges_out.append({'node1': person1.full_name, 'node2': person2.full_name,
                               'docs': edge['count'], 'words': 0})
+    c = Counter()
+    out = sorted(edges_out, key=lambda x: x['docs'], reverse=True)[:max_number_of_nodes]
+    for e in out:
+        c[e['node1']] += 1
+        c[e['node2']] += 1
+
+
+    embed()
 
     edges_out = sorted(edges_out, key=lambda x: x['docs'], reverse=True)[:max_number_of_nodes]
 
+
     # then gather data on the individual nodes
     for edge in edges_out:
-        person1 = people_db.alias_to_person_dict[edge['node1']]
-        person2 = people_db.alias_to_person_dict[edge['node2']]
+        person1 = people_db.get_person_from_alias(edge['node1'])
+        person2 = people_db.get_person_from_alias(edge['node2'])
+        if not person1:
+            embed()
+        if not person2:
+            embed()
         nodes_temp[person1] += edge['docs']
         nodes_temp[person2] += edge['docs']
 
@@ -248,9 +276,9 @@ def search_possible_matches(name, people_db=None):
         people_db.load_from_disk(Path(people_db_path))
 
     possible_matches = Counter()
-    for person in people_db.alias_to_person_dict:
+    for person in people_db._alias_to_person_dict:
         if person.lower().find(name.lower()) > -1:
-            person_obj = people_db.alias_to_person_dict[person]
+            person_obj = people_db._alias_to_person_dict[person]
             possible_matches[person_obj] = person_obj.count
 
     return possible_matches
@@ -311,11 +339,55 @@ def generate_network_research_directors(include_2nd_degree_connections=True):# p
                             include_2nd_degree_connections=include_2nd_degree_connections)
 
 
+def generate_network_whole_industry():
+    """
+    Generate a network where the nodes are not people but companies
+
+    :return:
+    """
+
+    # Load people db
+    people_db_path = Path('..', 'data', 'network_generation', 'people_db_1970s.pickle')
+    people_db = PeopleDatabase()
+    people_db.load_from_disk(Path(people_db_path))
+
+
+
+
+    # load the whole 1970s network
+    network = load_1970s_network()
+    edges = network['edges']
+
+    nodes_temp = Counter()
+    edges_out = []
+    nodes_out = []
+
+    c = Counter()
+
+    # first identify all the primary edges including at least one person from center_people
+    for idx, edge in enumerate(edges.values()):
+        if idx % 1000 == 0:
+            print(idx, len(edges))
+        person1, person2 = edge['edge']
+        c[person1.most_likely_position] += 1
+        c[person2.most_likely_position] += 1
+
+        if person1.full_name.lower().find('teague') > -1 or person2.full_name.lower().find(
+            'teague') > -1:
+            print('found')
+            print(person1.full_name, person2.full_name, edge['count'])
+        # if person1.most_likely_position
+
+    embed()
+
 if __name__ == '__main__':
 
-    # for match in search_possible_matches('hockett').most_common(10):
+    # for match in search_possible_matches('hetsko').most_common(10):
     #     print()
     #     print(match[0].full_name, match[1])
     #     print(match[0].positions)
     #     print(match[0].aliases)
-    generate_network_research_directors(include_2nd_degree_connections=True)
+
+    # generate_network_research_directors(include_2nd_degree_connections=True)
+    generate_network_lawyers(include_2nd_degree_connections=True)
+#     generate_network_whole_industry()

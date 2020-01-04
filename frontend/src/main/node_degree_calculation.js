@@ -1,53 +1,101 @@
-export function update_node_degrees(data, center_node_name){
+export function update_node_degree_and_visibility(data, config, center_node_name) {
 
-    console.log("Update degree", center_node_name);
-    console.log(data.center_names);
+    if (center_node_name === undefined){
+        data
+    }
 
-    // if center_node_name is undefined (no center node), set all node and link degrees
-    // to -1
+    console.log("Update degree. Center node:", center_node_name);
+    console.log(data);
+
+    data = update_node_degree(data, center_node_name);
+    data = update_node_visibility(data, config.selected_viz_degree, center_node_name);
+
+    console.log("data after updated degree", data);
+
+    return data
+
+}
 
 
 
-    let default_value = 2;
+function update_node_degree(data, center_node_name){
+    console.log("updating node degree", center_node_name);
 
+    let center_names = {... data.center_names};
+    if (center_node_name !== undefined){
+        center_names[center_node_name] = true
+    }
+
+    // first, set all degrees to 2
     data.nodes.forEach((d) => {
-        d.degree = default_value;
+        d.degree = 2;
     });
     data.links.forEach((d) => {
-        d.degree = default_value;
+        d.degree = 3;
     });
 
-
-    // if (center_node_name !== undefined){
-
     data.links.forEach((d) => {
-        // if (center_node_name === d.source.name){
-        // There has to be a better way to check if an object has a key.
-        if (d.source.name in data.center_names){
-            d.degree = 1;
+        if (d.source.name in center_names) {
+            d.degree = 2;
             d.source.degree = 1;
-            d.target.degree = 2;
-            if (d.target.name in data.center_names) {
+            if (d.target.name in center_names) {
                 d.target.degree = 1;
+                d.degree = 1;
             }
-        } else if (d.target.name in data.center_names) {
+        } else if (d.target.name in center_names) {
             d.target.degree = 1;
-            d.source.degree = 2;
+            d.degree = 2;
+        }
+
+        if (d.source.name === center_node_name || d.target.name === center_node_name){
             d.degree = 1;
         }
     });
 
-    if (center_node_name !== undefined) {
-        data.links.forEach((d) => {
-            if (d.source.name !== center_node_name && d.target.name !== center_node_name) {
-                d.degree = -1;
-                d.source.degree = -1;
-                d.target.degree = -1;
-            }
-        });
-    }
+    data.links.sort((a, b) => a.degree - b.degree);
+
+    // if (center_node_name !== undefined) {
+    //     data.links.forEach((d) => {
+    //         if (d.source.name !== center_node_name && d.target.name !== center_node_name) {
+    //             d.degree = -1;
+    //             d.source.degree = -1;
+    //             d.target.degree = -1;
+    //         }
+    //     });
+    // }
 
     //TODO: Handle visibility separate from degree
 
     return data
+}
+
+function update_node_visibility(data, viz_degree, center_node_name){
+
+    console.log(center_node_name);
+
+    data.nodes.forEach((d) => {
+
+        if (d.degree <= 1){
+            d.visibility = 'visible'
+        } else {
+            d.visibility = 'hidden'
+        }
+    });
+    data.links.forEach((d) => {
+        if (d.degree <= viz_degree * 2){
+            d.visibility = 'visible'
+        } else {
+            d.visibility = 'hidden'
+        }
+
+        if (d.source.name === center_node_name || d.target.name === center_node_name){
+            console.log({...d.source});
+            d.source.visibility = 'visible';
+            d.target.visibility = 'visible';
+            console.log({...d.source});
+        }
+    });
+
+    return data
+
 }

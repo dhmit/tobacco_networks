@@ -4,6 +4,8 @@
 import * as d3 from 'd3';
 import './graph.css';
 
+import {update_node_degree_and_visibility} from "./node_degree_calculation";
+
 // D3 code is much more readable with non-standard indentation,
 // so turning off standard eslint indent rules just for this file
 /* eslint indent: 0 */
@@ -28,6 +30,21 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("height", config.height)
             .attr("id", "graph_svg");
 
+    // to calculate node degrees and visibility, we need the data-bindings, so we're creating them
+    // here first, then we update the data with degree and visibility info, and then we use that
+    // info to set the attributes of the visualization
+
+    // Create links (they go to the background/bottom of the visualization
+    const links = svg
+        .append("g")
+            .attr("id", "graph_links")
+        .selectAll("line")
+            .data(data.links)
+        .enter()
+            .append("line");
+
+    // clusters are the affiliation groups, e.g. Philip Morris
+    // each consists of a group with one text element.
     const clusters = svg
         .append("g")
             .attr("id", "graph_clusters")
@@ -37,30 +54,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             .append("g")
                 .attr("id", (d) => `cluster_${d.name}`);
 
-
-    const link_width_scale = d3.scaleLinear()
-    .domain([0, d3.max(data['links'], function(d) { return d.docs})])
-    .range([0.5, 5]);
-
-    // Create links
-    const links = svg
-        .append("g")
-            .attr("id", "graph_links")
-        .selectAll("line")
-            .data(data.links)
-        .enter()
-            .append("line")
-            .attr("class", "graph_link")
-            .attr("stroke", "#aaa")
-            .attr("stroke-width", (d) => link_width_scale(d.docs));
-
-
-    const max_docs = d3.max(data['nodes'], function(d) { return d.docs; });
-    const node_size_scale = d3.scaleLinear()
-        .domain([0, max_docs])
-        .range([5, config.width * config.height / 80000]);
-
-    // node is an SVG g -- will contain circle + label
+    // node is an SVG g -- will contain circle + label (a group with a rect and a text element)
     const nodes = svg
         .append("g")
             .attr("id", "graph_nodes")
@@ -71,37 +65,165 @@ export function create_graph(el, data, config, handle_viz_events) {
             .attr("class", "graph_node")
             .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
 
+    // store data bindings and initialize force simulation
+    let data_bindings = {
+        'svg': svg,
+        'nodes': nodes,
+        'links': links,
+        'clusters': clusters
+    };
+
+    // initializing the force simulation connects the links and edges, i.e. we can modify
+    // node data through the links
+    // before this step, link.source/target is a string.
+    // after this step, it's a node and we can access its attributes e.g. with node.degree
+    let force_simulation = initialize_force_sim(config, data, data_bindings);
+
+    update_node_degree_and_visibility(data, config);
+
+    // // Set link attributes
+    // const link_width_scale_degree_1 = d3.scaleLinear()
+    //     .domain([0, d3.max(data['links'], function(d) { return d.docs})])
+    //     .range([2, 3]);
+    // const link_width_scale_degree_2 = d3.scaleLinear()
+    //     .domain([0, d3.max(data['links'], function(d) { return d.docs})])
+    //     .range([0.5, 2]);
+    // links
+    //     .attr("class", (d) => `graph_link degree_${d.degree}`)
+    //     .attr("stroke-width", (d) => {
+    //         if (d.degree === 1){
+    //             return link_width_scale_degree_1(d.docs);
+    //         } else {
+    //             return link_width_scale_degree_2(d.docs);
+    //         }
+    //     })
+    //     .attr('visibility', (d) => d.visibility);
+
+    // add node circle and labels
+    const max_docs = d3.max(data['nodes'], function(d) { return d.docs; });
+    const node_size_scale_degree_1 = d3.scaleLinear()
+        .domain([0, max_docs])
+        .range([20, config.width * config.height / 60000]);
+    const node_size_scale_degree_2 = d3.scaleLinear()
+        .domain([0, max_docs])
+        .range([5, config.width * config.height / 80000]);
+
+
+    // SR: ok. here's something stupid: each node consists of 4 element:
+    // - a background rect with stroke to outline the label
+    // - a circle for the node (with stroke)
+    // - a foreground rect, exactly like the background rect, except no stroke
+    // - a text element with the name
+    // the foreground rect is there so the stroke from the circle that would overlap with the text
+    // is hidden.
+    nodes
+        .append('rect')
+            .attr('class', 'node_label_rect_background')
+            .attr('visibility', (d) => d.visibility );
+
     nodes.append("circle")
         .attr("r", (d) => {
-            d.circle_radius = node_size_scale(d.docs);
-            return d.circle_radius;
+            let circle_radius;
+            if (d.degree === 1){
+                circle_radius = node_size_scale_degree_1(d.docs)
+            } else {
+                circle_radius = node_size_scale_degree_2(d.docs)
+            }
+            d.circle_radius = circle_radius;
+            return circle_radius;
         })
         .attr("x", (d) => data.clusters[d.cluster]['x_pos'])
         .attr("y", (d) => data.clusters[d.cluster]['y_pos'])
-        .attr("fill", (d) => data.clusters[d.cluster]['color']);
+        .attr('class', (d) => `node degree_${d.degree}` )
+        .attr('fill', (d) =>{
+            if (d.degree === 1){
+                return d3.interpolateLab('white', data.clusters[d.cluster].color)(0.3)
+            } else {
+                return data.clusters[d.cluster].color
+            }
+        })
+        .attr('stroke', (d) => {
+            if (d.degree === 1){
+                return data.clusters[d.cluster].color
+            } else {
+                return '#f2f2f3'
+            }
+        });
 
+    nodes
+        .append('rect')
+            .attr('class', 'node_label_rect_foreground')
+            .attr('visibility', (d) => d.visibility );
 
-
-
-    // Setup labels
-    const calc_label_pos = (d, i, nodes) => {
-        const label = nodes[i];
-        const r = node_size_scale(d.docs);
-        const h = label.getBBox().height;  // bounding box of the label
-        const w = label.getBBox().width;
-        // TODO: adjust position of the label based on radius of the circle
-        const shiftX = -w/2;
-        const shiftY = -h/2-r;
-        return `translate(${shiftX}, ${shiftY})`;
-    };
     nodes
         .append("text")
             .text((d) => d.name)
             .style("fill", "#555")
             .style("font-family", "Arial")
             .style("font-size", 12)
-            .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
-                .style("pointer-events", "none");
+            .attr("text-anchor", "middle")
+            .attr('alignment-baseline', 'central')
+            .attr('transform', (d) => {
+                if (d.degree === 1) {
+                    return 'translate(0, 0)'
+                } else {
+                    return 'translate(0, -20)'
+                }
+            })
+            // .attr("transform", (d, i, n) => calc_label_pos(d, i, n))
+            .style("pointer-events", "none")
+            .attr('visibility', (d) => d.visibility );
+
+    nodes.selectAll('rect')
+        .attr('rx', 3)
+        .attr('ry', 3)
+        .attr('x', (_, i, n) => {
+            // select the parent of the i-th node, which is the parent node group
+            const parent_node_group = d3.select(n[i].parentNode);
+            // then, get the bounding box of the text child element
+            // TODO: figure out a better way of getting the bbox.
+            const text_bbox = parent_node_group.selectAll('text').node().getBBox();
+            return text_bbox.x - 2
+        })
+        .attr('y', (d, i, n) => {
+            // now as an ugly oneliner
+            let y_pos = d3.select(n[i].parentNode).selectAll('text').node().getBBox().y - 2;
+            // 2nd degree labels should be above the node, not on the node
+            if (d.degree !== 1){
+                y_pos -= 20
+            }
+            return y_pos
+        })
+        .attr('width', (_, i, n) => {
+            // now as an ugly oneliner
+            return d3.select(n[i].parentNode).selectAll('text').node().getBBox().width + 4
+        })
+        .attr('height', (_, i, n) => {
+            // now as an ugly oneliner
+            return d3.select(n[i].parentNode).selectAll('text').node().getBBox().height + 4
+        })
+
+        .attr('fill', (d) => d3.interpolateLab('white', data.clusters[d.cluster].color)(0.3));
+
+    nodes.selectAll('.node_label_rect_background')
+        .attr('stroke', (d) => data.clusters[d.cluster].color);
+
+
+
+
+    // // Setup labels
+    // const calc_label_pos = (d, i, nodes) => {
+    //     const label = nodes[i];
+    //     const r = node_size_scale(d.docs);
+    //     const h = label.getBBox().height;  // bounding box of the label
+    //     const w = label.getBBox().width;
+    //     // TODO: adjust position of the label based on radius of the circle
+    //     const shiftX = -w/2;
+    //     const shiftY = -h/2-r;
+    //     return `translate(${shiftX}, ${shiftY})`;
+    // };
+
+
 
     clusters.append('text')
         .text((d) => d.name)
@@ -144,7 +266,7 @@ export function create_graph(el, data, config, handle_viz_events) {
     // d3.select(window).on("resize", resize);
 
     // send databindings back to react so they can be used later to update the chart
-    let data_bindings = {
+    data_bindings = {
         'svg': svg,
         'nodes': nodes,
         'links': links,
@@ -184,8 +306,6 @@ export function create_graph(el, data, config, handle_viz_events) {
     // n.b. this doesn't actually render the sim - we do that below
     // by adding nodes to the svg and updating their position in render_simulation
 
-
-    let force_simulation = initialize_force_sim(config, data, data_bindings);
 
     // run 400 ticks before displaying the result. That way, the simulation is mostly settled
     // but still slightly moving.
@@ -314,6 +434,36 @@ function render_simulation(config, data, data_bindings) {
             return d3.mean(cluster_centers[d.id]['x_pos'])
         })
         .attr('y', (d) => d3.mean(cluster_centers[d.id]['y_pos']));
+
+    const link_width_scale_degree_1 = d3.scaleLinear()
+        .domain([0, d3.max(data['links'], function(d) { return d.docs})])
+        .range([2, 3]);
+    const link_width_scale_degree_2 = d3.scaleLinear()
+        .domain([0, d3.max(data['links'], function(d) { return d.docs})])
+        .range([0.5, 2]);
+
+    data_bindings.links
+        .attr("class", (d) => `graph_link degree_${d.degree}`)
+        .attr("stroke-width", (d) => {
+            if (d.degree === 1){
+                return link_width_scale_degree_1(d.docs);
+            } else {
+                return link_width_scale_degree_2(d.docs);
+            }
+        })
+        .attr('visibility', (d) => d.visibility);
+
+    // const max_docs = d3.max(data['nodes'], function(d) { return d.docs; });
+    // const node_size_scale_degree_1 = d3.scaleLinear()
+    //     .domain([0, max_docs])
+    //     .range([20, config.width * config.height / 60000]);
+    // const node_size_scale_degree_2 = d3.scaleLinear()
+    //     .domain([0, max_docs])
+    //     .range([5, config.width * config.height / 80000]);
+
+    data_bindings.nodes.selectAll('rect,text')
+        .attr('visibility', (d) => d.visibility );
+
 }
 
 function initialize_force_sim(config, data, data_bindings) {
@@ -452,48 +602,71 @@ export function update_graph(el, data, config, data_bindings, action) {
 
         console.log("update focus");
 
-        const max_docs = d3.max(data['nodes'], function(d) { return d.docs; });
-        const node_size_scale = d3.scaleLinear()
-            .domain([0, max_docs])
-            .range([5, config.width * config.height / 80000]);
+        const link_width_scale_degree_1 = d3.scaleLinear()
+            .domain([0, d3.max(data['links'], function(d) { return d.docs})])
+            .range([2, 3]);
+        const link_width_scale_degree_2 = d3.scaleLinear()
+            .domain([0, d3.max(data['links'], function(d) { return d.docs})])
+            .range([0.5, 2]);
+        data_bindings.links.transition('link_strokes').duration(1000)
+            .attr("stroke-width", (d) => {
+                if (d.degree === 1){
+                    return link_width_scale_degree_1(d.docs);
+                } else {
+                    return link_width_scale_degree_2(d.docs);
+                }
+            });
+        data_bindings.links
+            .attr("class", (d) => `graph_link degree_${d.degree}`);
 
-        data_bindings.nodes
-            .style('opacity', (d) =>{
-            //data_bindings.nodes.style('opacity', (d) => {
-            if (d.degree === -1){ return 0 } else { return 1}
-        });
+        data_bindings.nodes.selectAll('rect,text').transition('node_labels').duration(1000)
+            .attr('visibility', (d) => d.visibility );
+
+
+//        render_simulation(config, data, data_bindings);
+
+        // const max_docs = d3.max(data['nodes'], function(d) { return d.docs; });
+        // const node_size_scale = d3.scaleLinear()
+        //     .domain([0, max_docs])
+        //     .range([5, config.width * config.height / 80000]);
+        //
+        // data_bindings.nodes
+        //     .style('opacity', (d) =>{
+        //     //data_bindings.nodes.style('opacity', (d) => {
+        //     if (d.degree === -1){ return 0 } else { return 1}
+        // });
 
         // data_bindings.nodes.selectAll('circle')
         //     .attr('class', (d) => `node_degree_${d.degree}`);
 
-        data_bindings.nodes.selectAll('circle').transition().duration(1000)
-            .attr('r', (d) => {
-                let radius = node_size_scale(d.docs);
-                if (d.degree === 0) { return 20} else {return radius}
-            })
-            .attr('class', (d) => `node degree_${d.degree}`)
-
-            .attr('fill', (d) => {
-                if(d.degree === 0 || d.degree === 1){
-                    return data.clusters[d.cluster].color
-                } else {
-                    return 'white'
-                }
-            })
-            .attr('stroke', (d) =>{
-                if(d.degree === 0 || d.degree === 1){
-                    return 'white'
-                } else {
-                    return data.clusters[d.cluster].color
-                }
-            });
-
-
+        // data_bindings.nodes.selectAll('circle').transition().duration(1000)
+        //     .attr('r', (d) => {
+        //         let radius = node_size_scale(d.docs);
+        //         if (d.degree === 0) { return 20} else {return radius}
+        //     })
+        //     .attr('class', (d) => `node degree_${d.degree}`)
+        //
+        //     .attr('fill', (d) => {
+        //         if(d.degree === 0 || d.degree === 1){
+        //             return data.clusters[d.cluster].color
+        //         } else {
+        //             return 'white'
+        //         }
+        //     })
+        //     .attr('stroke', (d) =>{
+        //         if(d.degree === 0 || d.degree === 1){
+        //             return 'white'
+        //         } else {
+        //             return data.clusters[d.cluster].color
+        //         }
+        //     });
 
 
-        data_bindings.links.transition().duration(500).style('opacity', (d) =>{
-            if (d.degree === -1){return 0 } else {return 1}
-        });
+
+
+        // data_bindings.links.transition().duration(500).style('opacity', (d) =>{
+        //     if (d.degree === -1){return 0 } else {return 1}
+        // });
 
         // update_focused_node(el, data, config, data_bindings);
     } else if (action === "cluster_nodes") {

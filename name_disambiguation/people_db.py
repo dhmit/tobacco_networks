@@ -28,7 +28,7 @@ class PeopleDatabase:
         Intiailizes an empty PeopleDatabase
         """
         self.people = set()
-        self.alias_to_person_dict = {}
+        self._alias_to_person_dict = {}
 
     def add_person_raw(self, name_raw: str, count=1, position=None):
         """
@@ -43,9 +43,10 @@ class PeopleDatabase:
             else:
                 positions = None
             new_p = Person(name_raw=name_raw, count=count, positions=Counter(positions))
-            if name_raw in self.alias_to_person_dict:
-                existing_p = self.alias_to_person_dict[name_raw]
 
+            # if the raw name is already in the people_db, merge the entries
+            existing_p = self.get_person_from_alias(name_raw)
+            if existing_p:
                 # remove person temporarily as the hash value will change with the updates
                 self.people.remove(existing_p)
                 existing_p.positions += new_p.positions
@@ -53,11 +54,16 @@ class PeopleDatabase:
 #                    existing_p.positions += Counter([position])
                 existing_p.aliases += new_p.aliases
                 existing_p.count += new_p.count
-                self.alias_to_person_dict[name_raw.upper()] = existing_p
+
+                self.add_alias_to_alias_to_person_dict(name_raw, existing_p)
+                if not self.get_person_from_alias(existing_p.full_name):
+                    self.add_alias_to_alias_to_person_dict(existing_p.full_name, existing_p)
                 self.people.add(existing_p)
             else:
                 self.people.add(new_p)
-                self.alias_to_person_dict[name_raw.upper()] = new_p
+                self.add_alias_to_alias_to_person_dict(name_raw, new_p)
+                if not self.get_person_from_alias(new_p.full_name):
+                    self.add_alias_to_alias_to_person_dict(new_p.full_name, new_p)
 
         except IndexError:
             print(f"Could not parse name_raw {name_raw} to Person.")
@@ -112,16 +118,16 @@ class PeopleDatabase:
         return person_counter
 
 
-    def get_alias_to_person_dict(self):
-        """
-        Returns a dict that corresponds aliases to person objects
-        :return: dict
-        """
-        alias_to_person = {}
-        for person in self.people:
-            for alias in person.aliases:
-                alias_to_person[alias] = person
-        return alias_to_person
+    # def get_alias_to_person_dict(self):
+    #     """
+    #     Returns a dict that corresponds aliases to person objects
+    #     :return: dict
+    #     """
+    #     alias_to_person = {}
+    #     for person in self.people:
+    #         for alias in person.aliases:
+    #             alias_to_person[alias] = person
+    #     return alias_to_person
 
     def store_to_disk(self, file_path: Path):
         """
@@ -143,9 +149,59 @@ class PeopleDatabase:
         with open(str(file_path), 'rb') as infile:
             loaded_db = pickle.load(infile)
             self.people = loaded_db.people
-            self.alias_to_person_dict = loaded_db.alias_to_person_dict
+            self._alias_to_person_dict = {}
+            for person in self.people:
+                for alias in person.aliases.keys():
+                    self.add_alias_to_alias_to_person_dict(alias, person)
+                    if not self.get_person_from_alias(person.full_name):
+                        self.add_alias_to_alias_to_person_dict(person.full_name, person)
 
             self.add_manually_merged_names()
+
+
+    def add_alias_to_alias_to_person_dict(self, alias: str, person: Person):
+        """
+        Adds an alias to the _alias_to_person_dict, making the alias lower case and removing
+        white space
+        so far, adding and looking up has been done directly with the dict but capitalization is
+        inconsistent, so we missed some important matches.
+
+        :param alias: str
+        :param person: Person
+        :return:
+        """
+        self._alias_to_person_dict[alias.lower().replace(' ', '')] = person
+
+    def remove_alias_to_alias_to_person_dict(self, alias: str):
+        """
+        Removes an alias from the alias_to_person_dict
+
+        :param alias: str
+        :return:
+        """
+
+        del self._alias_to_person_dict[alias.lower().replace(' ', '')]
+
+    def get_person_from_alias(self, alias: str):
+        """
+        loads a Person object by alias
+        If it doesn't find a person under the alias, returns None
+
+        :param alias: str
+        :return:
+        """
+
+        alias = alias.lower().replace(' ', '')
+        if alias in self._alias_to_person_dict:
+
+            names_to_skip = ['ctr', 'ftc', 'rjr', 'unk', 'b&w', 'inc', 't.i.']
+            if alias in names_to_skip:
+                return None
+            else:
+                return self._alias_to_person_dict[alias]
+        else:
+            return None
+
 
     def add_manually_merged_names(self):
         """
@@ -163,9 +219,10 @@ class PeopleDatabase:
                 alias1 = person['aliases_to_merge'][i]
                 alias2 = person['aliases_to_merge'][i + 1]
                 try:
-                    p1 = self.alias_to_person_dict[alias1]
-                    p2 = self.alias_to_person_dict[alias2]
-                    self.merge_two_persons(p1, p2, person['authoritative_name'])
+                    p1 = self.get_person_from_alias(alias1)
+                    p2 = self.get_person_from_alias(alias2)
+                    if p1 and p2:
+                        self.merge_two_persons(p1, p2, person['authoritative_name'])
                 except KeyError:
                     print(f'Could not find {alias1} or {alias2} in people db')
                     continue
@@ -321,45 +378,43 @@ class PeopleDatabase:
             new_p.first = authoritative_name['first']
             new_p.middle = authoritative_name['middle']
 
+
             # TODO: create implementation without ugly default value
-            if 'affilation' in authoritative_name:
+            if 'affiliation' in authoritative_name:
                 new_p.positions[authoritative_name['affiliation']] = 9999
+
         else:
             for attr in ['first', 'middle']:
                 if len(getattr(person2, attr)) > len(getattr(person1, attr)):
                     setattr(new_p, attr, getattr(person2, attr))
 
-        new_p.positions = person1.positions + person2.positions
+        self.remove_alias_to_alias_to_person_dict(person1.full_name)
+        if person1.full_name.lower().replace(' ', '') != person2.full_name.lower().replace(' ', ''):
+            self.remove_alias_to_alias_to_person_dict(person2.full_name)
+
+        new_p.positions += person1.positions + person2.positions
         new_p.aliases = person1.aliases + person2.aliases
         new_p.count = person1.count + person2.count
 
-
-
         for alias in new_p.aliases:
-            self.alias_to_person_dict[alias] = new_p
-            self.alias_to_person_dict[alias.upper()] = new_p
-        self.alias_to_person_dict[new_p.full_name] = new_p
-        self.alias_to_person_dict[new_p.full_name.upper()] = new_p
+            self.add_alias_to_alias_to_person_dict(alias, new_p)
+        self.add_alias_to_alias_to_person_dict(new_p.full_name, new_p)
+
+        self.people.remove(person1)
+        self.people.remove(person2)
+        self.people.add(new_p)
 
 
-
-        try:
-            self.people.remove(person1)
-            self.people.remove(person2)
-            self.people.add(new_p)
-        except KeyError:
-            embed()
-
-    def set_people_position(self, official_org=True):
-        """
-        For each Person object in the people db, set its position as the most appeared
-        organization name
-        If official_org=True, only consider most common organization that is in
-        RAW_ORG_TO_CLEAN_ORG_DICT (if none of the raw orgs are in the dict, return the most common)
-        :return:
-        """
-        for person in self.people:
-            person.set_likely_position(official_org)
+    # def set_people_position(self, official_org=True):
+    #     """
+    #     For each Person object in the people db, set its position as the most appeared
+    #     organization name
+    #     If official_org=True, only consider most common organization that is in
+    #     RAW_ORG_TO_CLEAN_ORG_DICT (if none of the raw orgs are in the dict, return the most common)
+    #     :return:
+    #     """
+    #     for person in self.people:
+    #         person.set_likely_position(official_org)
 
 
 class TestPeopleDB(unittest.TestCase):
@@ -391,7 +446,7 @@ class TestPeopleDB(unittest.TestCase):
         self.people_db.merge_duplicates()
         self.assertEqual(len(self.people_db), 3)
         self.assertEqual(len(self.people_db),
-                         len(set(self.people_db.alias_to_person_dict.values())))
+                         len(set(self.people_db._alias_to_person_dict.values())))
 
     def test_merge2(self):
         """
@@ -404,21 +459,19 @@ class TestPeopleDB(unittest.TestCase):
                      'Dunn, Frank W']:
             people_db.add_person_raw(name, 1)
         people_db.merge_duplicates()
-        print(people_db.people)
-        print("Here", len(people_db))
         self.assertEqual(len(people_db), 4)
-        self.assertEqual(len(people_db), len(set(people_db.alias_to_person_dict.values())))
+        self.assertEqual(len(people_db), len(set(people_db._alias_to_person_dict.values())))
 
 
 if __name__ == '__main__':
 
-    # people_db = PeopleDatabase()
-    # for initial_name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan', 'Dunn, WL',
-    #                      'Dunn, William L', 'Garcia, Raquel']:
-    #     people_db.add_person_raw(initial_name, 1)
-    # people_db.merge_duplicates()
-    # print(len(people_db))
-    # print(set(people_db.alias_to_person_dict.values()))
-    # embed()
+    people_db = PeopleDatabase()
+    for initial_name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan', 'Dunn, WL',
+                         'Dunn, William L', 'Garcia, Raquel']:
+        people_db.add_person_raw(initial_name, 1)
+    people_db.merge_duplicates()
+    print(len(people_db))
+    print(set(people_db._alias_to_person_dict.values()))
+
 
     unittest.main()
