@@ -13,7 +13,7 @@ from pathlib import Path
 from nameparser.config import CONSTANTS  # pylint: disable=C0411
 
 from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
-from name_disambiguation.config import COMPANY_ABBREVIATIONS_TO_SKIP
+from name_disambiguation.config import COMPANY_ABBREVIATIONS_TO_SKIP, MANUALLY_MERGED_NAMES
 from name_disambiguation.person import Person
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
@@ -252,8 +252,6 @@ class PeopleDatabase:
         This script tries to add them
         """
 
-        from name_disambiguation.config import MANUALLY_MERGED_NAMES
-
         for person in MANUALLY_MERGED_NAMES:
 
             for i in range(len(person['aliases_to_merge']) - 1):
@@ -438,7 +436,7 @@ class PeopleDatabase:
 
                 # p1/2_idx indicate the index of the person. If they are the same, we are dealing
                 # with the same person and should skip.
-                if person1_idx == person2_idx:                                    # pylint: disable=R1724
+                if person1_idx == person2_idx:                               # pylint: disable=R1724
                     continue
 
                 # If p1 and person2 share at least one alias, we can merge them
