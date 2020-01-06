@@ -55,7 +55,6 @@ class ModelsTests(TestCase):
                                  )
         DjangoPerson.objects.get(last="TEAGUE", first="C", middle="E",
                                  full_name="C E TEAGUE",
-                                 most_likely_org="JR",
                                  positions=json.dumps(Counter({"JR": 3})),
                                  aliases=json.dumps(Counter({"TEAGUE CE JR": 3})),
                                  count=3

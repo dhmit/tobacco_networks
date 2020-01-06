@@ -281,7 +281,8 @@ class PeopleDatabase:
                         self.people.add(person1)
 
                 else:
-                    print(f'Could not find {alias1} or {alias2} in people db')
+                    # print(f'Could not find {alias1} or {alias2} in people db')
+                    pass
 
     def create_positions_csv(self, out_file=Path('..', 'data', 'name_disambiguation',
                                                  'all_organizations.csv')):
@@ -351,6 +352,14 @@ class PeopleDatabase:
             self.manually_merge_db()
 
     def manually_merge_db(self):
+        """
+        Manually merge the names in the database.
+        Allows user to merge, for example, "Kornegay, Horace A." with "Kornegay H.", which the
+        automated merger does not do.
+        Relies on user input -> use only for small people databases.
+
+        :return:
+        """
 
         last_names = set()
         for person in self.people:
@@ -361,9 +370,12 @@ class PeopleDatabase:
             self.manually_merge_last_name(last_name)
 
     def manually_merge_last_name(self, last_name):
+        """
+        manually merges everyone in the database with a given last name.
 
-        # if last_name.lower() != 'kornegay':
-        #     return
+        :param last_name: str
+        :return:
+        """
 
         while True:
             candidates = []
@@ -394,8 +406,8 @@ class PeopleDatabase:
                     print("new", new_p)
                     breaking = False
                     break
-                elif selection == 'n':
-                    pass
+                if selection == 'n':
+                    breaking = True
                 else:
                     breaking = False
 
@@ -580,8 +592,9 @@ class TestPeopleDB(unittest.TestCase):
 
         self.people_db.merge_duplicates()
         self.assertEqual(len(self.people_db), 3)
-        self.assertEqual(len(self.people_db),
-                         len(set(self.people_db._alias_to_person_dict.values())))
+
+        alias_set = len(set(self.people_db._alias_to_person_dict.values())) # pylint: disable=W0212
+        self.assertEqual(len(self.people_db), alias_set)
 
     def test_merge2(self):
         """
@@ -593,24 +606,11 @@ class TestPeopleDB(unittest.TestCase):
                      'Dunn, William L', 'Dunn,WL', 'DUNN,WL Jr', 'DUNN, WL', 'Dunn, Frank',
                      'Dunn, Frank W']:
             people_db_test.add_person_raw(name, 1)
-        people_db.merge_duplicates()
-        self.assertEqual(len(people_db), 4)
-        self.assertEqual(len(people_db),
-                         len(set(people_db._alias_to_person_dict.values()))) # pylint: disable=W0212
+        people_db_test.merge_duplicates()
+        self.assertEqual(len(people_db_test), 4)
+        alias_set = len(set(self.people_db._alias_to_person_dict.values()))  # pylint: disable=W0212
+        self.assertEqual(len(people_db_test), alias_set)
 
 
 if __name__ == '__main__':
-
-    # people_db = PeopleDatabase()
-    # for initial_name in ['Dunn, WL', 'Garcia, Raquel', 'Risi, Stephan', 'Dunn, WL',
-    #                      'Dunn, William L', 'Garcia, Raquel']:
-    #     people_db.add_person_raw(initial_name, 1)
-    # people_db.merge_duplicates()
-    # print(len(people_db))
-    # print(set(people_db._alias_to_person_dict.values()))
-
-    people_db = PeopleDatabase()
-    people_db.parse_from_csv(csv_path=Path('..', 'data', 'documents', 'docs_1970s_all.csv'))
-
-
-    # unittest.main()
+    unittest.main()

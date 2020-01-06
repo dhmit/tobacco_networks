@@ -8,8 +8,6 @@ import re
 import unittest
 from collections import Counter
 
-from IPython import embed
-
 from nameparser import HumanName
 from nameparser.config import CONSTANTS
 from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
@@ -30,7 +28,8 @@ class Person:
         aliases (Counter of str): counter of raw names that correspond to the person
         count (int): number of times the person appeared in the data
     """
-    def __init__(self, name_raw=None, last='', first='', middle='',   # pylint: disable=R0913,W0212
+    def __init__(self, name_raw=None, last='', first='',    # pylint: disable=R0912,R0913,W0212
+                 middle='',
                  positions=None, aliases=None, count=1, docs_authored=None, docs_received=None):
         """
         Returns a person object
@@ -234,8 +233,8 @@ class Person:
                     continue
                 if len(position) < 5:
                     continue
-                else:
-                    return f'                                            {position.upper()}'
+
+                return f'                                            {position.upper()}'
 
 
         return 'no positions available'
@@ -513,6 +512,11 @@ class TestNameChecker(unittest.TestCase):
     Tests the check_if_this_person_looks_valid test
     """
     def test_check_if_this_person_looks_valid(self):        # pylint: disable=C0103
+        """
+        ibid.
+
+        :return:
+        """
         outcomes_and_names = [
             (True, Person(last='PEPPLES', first='E')),
 
@@ -552,7 +556,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly
         """
         # Also test Person constructor: use list as positions
-        self.assertEqual(Person(last="Teague", first="C", middle="E", positions=Counter(),
+        self.assertEqual(Person(last="Teague", first="C", middle="E", positions=Counter({'JR': 1}),
                                 aliases=Counter(["TEAGUE CE JR"])),
                          Person(name_raw="TEAGUE CE JR"))
 
@@ -771,19 +775,4 @@ class TestOrgParser(unittest.TestCase):
 
 
 if __name__ == '__main__':
-
-    n = 'PEPPLES E, BW'
-    # n = 'McTague-FL-Jr'
-    print('full', n)
-    p = Person(n)
-    print('First:  ', p.first)
-    print('Middle: ', p.middle)
-    print('Last:   ', p.last)
-    print(p)
-
-    e = Person.extract_raw_org_names_from_name(n)
-    print(e)
-    embed()
-    Person(name_raw='US HOUSE COMM ON INTERSTATE AND FOREIGN COMMERCE')
-
     unittest.main()

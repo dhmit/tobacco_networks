@@ -6,15 +6,13 @@ Involve taking the documents (originally from CSV) and extract authors, organiza
 and recipients
 Also involve converting organization names to their official, clean names
 """
-import time
 import json
-from pathlib import Path
+import time
 import unittest
-from collections import Counter
+
 import pandas as pd
-from name_disambiguation.person import Person
+
 from name_disambiguation.people_db import PeopleDatabase
-from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 
 def merge_names_from_json_file(json_name_file, people_db_pickle_file):
@@ -45,77 +43,6 @@ def merge_names_from_json_file(json_name_file, people_db_pickle_file):
 
     people_db.store_to_disk(people_db_pickle_file)
     print("Merging names took", time.time() - initial_time)
-
-
-def parse_doc_metadata_csv_to_people_db(csv_path, people_db=None, output_people_db_path=None): #
-    # pylint: disable=C0103
-    """
-    Parses the metadata for each document in a csv of tobacco document metadata
-
-    For each document belonging to a certain company,
-    finds Person that that document author alias maps to,
-    and adds that company to the position counter of that Person
-
-     Goes through documents and updates authors/recipients' positions
-     based on organization associated with document
-
-     Adds people to db_current if their alias is associated with a doc but is not in
-     db_current yet
-
-     Ignores:
-         organizations not in RAW_ORG_TO_CLEAN_ORG_DICT
-         docs with more than 1 organization
-         docs with more than 4 recipients
-         docs with no people associated with them
-
-
-    :param csv_path: Path
-    :param people_db: PeopleDatabase that information will be added to
-    :return:
-    """
-
-    if not people_db:
-        people_db = PeopleDatabase()
-
-    # get lists of dicts for authors and recipients. each of them has 3 fields:
-    # general, person, organization
-    people_dicts = get_au_and_rc_by_document(csv_path, return_type='both')
-
-    print("p dicts", len(people_dicts))
-
-
-    for idx, person in enumerate(people_dicts):
-        if idx % 100 == 0:
-            print(idx, len(people_db))
-
-        orgs = set()
-        for org in person['organization']:
-            if org not in RAW_ORG_TO_CLEAN_ORG_DICT:
-                continue
-            orgs.add(RAW_ORG_TO_CLEAN_ORG_DICT[org])
-
-        if len(orgs) != 1:
-            continue
-        org = list(orgs)[0]
-        aliases = Counter(person['person'])
-        aliases = aliases + Counter(person['general'])
-        if not aliases or len(aliases) >= 4:
-            continue
-
-        for alias in aliases:
-            if alias not in people_db.alias_to_person_dict:
-                person = Person(name_raw=alias, count=aliases[alias])
-                person.positions = Counter([org])
-                people_db.people.add(person)
-                people_db.alias_to_person_dict[alias] = person
-            else:
-                people_db.alias_to_person_dict[alias].positions[org] += 1
-                people_db.alias_to_person_dict[alias].count += 1
-                people_db.alias_to_person_dict[alias].aliases[alias.upper()] += 1
-
-    people_db.merge_duplicates()
-
-    return people_db
 
 
 def get_au_and_rc_by_document(path, return_type='both') -> list:
@@ -193,40 +120,6 @@ def parse_column_org(column_org):
                     organizations.append(name_split_comma)
 
     return organizations
-
-
-class TestAddPositions(unittest.TestCase):
-    """
-    Tests adding positions to people in a people database
-    """
-
-    def test_parse_doc_metadata_csv(self):
-        """
-        Test add_au_and_rc_function
-        """
-
-        people_db = PeopleDatabase()
-        csv_path = Path('..', 'data', 'name_disambiguation', 'test_docs.csv')
-        people_db = parse_doc_metadata_csv_to_people_db(csv_path, people_db=people_db)
-
-        expected_people_db = PeopleDatabase()
-        raquel = Person('Garcia, Raquel', count=1)
-        raquel.positions = Counter({"British American Tobacco": 1})
-        raquel.aliases = Counter({'GARCIA, RAQUEL': 1})
-        expected_people_db.people.add(raquel)
-
-        dunn = Person('Dunn, WL', count=1)
-        dunn.positions = Counter({"British American Tobacco": 1})
-        dunn.aliases = Counter({'DUNN, WL': 1})
-        expected_people_db.people.add(dunn)
-
-        stephan = Person('Risi, Stephan', count=2)
-        stephan.positions = Counter({"Philip Morris": 2})
-        stephan.aliases = Counter({'RISI, STEPHAN': 2})
-        expected_people_db.people.add(stephan)
-
-
-        self.assertEqual(people_db, expected_people_db)
 
 
 if __name__ == '__main__':
