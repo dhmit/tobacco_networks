@@ -4,16 +4,17 @@ The People Database provides a class to add and merge persons
 
 import copy
 import csv
+import itertools
 import pickle
 import unittest
 from collections import Counter, defaultdict
 from pathlib import Path
-from IPython import embed
+
 from nameparser.config import CONSTANTS  # pylint: disable=C0411
+
 from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
-from name_disambiguation.person import Person
 from name_disambiguation.config import COMPANY_ABBREVIATIONS_TO_SKIP
-import itertools
+from name_disambiguation.person import Person
 
 CONSTANTS.titles.remove(*CONSTANTS.titles)
 
@@ -69,9 +70,9 @@ class PeopleDatabase:
                 self.people.add(existing_p)
 
                 # add any new organizations to the raw_org_to_clean_dict
-                for position in existing_p.positions:
-                    if not position in self.raw_org_to_clean_org_dict:
-                        self.raw_org_to_clean_org_dict[position] = position
+                for pos in existing_p.positions:
+                    if not pos in self.raw_org_to_clean_org_dict:
+                        self.raw_org_to_clean_org_dict[pos] = pos
 
             else:
                 self.people.add(new_p)
@@ -79,9 +80,9 @@ class PeopleDatabase:
                 if not self.get_person_from_alias(new_p.full_name):
                     self.add_alias_to_alias_to_person_dict(new_p.full_name, new_p)
                 # add any new organizations to the raw_org_to_clean_dict
-                for position in new_p.positions:
-                    if not position in self.raw_org_to_clean_org_dict:
-                        self.raw_org_to_clean_org_dict[position] = position
+                for pos in new_p.positions:
+                    if not pos in self.raw_org_to_clean_org_dict:
+                        self.raw_org_to_clean_org_dict[pos] = pos
 
         except IndexError:
             print(f"Could not parse name_raw {name_raw} to Person.")
@@ -120,9 +121,9 @@ class PeopleDatabase:
         Copies a people_db object
         :return: a copied people_db object
         """
-        people_db = PeopleDatabase()
-        people_db.people = copy.deepcopy(self.people)
-        return people_db
+        people_db_copy = PeopleDatabase()
+        people_db_copy.people = copy.deepcopy(self.people)
+        return people_db_copy
 
     @property
     def counter(self):
@@ -184,8 +185,9 @@ class PeopleDatabase:
                 add_person = True
                 for alias in person.aliases.keys():
                     if (
-                        alias.lower().replace(' ', '') in COMPANY_ABBREVIATIONS_TO_SKIP or
-                        person.full_name.lower().replace(' ', '') in COMPANY_ABBREVIATIONS_TO_SKIP
+                            alias.lower().replace(' ', '') in COMPANY_ABBREVIATIONS_TO_SKIP or
+                            person.full_name.lower().replace(' ', '') in
+                            COMPANY_ABBREVIATIONS_TO_SKIP
                     ):
                         add_person = False
                         break
@@ -203,7 +205,7 @@ class PeopleDatabase:
             self.generate_alias_to_person_dict()
 
 
-    def add_alias_to_alias_to_person_dict(self, alias: str, person: Person):
+    def add_alias_to_alias_to_person_dict(self, alias: str, person: Person): # pylint: disable=C0103
         """
         Adds an alias to the _alias_to_person_dict, making the alias lower case and removing
         white space
@@ -216,7 +218,7 @@ class PeopleDatabase:
         """
         self._alias_to_person_dict[alias.lower()] = person
 
-    def remove_alias_to_alias_to_person_dict(self, alias: str):
+    def remove_alias_to_alias_to_person_dict(self, alias: str):     # pylint: disable=C0103
         """
         Removes an alias from the alias_to_person_dict
 
@@ -258,25 +260,25 @@ class PeopleDatabase:
                 alias1 = person['aliases_to_merge'][i]
                 alias2 = person['aliases_to_merge'][i + 1]
 
-                p1 = self.get_person_from_alias(alias1)
-                p2 = self.get_person_from_alias(alias2)
+                person1 = self.get_person_from_alias(alias1)
+                person2 = self.get_person_from_alias(alias2)
 
-                if p1 and p2:
-                    if p1 != p2:
-                        self.merge_two_persons(p1, p2, person['authoritative_name'])
+                if person1 and person2:
+                    if person1 != person2:
+                        self.merge_two_persons(person1, person2, person['authoritative_name'])
                     else:
-                        # temporarily remove p1 because we're messing with the hash key
+                        # temporarily remove person1 because we're messing with the hash key
                         # and couldn't remove it later
-                        self.people.remove(p1)
-                        p1.first = person['authoritative_name']['first']
-                        p1.middle = person['authoritative_name']['middle']
-                        p1.last = person['authoritative_name']['last']
+                        self.people.remove(person1)
+                        person1.first = person['authoritative_name']['first']
+                        person1.middle = person['authoritative_name']['middle']
+                        person1.last = person['authoritative_name']['last']
                         if 'affiliation' in person['authoritative_name']:
-                            p1.positions[person['authoritative_name']['affiliation']] = 9999
-                        for alias in p1.aliases:
-                            self.add_alias_to_alias_to_person_dict(alias, p1)
-                        self.add_alias_to_alias_to_person_dict(p1.full_name, p1)
-                        self.people.add(p1)
+                            person1.positions[person['authoritative_name']['affiliation']] = 9999
+                        for alias in person1.aliases:
+                            self.add_alias_to_alias_to_person_dict(alias, person1)
+                        self.add_alias_to_alias_to_person_dict(person1.full_name, person1)
+                        self.people.add(person1)
 
                 else:
                     print(f'Could not find {alias1} or {alias2} in people db')
@@ -375,19 +377,20 @@ class PeopleDatabase:
             breaking = True
             for combination in itertools.combinations(candidates, 2):
 
-                p1, p2 = combination
-                if p1.first and p2.first and p1.first[0] != p2.first[0]:
-                    print('skipping because of different first names', p1.full_name, p2.full_name)
+                person1, person2 = combination
+                if person1.first and person2.first and person1.first[0] != person2.first[0]:
+                    print('skipping because of different first names', person1.full_name,
+                          person2.full_name)
                     continue
 
-                print(f'\n\nMerge candidate: {p1.full_name} <-> {p2.full_name}')
-                print("\n", p1)
-                print("\n", p2)
+                print(f'\n\nMerge candidate: {person1.full_name} <-> {person2.full_name}')
+                print("\n", person1)
+                print("\n", person2)
 
-                # selection = input("Should these 2 people get merged? (y/n):   ")
-                selection = 'y'
+                selection = input("Should these 2 people get merged? (y/n):   ")
+                # selection = 'y'
                 if selection == 'y':
-                    new_p = self.merge_two_persons(p1, p2)
+                    new_p = self.merge_two_persons(person1, person2)
                     print("new", new_p)
                     breaking = False
                     break
@@ -417,59 +420,72 @@ class PeopleDatabase:
 
         last_names_dict[last_name].sort(key=lambda x: x.count, reverse=True)
 
-        for p1_idx, p1 in enumerate(last_names_dict[last_name]):        # pylint: disable=C0103
-            for p2_idx, p2 in enumerate(last_names_dict[last_name]):    # pylint: disable=C0103
+        for person1_idx, person1 in enumerate(last_names_dict[last_name]):        # pylint: disable=C0103
+            for person2_idx, person2 in enumerate(last_names_dict[last_name]):    # pylint:
+                # disable=C0103
 
                 # p1/2_idx indicate the index of the person. If they are the same, we are dealing
                 # with the same person and should skip.
-                if p1_idx == p2_idx:                                    # pylint: disable=R1724
+                if person1_idx == person2_idx:                                    # pylint: disable=R1724
                     continue
 
-                # If p1 and p2 share at least one alias, we can merge them
+                # If p1 and person2 share at least one alias, we can merge them
                 # the primary use of this is to merge cases where the same author was added
                 # multiple times
-                elif len(set(p1.aliases).intersection(set(p2.aliases))) > 0:
-                    self.merge_two_persons(p1, p2)
+                elif len(set(person1.aliases).intersection(set(person2.aliases))) > 0:
+                    self.merge_two_persons(person1, person2)
                     return False
 
 
                 # if no first and middle name -> continue
-                elif p1.first == '' and p1.middle == '':
+                elif person1.first == '' and person1.middle == '':
                     continue
-                elif p2.first == '' and p2.middle == '':
+                elif person2.first == '' and person2.middle == '':
                     continue
 
                 # if first and middle names match -> merge
-                elif p1.first == p2.first and p1.middle == p2.middle:
-                    self.merge_two_persons(p1, p2)
+                elif person1.first == person2.first and person1.middle == person2.middle:
+                    self.merge_two_persons(person1, person2)
                     return False
 
                 # if both have full first names and they don't match -> skip
-                elif len(p1.first) > 2 and len(p2.first) > 2 and p1.first != p2.first:
+                elif (
+                        len(person1.first) > 2 and len(person2.first) > 2 and
+                        person1.first != person2.first
+                ):
                     continue
 
                 # if both have full middle names and they don't match -> skip
-                elif len(p1.middle) > 2 and len(p2.middle) > 2 and p1.middle != p2.middle:
+                elif (
+                        len(person1.middle) > 2 and len(person2.middle) > 2 and
+                        person1.middle != person2.middle
+                ):
                     continue
 
                 # if initial of the first name is not the same -> skip
-                elif p1.first and p2.first and p1.first[0] != p2.first[0]:
+                elif person1.first and person2.first and person1.first[0] != person2.first[0]:
                     continue
 
                 # if both have at least first and middle initials
-                elif p1.first and p1.middle and p2.first and p2.middle:
-                    if p1.first[0] != p2.first[0] or p1.middle[0] != p2.middle[0]:
+                elif person1.first and person1.middle and person2.first and person2.middle:
+                    if (
+                            person1.first[0] != person2.first[0] or
+                            person1.middle[0] != person2.middle[0]
+                    ):
                         continue
 
                     # if first and middle initials match -> merge
-                    if p1.first[0] == p2.first[0] and p1.middle[0] == p2.middle[0]:
-                        self.merge_two_persons(p1, p2)
+                    if (
+                            person1.first[0] == person2.first[0] and
+                            person1.middle[0] == person2.middle[0]
+                    ):
+                        self.merge_two_persons(person1, person2)
                         return False    # we're not finished -> return False
 
-                elif len(p1.first) == 1 and not p1.middle:
+                elif len(person1.first) == 1 and not person1.middle:
                     # TODO
                     continue
-                elif len(p2.first) == 1 and not p2.middle:
+                elif len(person2.first) == 1 and not person2.middle:
                     # TODO
                     continue
                 else:
@@ -502,10 +518,10 @@ class PeopleDatabase:
 
             for attr in ['first', 'middle']:
                 if (
-                    len(getattr(person2, attr)) > len(getattr(person1, attr)) or
-                    # no first or middle name should have a forward slash (e.g. "dk/shook")
-                    # in that case, take the other name
-                    getattr(person1, attr).find('/') > -1
+                        len(getattr(person2, attr)) > len(getattr(person1, attr)) or
+                        # no first or middle name should have a forward slash (e.g. "dk/shook")
+                        # in that case, take the other name
+                        getattr(person1, attr).find('/') > -1
                 ):
                     setattr(new_p, attr, getattr(person2, attr))
 
@@ -530,10 +546,7 @@ class PeopleDatabase:
         self.add_alias_to_alias_to_person_dict(new_p.full_name, new_p)
 
         self.people.remove(person1)
-        try:
-            self.people.remove(person2)
-        except:
-            embed()
+        self.people.remove(person2)
         self.people.add(new_p)
 
         return new_p
@@ -575,14 +588,15 @@ class TestPeopleDB(unittest.TestCase):
         Test people_db merge 2
         """
 
-        people_db = PeopleDatabase()
+        people_db_test = PeopleDatabase()
         for name in ['DUNN,W', 'DUNN,WL', 'DUNN,WL JR', 'DUNN, W. L.', 'Dunn, FW,'
                      'Dunn, William L', 'Dunn,WL', 'DUNN,WL Jr', 'DUNN, WL', 'Dunn, Frank',
                      'Dunn, Frank W']:
-            people_db.add_person_raw(name, 1)
+            people_db_test.add_person_raw(name, 1)
         people_db.merge_duplicates()
         self.assertEqual(len(people_db), 4)
-        self.assertEqual(len(people_db), len(set(people_db._alias_to_person_dict.values())))
+        self.assertEqual(len(people_db),
+                         len(set(people_db._alias_to_person_dict.values()))) # pylint: disable=W0212
 
 
 if __name__ == '__main__':

@@ -30,7 +30,7 @@ class Person:
         aliases (Counter of str): counter of raw names that correspond to the person
         count (int): number of times the person appeared in the data
     """
-    def __init__(self, name_raw=None, last='', first='', middle='',       # pylint: disable=R0913
+    def __init__(self, name_raw=None, last='', first='', middle='',   # pylint: disable=R0913,W0212
                  positions=None, aliases=None, count=1, docs_authored=None, docs_received=None):
         """
         Returns a person object
@@ -110,7 +110,6 @@ class Person:
                 self.docs_received = docs_received
             else:
                 raise ValueError("docs_received for Person object has to be a set.")
-
 
         self.count = count
 
@@ -228,14 +227,16 @@ class Person:
         # if nothing found, return nothing found
         if len(self.positions) > 0:
             for position, _ in self.positions.most_common():
-                if (position in RAW_ORG_TO_CLEAN_ORG_DICT and
-                        RAW_ORG_TO_CLEAN_ORG_DICT[position] == '@skip@'):
+                if (
+                        position in RAW_ORG_TO_CLEAN_ORG_DICT and
+                        RAW_ORG_TO_CLEAN_ORG_DICT[position] == '@skip@'
+                ):
                     continue
-                elif len(position) < 5:
+                if len(position) < 5:
                     continue
                 else:
                     return f'                                            {position.upper()}'
-                    print(self.positions.most_common())
+
 
         return 'no positions available'
 
@@ -464,18 +465,21 @@ class Person:
 
 
         if len(name_raw) > 0:
-            f, m, l, _ = Person.parse_raw_name(name_raw, 0, extract_orgs=False)
+            first, middle, last, _ = Person.parse_raw_name(name_raw, 0, extract_orgs=False)
 
-            if not Person(last=l, middle=m, first=f).check_if_this_person_looks_valid():
+            if not Person(last=last, middle=middle, first=first).check_if_this_person_looks_valid():
                 search_hit = re.search(',.+$', name_raw)
                 if search_hit:
                     extracted_position = name_raw[search_hit.start():].strip(', ')
-                    name_raw_without_org = name_raw[0:search_hit.start()] + name_raw[search_hit.end():]
+                    name_raw_without_org = name_raw[0:search_hit.start()] + name_raw[
+                        search_hit.end():]
 
-                    # if raw name becomes valid after extracting the org, then we add it to the orgs.
+                    # if raw name becomes valid after extracting the org, then we add it to the orgs
                     # otherwise, we skip it
-                    f, m, l, _ = Person.parse_raw_name(name_raw_without_org, 0, extract_orgs=False)
-                    if Person(last=l, middle=m, first=f).check_if_this_person_looks_valid():
+                    first, middle, last, _ = Person.parse_raw_name(name_raw_without_org,
+                                                                   0, extract_orgs=False)
+                    if Person(last=last, middle=middle,
+                              first=first).check_if_this_person_looks_valid():
                         extracted_positions.append(extracted_position)
                         name_raw = name_raw_without_org
 
@@ -485,7 +489,7 @@ class Person:
         name_raw = name_raw.strip(', ')
         return name_raw, extracted_positions
 
-    def check_if_this_person_looks_valid(self):
+    def check_if_this_person_looks_valid(self):         # pylint: disable=C0103
         """
         Checks if the initialized person looks valid, i.e. it has a first name or first initial,
         the last name doesn't have strange
@@ -494,9 +498,9 @@ class Person:
         status = True
 
         if (
-            not re.match('^[a-zA-Z]+$', self.last) or
-            not re.match('^[a-zA-Z]+$', self.first) or
-            (len(self.middle) > 0 and not re.match('^[a-zA-Z]+$', self.middle))
+                not re.match('^[a-zA-Z]+$', self.last) or
+                not re.match('^[a-zA-Z]+$', self.first) or
+                (len(self.middle) > 0 and not re.match('^[a-zA-Z]+$', self.middle))
         ):
             status = False
 
@@ -508,7 +512,7 @@ class TestNameChecker(unittest.TestCase):
     """
     Tests the check_if_this_person_looks_valid test
     """
-    def test_check_if_this_person_looks_valid(self):
+    def test_check_if_this_person_looks_valid(self):        # pylint: disable=C0103
         outcomes_and_names = [
             (True, Person(last='PEPPLES', first='E')),
 
@@ -783,16 +787,3 @@ if __name__ == '__main__':
     Person(name_raw='US HOUSE COMM ON INTERSTATE AND FOREIGN COMMERCE')
 
     unittest.main()
-
-'''
-merging
- T. F. Ahrensfeld   F:T M:F L:AHRENSFELD, Position: Counter({'Philip Morris': 24, 'Tobacco Institute': 4}), Aliases: [('AHRENSFELD,TF', 64), ('AHRENSFELD-TF', 28), ('AHRENSFELD TF', 14)], count: 106
- Thomas F. Ahrensfeld   F:THOMAS M:F L:AHRENSFELD, Position: Counter(), Aliases: [('AHRENSFELD, THOMAS F', 11)], count: 11
-
-
-merging
- Thomas F. Ahrensfeld   F:THOMAS M:F L:AHRENSFELD, Position: Counter({'Philip Morris': 48, 'Tobacco Institute': 8}), Aliases: [('AHRENSFELD,TF', 64), ('AHRENSFELD-TF', 28), ('AHRENSFELD TF', 14), ('AHRENSFELD, THOMAS F', 11)], count: 117
- T. F. Ahrensfeld   F:T M:F L:AHRENSFELD, Position: Counter({'PHILIP MORRIS': 7}), Aliases: [('AHRENSFELD TF, PM', 7)], count: 7
-key error trying to remove T. F. Ahrensfeld
-
-'''

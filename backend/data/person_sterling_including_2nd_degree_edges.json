@@ -4,6 +4,48 @@
     },
     "links": [
         {
+            "docs": 486,
+            "node1": "William Ullman Gardner",
+            "node2": "Robert Casad Hockett",
+            "words": 0
+        },
+        {
+            "docs": 62,
+            "node1": "Robert Casad Hockett",
+            "node2": "William Thomas Hoyt",
+            "words": 0
+        },
+        {
+            "docs": 1058,
+            "node1": "Henry C. Roemer",
+            "node2": "William W. Shinn",
+            "words": 0
+        },
+        {
+            "docs": 64,
+            "node1": "William Ullman Gardner",
+            "node2": "William W. Shinn",
+            "words": 0
+        },
+        {
+            "docs": 21,
+            "node1": "William W. Shinn",
+            "node2": "Leonard S. Zahn",
+            "words": 0
+        },
+        {
+            "docs": 69,
+            "node1": "William W. Shinn",
+            "node2": "Leonard S. Zahn",
+            "words": 0
+        },
+        {
+            "docs": 430,
+            "node1": "William Thomas Hoyt",
+            "node2": "Henry C. Roemer",
+            "words": 0
+        },
+        {
             "docs": 8,
             "node1": "Theodor D. Sterling",
             "node2": "W. A. Wallis",
@@ -28,9 +70,33 @@
             "words": 0
         },
         {
+            "docs": 245,
+            "node1": "Donald K. Hoel",
+            "node2": "Henry C. Roemer",
+            "words": 0
+        },
+        {
+            "docs": 21,
+            "node1": "Alexander Holtzman",
+            "node2": "F. Panzer",
+            "words": 0
+        },
+        {
+            "docs": 63,
+            "node1": "Alexander Holtzman",
+            "node2": "Henry C. Roemer",
+            "words": 0
+        },
+        {
             "docs": 43,
             "node1": "W. G. Cochran",
             "node2": "Theodor D. Sterling",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Donald K. Hoel",
+            "node2": "William Thomas Hoyt",
             "words": 0
         },
         {
@@ -40,9 +106,45 @@
             "words": 0
         },
         {
+            "docs": 14,
+            "node1": "Robert Casad Hockett",
+            "node2": "William W. Shinn",
+            "words": 0
+        },
+        {
+            "docs": 26,
+            "node1": "William Thomas Hoyt",
+            "node2": "William W. Shinn",
+            "words": 0
+        },
+        {
+            "docs": 67,
+            "node1": "William Thomas Hoyt",
+            "node2": "Alexander Holtzman",
+            "words": 0
+        },
+        {
             "docs": 16,
             "node1": "Theodor D. Sterling",
             "node2": "William W. Shinn",
+            "words": 0
+        },
+        {
+            "docs": 30,
+            "node1": "Robert Casad Hockett",
+            "node2": "Leonard S. Zahn",
+            "words": 0
+        },
+        {
+            "docs": 892,
+            "node1": "William Thomas Hoyt",
+            "node2": "Leonard S. Zahn",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "Alexander Holtzman",
+            "node2": "A. Whist",
             "words": 0
         },
         {
@@ -55,6 +157,18 @@
             "docs": 37,
             "node1": "Theodor D. Sterling",
             "node2": "Leonard S. Zahn",
+            "words": 0
+        },
+        {
+            "docs": 101,
+            "node1": "William Ullman Gardner",
+            "node2": "William Thomas Hoyt",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "Robert Casad Hockett",
+            "node2": "Alexander Holtzman",
             "words": 0
         },
         {
@@ -112,6 +226,54 @@
             "words": 0
         },
         {
+            "docs": 123,
+            "node1": "Alexander Holtzman",
+            "node2": "William W. Shinn",
+            "words": 0
+        },
+        {
+            "docs": 31,
+            "node1": "William Thomas Hoyt",
+            "node2": "H. Selye",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "Alexander Holtzman",
+            "node2": "Leonard S. Zahn",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "William Ullman Gardner",
+            "node2": "William W. Shinn",
+            "words": 0
+        },
+        {
+            "docs": 17,
+            "node1": "F. Panzer",
+            "node2": "Henry C. Roemer",
+            "words": 0
+        },
+        {
+            "docs": 89,
+            "node1": "Donald K. Hoel",
+            "node2": "Alexander Holtzman",
+            "words": 0
+        },
+        {
+            "docs": 117,
+            "node1": "William Thomas Hoyt",
+            "node2": "Leonard S. Zahn",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "Alexander Holtzman",
+            "node2": "H. Selye",
+            "words": 0
+        },
+        {
             "docs": 8,
             "node1": "Hans L. Falk",
             "node2": "Theodor D. Sterling",
@@ -124,6 +286,18 @@
             "words": 0
         },
         {
+            "docs": 29,
+            "node1": "Donald K. Hoel",
+            "node2": "Leonard S. Zahn",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "Alexander Holtzman",
+            "node2": "Leonard S. Zahn",
+            "words": 0
+        },
+        {
             "docs": 3,
             "node1": "Bob C. Hockett",
             "node2": "Theodor D. Sterling",
@@ -133,6 +307,18 @@
             "docs": 1,
             "node1": "Gershon W. Fishbein",
             "node2": "Theodor D. Sterling",
+            "words": 0
+        },
+        {
+            "docs": 14,
+            "node1": "Robert Casad Hockett",
+            "node2": "H. Selye",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "William Thomas Hoyt",
+            "node2": "L. S. Wilson",
             "words": 0
         },
         {
@@ -220,15 +406,63 @@
             "words": 0
         },
         {
+            "docs": 74,
+            "node1": "H. Frustace",
+            "node2": "William Thomas Hoyt",
+            "words": 0
+        },
+        {
             "docs": 2,
             "node1": "H. Perry",
             "node2": "Theodor D. Sterling",
             "words": 0
         },
         {
+            "docs": 26,
+            "node1": "William Thomas Hoyt",
+            "node2": "H. Perry",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "William Ullman Gardner",
+            "node2": "H. Perry",
+            "words": 0
+        },
+        {
             "docs": 8,
             "node1": "Ervin Y. Rodin",
             "node2": "Theodor D. Sterling",
+            "words": 0
+        },
+        {
+            "docs": 64,
+            "node1": "Henry C. Roemer",
+            "node2": "Henry C. Roemer",
+            "words": 0
+        },
+        {
+            "docs": 11,
+            "node1": "Robert Casad Hockett",
+            "node2": "Henry C. Roemer",
+            "words": 0
+        },
+        {
+            "docs": 19,
+            "node1": "William Ullman Gardner",
+            "node2": "Henry C. Roemer",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "William Ullman Gardner",
+            "node2": "I. Hcr",
+            "words": 0
+        },
+        {
+            "docs": 56,
+            "node1": "I. Hcr",
+            "node2": "William Thomas Hoyt",
             "words": 0
         },
         {
@@ -268,6 +502,12 @@
             "words": 0
         },
         {
+            "docs": 18,
+            "node1": "F. Panzer",
+            "node2": "William W. Shinn",
+            "words": 0
+        },
+        {
             "docs": 4,
             "node1": "Aleph Foundation",
             "node2": "Theodor D. Sterling",
@@ -301,6 +541,12 @@
             "docs": 5,
             "node1": "Surgeon General",
             "node2": "Theodor D. Sterling",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "Alexander Holtzman",
+            "node2": "Alexander Holtzman",
             "words": 0
         },
         {
@@ -352,6 +598,12 @@
             "words": 0
         },
         {
+            "docs": 14,
+            "node1": "William Ullman Gardner",
+            "node2": "William Ullman Gardner",
+            "words": 0
+        },
+        {
             "docs": 2,
             "node1": "Theodor D. Sterling",
             "node2": "J. H. Weisburger",
@@ -364,7 +616,7 @@
             "words": 0
         }
     ],
-    "name": "person_sterling",
+    "name": "person_sterling_including_2nd_degree_edges",
     "nodes": [
         {
             "affiliation": "Washington University in St. Louis",
@@ -427,21 +679,15 @@
             "words": 0
         },
         {
-            "affiliation": "American Cancer Society",
-            "docs": 12,
-            "name": "H. Marvin Pollard",
-            "words": 0
-        },
-        {
             "affiliation": "                                            LOUISVILLE TIMES",
             "docs": 12,
             "name": "Courier Journal",
             "words": 0
         },
         {
-            "affiliation": "                                            PUBLIC HEALTH SERVICE",
+            "affiliation": "American Cancer Society",
             "docs": 12,
-            "name": "J. Steinfeld",
+            "name": "H. Marvin Pollard",
             "words": 0
         },
         {
@@ -451,21 +697,15 @@
             "words": 0
         },
         {
+            "affiliation": "                                            PUBLIC HEALTH SERVICE",
+            "docs": 12,
+            "name": "J. Steinfeld",
+            "words": 0
+        },
+        {
             "affiliation": "                                            LOUISVILLE TIMES",
             "docs": 9,
             "name": "B. Bingham",
-            "words": 0
-        },
-        {
-            "affiliation": "Johns Hopkins University",
-            "docs": 0,
-            "name": "Harry A. Kahn",
-            "words": 0
-        },
-        {
-            "affiliation": "no positions available",
-            "docs": 8,
-            "name": "J. Herchenroeder",
             "words": 0
         },
         {
@@ -475,9 +715,9 @@
             "words": 0
         },
         {
-            "affiliation": "no positions available",
-            "docs": 8,
-            "name": "P. Handler",
+            "affiliation": "Johns Hopkins University",
+            "docs": 0,
+            "name": "Harry A. Kahn",
             "words": 0
         },
         {
@@ -490,6 +730,18 @@
             "affiliation": "National Cancer Institute",
             "docs": 0,
             "name": "J. C. Bailar",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 8,
+            "name": "P. Handler",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 8,
+            "name": "J. Herchenroeder",
             "words": 0
         },
         {
@@ -511,15 +763,9 @@
             "words": 0
         },
         {
-            "affiliation": "no positions available",
+            "affiliation": "                                            LOUISVILLE TIMES",
             "docs": 4,
-            "name": "M. H. Pollard",
-            "words": 0
-        },
-        {
-            "affiliation": "R.J. Reynolds",
-            "docs": 4,
-            "name": "Henry C. Roemer",
+            "name": "B. Shulman",
             "words": 0
         },
         {
@@ -529,9 +775,9 @@
             "words": 0
         },
         {
-            "affiliation": "                                            LOUISVILLE TIMES",
+            "affiliation": "no positions available",
             "docs": 4,
-            "name": "B. Shulman",
+            "name": "M. H. Pollard",
             "words": 0
         },
         {
@@ -547,6 +793,12 @@
             "words": 0
         },
         {
+            "affiliation": "R.J. Reynolds",
+            "docs": 4,
+            "name": "Henry C. Roemer",
+            "words": 0
+        },
+        {
             "affiliation": "Council for Tobacco Research",
             "docs": 3,
             "name": "Bob C. Hockett",
@@ -555,7 +807,7 @@
         {
             "affiliation": "no positions available",
             "docs": 3,
-            "name": "Tim Lee Carter",
+            "name": "B. Schulman",
             "words": 0
         },
         {
@@ -567,43 +819,7 @@
         {
             "affiliation": "no positions available",
             "docs": 3,
-            "name": "B. Schulman",
-            "words": 0
-        },
-        {
-            "affiliation": "                                            SINAI HOSPITAL DETROIT",
-            "docs": 2,
-            "name": "H. Perry",
-            "words": 0
-        },
-        {
-            "affiliation": "Shook, Hardy & Bacon",
-            "docs": 2,
-            "name": "Donald K. Hoel",
-            "words": 0
-        },
-        {
-            "affiliation": "no positions available",
-            "docs": 2,
-            "name": "J. H. Weisburger",
-            "words": 0
-        },
-        {
-            "affiliation": "Philip Morris",
-            "docs": 2,
-            "name": "Alexander Holtzman",
-            "words": 0
-        },
-        {
-            "affiliation": "no positions available",
-            "docs": 2,
-            "name": "J. Ashrae",
-            "words": 0
-        },
-        {
-            "affiliation": "Johns Hopkins University",
-            "docs": 2,
-            "name": "H. A. Khan",
+            "name": "Tim Lee Carter",
             "words": 0
         },
         {
@@ -613,15 +829,51 @@
             "words": 0
         },
         {
-            "affiliation": "National Cancer Institute",
+            "affiliation": "Philip Morris",
             "docs": 2,
-            "name": "A. C. Upton",
+            "name": "Alexander Holtzman",
+            "words": 0
+        },
+        {
+            "affiliation": "                                            SINAI HOSPITAL DETROIT",
+            "docs": 2,
+            "name": "H. Perry",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 2,
+            "name": "J. Ashrae",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 2,
+            "name": "J. H. Weisburger",
+            "words": 0
+        },
+        {
+            "affiliation": "Johns Hopkins University",
+            "docs": 2,
+            "name": "H. A. Khan",
             "words": 0
         },
         {
             "affiliation": "University of Southern California",
             "docs": 2,
             "name": "M. Gardner",
+            "words": 0
+        },
+        {
+            "affiliation": "Shook, Hardy & Bacon",
+            "docs": 2,
+            "name": "Donald K. Hoel",
+            "words": 0
+        },
+        {
+            "affiliation": "National Cancer Institute",
+            "docs": 2,
+            "name": "A. C. Upton",
             "words": 0
         },
         {
@@ -633,13 +885,7 @@
         {
             "affiliation": "no positions available",
             "docs": 1,
-            "name": "H. C. Hockett",
-            "words": 0
-        },
-        {
-            "affiliation": "Philip Morris",
-            "docs": 1,
-            "name": "H. Frustace",
+            "name": "William U. Gardener",
             "words": 0
         },
         {
@@ -649,33 +895,15 @@
             "words": 0
         },
         {
-            "affiliation": "Philip Morris",
+            "affiliation": "British American Tobacco",
             "docs": 1,
-            "name": "A. Whist",
-            "words": 0
-        },
-        {
-            "affiliation": "Harvard University",
-            "docs": 1,
-            "name": "H. Selye",
-            "words": 0
-        },
-        {
-            "affiliation": "no positions available",
-            "docs": 1,
-            "name": "William U. Gardener",
+            "name": "Leo C. Laporte",
             "words": 0
         },
         {
             "affiliation": "no positions available",
             "docs": 1,
             "name": "J. Steinfield",
-            "words": 0
-        },
-        {
-            "affiliation": "no positions available",
-            "docs": 1,
-            "name": "R. Shulman",
             "words": 0
         },
         {
@@ -693,13 +921,37 @@
         {
             "affiliation": "no positions available",
             "docs": 1,
-            "name": "A. Willis",
+            "name": "R. Shulman",
             "words": 0
         },
         {
-            "affiliation": "British American Tobacco",
+            "affiliation": "no positions available",
             "docs": 1,
-            "name": "Leo C. Laporte",
+            "name": "H. C. Hockett",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1,
+            "name": "H. Frustace",
+            "words": 0
+        },
+        {
+            "affiliation": "Harvard University",
+            "docs": 1,
+            "name": "H. Selye",
+            "words": 0
+        },
+        {
+            "affiliation": "Philip Morris",
+            "docs": 1,
+            "name": "A. Whist",
+            "words": 0
+        },
+        {
+            "affiliation": "no positions available",
+            "docs": 1,
+            "name": "A. Willis",
             "words": 0
         }
     ]
