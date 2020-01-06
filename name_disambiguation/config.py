@@ -8,11 +8,17 @@ from pathlib import Path
 
 DATA_PATH = Path(Path(os.path.abspath(os.path.dirname(__file__))).parent, 'data')
 
+COMPANY_ABBREVIATIONS_TO_SKIP = {
+    'b&w', 'ctr', 'lorillard', 'rjr', 'philip morris', 'ti', 't.i.',
+    'ftc',
+    'inc', 'unk', 'x'
+
+    }
 
 MANUALLY_MERGED_NAMES = [
     {
         'authoritative_name': {'last': 'Ahrensfeld', 'first': 'Thomas', 'middle': 'F'},
-        'aliases_to_merge': ['AHRENSFELD,TF', 'AHRENSFELD,T']
+        'aliases_to_merge': ['AHRENSFELD,TF', 'AHRENSFELD,T', 'ahrensfeld']
     },
     {
         'authoritative_name': {'last': 'Bryant', 'first': 'H', 'middle': 'DeBaun'},
@@ -44,18 +50,21 @@ MANUALLY_MERGED_NAMES = [
         'aliases_to_merge': ['HUGHES,IW', 'Hughes-I', 'HUGHES,IW/X']
     },
     {
-        'authoritative_name': {'last': 'Senkus', 'first': 'Murray', 'middle': ''},
-        'aliases_to_merge': ['SENKUS M', 'Senkus, Murray']
+        'authoritative_name': {'last': 'Leake', 'first': 'Preston', 'middle': 'Hildebrand'},
+        'aliases_to_merge': ['Leake-PH', 'Leake-P']
     },
     {
         'authoritative_name': {'last': 'Ramm', 'first': 'Henry', 'middle': 'H'},
         'aliases_to_merge': ['RAMM HH', 'RAMM H, CTR', 'Ramm-HH Council For Tobacco Research']
     },
-
     {
         'authoritative_name': {'last': 'Roemer', 'first': 'Henry', 'middle': 'C',
                                'affiliation': "R.J. Reynolds"},
         'aliases_to_merge': ['ROEMER HC JR', 'Roemer, H']
+    },
+    {
+        'authoritative_name': {'last': 'Senkus', 'first': 'Murray', 'middle': ''},
+        'aliases_to_merge': ['SENKUS M', 'Senkus, Murray']
     },
     {
         'authoritative_name': {'last': 'Shinn', 'first': 'William', 'middle': 'W'},
@@ -72,7 +81,9 @@ MANUALLY_MERGED_NAMES = [
         'aliases_to_merge': ['WAKEHAM,H', 'WAKEHAM,HR']
     },
     {
-        'authoritative_name': {'last': 'Yeaman', 'first': 'Addison', 'middle': 'Y'},
-        'aliases_to_merge': ['YEAMAN,A', 'YEAMAN AY, CTR', 'YEAMAN,A/X', 'Yeaman, Addison']
+        'authoritative_name': {'last': 'Yeaman', 'first': 'Addison', 'middle': 'Y',
+                               'affiliation': 'Brown & Williamson'},
+        'aliases_to_merge': ['YEAMAN,A', 'YEAMAN AY, CTR', 'YEAMAN,A/X', 'Yeaman, Addison',
+                             'YEAMAN-A']
     },
 ]

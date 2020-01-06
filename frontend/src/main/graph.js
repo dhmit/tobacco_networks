@@ -77,37 +77,23 @@ export function create_graph(el, data, config, handle_viz_events) {
     // node data through the links
     // before this step, link.source/target is a string.
     // after this step, it's a node and we can access its attributes e.g. with node.degree
+    // This creates the x and y values for the data, based on relationships here
+    // n.b. this doesn't actually render the sim - we do that below
+    // by adding nodes to the svg and updating their position in render_simulation
     let force_simulation = initialize_force_sim(config, data, data_bindings);
 
+    // with the databindings in place, we now update which nodes and edges should be visible
     update_node_degree_and_visibility(data, config);
 
-    // // Set link attributes
-    // const link_width_scale_degree_1 = d3.scaleLinear()
-    //     .domain([0, d3.max(data['links'], function(d) { return d.docs})])
-    //     .range([2, 3]);
-    // const link_width_scale_degree_2 = d3.scaleLinear()
-    //     .domain([0, d3.max(data['links'], function(d) { return d.docs})])
-    //     .range([0.5, 2]);
-    // links
-    //     .attr("class", (d) => `graph_link degree_${d.degree}`)
-    //     .attr("stroke-width", (d) => {
-    //         if (d.degree === 1){
-    //             return link_width_scale_degree_1(d.docs);
-    //         } else {
-    //             return link_width_scale_degree_2(d.docs);
-    //         }
-    //     })
-    //     .attr('visibility', (d) => d.visibility);
 
     // add node circle and labels
     const max_docs = d3.max(data['nodes'], function(d) { return d.docs; });
     const node_size_scale_degree_1 = d3.scaleLinear()
         .domain([0, max_docs])
-        .range([20, config.width * config.height / 60000]);
+        .range([20, 30]);
     const node_size_scale_degree_2 = d3.scaleLinear()
         .domain([0, max_docs])
-        .range([5, config.width * config.height / 80000]);
-
+        .range([5, 30]);
 
     // SR: ok. here's something stupid: each node consists of 4 element:
     // - a background rect with stroke to outline the label
@@ -116,6 +102,8 @@ export function create_graph(el, data, config, handle_viz_events) {
     // - a text element with the name
     // the foreground rect is there so the stroke from the circle that would overlap with the text
     // is hidden.
+
+    // add background rectangle (which will have a stroke)
     nodes
         .append('rect')
             .attr('class', 'node_label_rect_background')
@@ -132,6 +120,7 @@ export function create_graph(el, data, config, handle_viz_events) {
             d.circle_radius = circle_radius;
             return circle_radius;
         })
+        // set initial x and y to the center of the clusters
         .attr("x", (d) => data.clusters[d.cluster]['x_pos'])
         .attr("y", (d) => data.clusters[d.cluster]['y_pos'])
         .attr('class', (d) => `node degree_${d.degree}` )
@@ -150,11 +139,13 @@ export function create_graph(el, data, config, handle_viz_events) {
             }
         });
 
+    // foreground rectangle for the label without stroke
     nodes
         .append('rect')
             .attr('class', 'node_label_rect_foreground')
             .attr('visibility', (d) => d.visibility );
 
+    // node label
     nodes
         .append("text")
             .text((d) => d.name)
@@ -174,11 +165,13 @@ export function create_graph(el, data, config, handle_viz_events) {
             .style("pointer-events", "none")
             .attr('visibility', (d) => d.visibility );
 
+    // place and size of the rectangles
     nodes.selectAll('rect')
-        .attr('rx', 3)
-        .attr('ry', 3)
+        .attr('rx', 3)  //rounded corners
+        .attr('ry', 3)  //rounded corners
         .attr('x', (_, i, n) => {
             // select the parent of the i-th node, which is the parent node group
+            // with thanks to Crista, Ife, and Jordan for figuring out the BBox
             const parent_node_group = d3.select(n[i].parentNode);
             // then, get the bounding box of the text child element
             // TODO: figure out a better way of getting the bbox.
@@ -209,22 +202,6 @@ export function create_graph(el, data, config, handle_viz_events) {
         .attr('stroke', (d) => data.clusters[d.cluster].color);
 
 
-
-
-    // // Setup labels
-    // const calc_label_pos = (d, i, nodes) => {
-    //     const label = nodes[i];
-    //     const r = node_size_scale(d.docs);
-    //     const h = label.getBBox().height;  // bounding box of the label
-    //     const w = label.getBBox().width;
-    //     // TODO: adjust position of the label based on radius of the circle
-    //     const shiftX = -w/2;
-    //     const shiftY = -h/2-r;
-    //     return `translate(${shiftX}, ${shiftY})`;
-    // };
-
-
-
     clusters.append('text')
         .text((d) => d.name)
         .style('fill', (d) => d.color)
@@ -233,45 +210,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         .attr("x", (d) => (d.x_pos + 0.2) * config.width / 3 * 2)
         .attr("y", (d) => (d.y_pos + 0.2) * config.height / 3 * 2);
 
-    // clusters.append('circle')
-    //     .style('fill', (d) => d.color)
-    //     .attr('cx', (d) => (d.x_pos + 0.2) * config.width / 3 * 2)
-    //     .attr('cy', (d) => (d.y_pos + 0.2) * config.height / 3 * 2)
-    //     .attr('r', 20);
 
-    // Preventing other nodes from moving while dragging one node
-    // function fix_nodes(this_node) {
-    //     nodes.each(
-    //         function(node){
-    //         if (this_node != node){
-    //             node.fx = node.x;
-    //             node.fy = node.y;
-    //          }
-    //      });
-    //  }
-    // function resize() {
-    //     const width = window.innerWidth;
-    //     const height = window.innerHeight;
-    //
-    //     svg.attr("width", width).attr("height", height);
-    //     config.width = width;
-    //     config.height = height;
-    //     let force_simulation = initialize_force_sim(config, data);
-    //     force_simulation.alphaTarget(0.3).restart();
-    //     force_simulation.alphaTarget(0);
-    // }
-
-
-
-    // d3.select(window).on("resize", resize);
-
-    // send databindings back to react so they can be used later to update the chart
-    data_bindings = {
-        'svg': svg,
-        'nodes': nodes,
-        'links': links,
-        'clusters': clusters
-    };
     handle_viz_events('update_data_bindings', data_bindings);
 
     nodes  // bind event handlers for nodes
@@ -301,10 +240,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         .on("click", (d, _i) => handle_viz_events('click', d));
 
 
-    // Initialize the force simulation - see https://github.com/d3/d3-force
-    // This creates the x and y values for the data, based on relationships here
-    // n.b. this doesn't actually render the sim - we do that below
-    // by adding nodes to the svg and updating their position in render_simulation
+
 
 
     // run 400 ticks before displaying the result. That way, the simulation is mostly settled
@@ -340,42 +276,42 @@ export function create_graph(el, data, config, handle_viz_events) {
     }
 }
 
-
-function force_sim(config,data) {
-    const force_x_pos = (d) => {
-        if (d.has_been_dragged) {
-            return d.x_grav;
-        } else {
-            return get_gravity_center(d, config, data)[0];
-        }
-    };
-    const force_y_pos = (d) => {
-        if (d.has_been_dragged) {
-            return d.y_grav;
-        } else {
-            return get_gravity_center(d, config, data)[1];
-        }
-    };
-    const cluster_strength = (d) => {
-        if (d.has_been_dragged){
-            return 3;
-        } else {
-            return 1;
-        }
-    };
-
-    let force_simulation = d3.forceSimulation(data.nodes);
-    force_simulation
-        .force("charge", d3.forceManyBody())
-        .force('collision', d3.forceCollide().radius(30))
-        .force('x', d3.forceX()
-            .x((d) => force_x_pos(d))
-            .strength(cluster_strength)
-        )
-        .force('y', d3.forceY().y((d) => force_y_pos(d)).strength(cluster_strength))
-        .force('center', d3.forceCenter(config.width / 2, config.height / 2).strength(2000))
-        .on("tick", () => render_simulation(config, data));  // what to do when the sim updates
-    }
+//
+// function force_sim(config,data) {
+//     const force_x_pos = (d) => {
+//         if (d.has_been_dragged) {
+//             return d.x_grav;
+//         } else {
+//             return get_gravity_center(d, config, data)[0];
+//         }
+//     };
+//     const force_y_pos = (d) => {
+//         if (d.has_been_dragged) {
+//             return d.y_grav;
+//         } else {
+//             return get_gravity_center(d, config, data)[1];
+//         }
+//     };
+//     const cluster_strength = (d) => {
+//         if (d.has_been_dragged){
+//             return 3;
+//         } else {
+//             return 1;
+//         }
+//     };
+//
+//     let force_simulation = d3.forceSimulation(data.nodes);
+//     force_simulation
+//         .force("charge", d3.forceManyBody())
+//         .force('collision', d3.forceCollide().radius(30))
+//         .force('x', d3.forceX()
+//             .x((d) => force_x_pos(d))
+//             .strength(cluster_strength)
+//         )
+//         .force('y', d3.forceY().y((d) => force_y_pos(d)).strength(cluster_strength))
+//         .force('center', d3.forceCenter(config.width / 2, config.height / 2).strength(2000))
+//         .on("tick", () => render_simulation(config, data));  // what to do when the sim updates
+//     }
 
 function get_gravity_center(d, config, data){
 
@@ -453,14 +389,6 @@ function render_simulation(config, data, data_bindings) {
         })
         .attr('visibility', (d) => d.visibility);
 
-    // const max_docs = d3.max(data['nodes'], function(d) { return d.docs; });
-    // const node_size_scale_degree_1 = d3.scaleLinear()
-    //     .domain([0, max_docs])
-    //     .range([20, config.width * config.height / 60000]);
-    // const node_size_scale_degree_2 = d3.scaleLinear()
-    //     .domain([0, max_docs])
-    //     .range([5, config.width * config.height / 80000]);
-
     data_bindings.nodes.selectAll('rect,text')
         .attr('visibility', (d) => d.visibility );
 
@@ -487,6 +415,12 @@ function initialize_force_sim(config, data, data_bindings) {
         .domain([0, d3.max(data['links'], function(d) { return d.docs})])
         .range([0, 5]);
 
+    const center_draw = d3.scaleLinear()
+        .domain([0, max_docs])
+        .range([0, 10]);
+
+
+
     let force_simulation = d3.forceSimulation(data.nodes);
     force_simulation
         .force('x', d3.forceX()
@@ -497,6 +431,15 @@ function initialize_force_sim(config, data, data_bindings) {
                         .strength(cluster_strength))
 
         .force("center", d3.forceCenter().x(config.width / 2).y(config.height / 2))
+
+        .force('x_center', d3.forceX()
+                        .x(config.width/2)
+                        .strength((d) => center_draw(d.docs))
+        )
+        .force('y_center', d3.forceY()
+                        .y(config.height/2)
+                        .strength((d) => center_draw(d.docs))
+        )
 
         // the most central nodes should be dragged towards the center
         // one way of accomplishing this is to have an attraction between nodes based on the
@@ -535,21 +478,22 @@ function initialize_force_sim(config, data, data_bindings) {
     return force_simulation;
 }
 
-function change_clusters(config, data) {
-    force_sim(config,data);
-    function resize() {
-        const svg = d3.select("#graph_svg");
-        console.log("RESIZING", config.width, config.height);
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        svg.attr("width", width).attr("height", height);
-        config.width = width;
-        config.height = height;
-        let force_simulation = initialize_force_sim(config, data);
-        force_simulation.alphaTarget(0.3).restart();
-        force_simulation.alphaTarget(0);
-    }
-    d3.select(window).on("resize", resize);
+// TODO: Re-implement clustering
+// function change_clusters(config, data) {
+//     force_sim(config,data);
+//     function resize() {
+//         const svg = d3.select("#graph_svg");
+//         console.log("RESIZING", config.width, config.height);
+//         const width = window.innerWidth;
+//         const height = window.innerHeight;
+//         svg.attr("width", width).attr("height", height);
+//         config.width = width;
+//         config.height = height;
+//         let force_simulation = initialize_force_sim(config, data);
+//         force_simulation.alphaTarget(0.3).restart();
+//         force_simulation.alphaTarget(0);
+//     }
+//     d3.select(window).on("resize", resize);
 
     // let force_simulation = d3.forceSimulation(data.nodes);
 
@@ -565,7 +509,7 @@ function change_clusters(config, data) {
     //             .on("drag", (d) => dragged(d))
     //             .on("end", (d) => drag_ended(d,config,data,nodes,links,force_simulation))
     //     )
-}
+// }
 
 
 /**
@@ -622,56 +566,10 @@ export function update_graph(el, data, config, data_bindings, action) {
         data_bindings.nodes.selectAll('rect,text').transition('node_labels').duration(1000)
             .attr('visibility', (d) => d.visibility );
 
-
-//        render_simulation(config, data, data_bindings);
-
-        // const max_docs = d3.max(data['nodes'], function(d) { return d.docs; });
-        // const node_size_scale = d3.scaleLinear()
-        //     .domain([0, max_docs])
-        //     .range([5, config.width * config.height / 80000]);
-        //
-        // data_bindings.nodes
-        //     .style('opacity', (d) =>{
-        //     //data_bindings.nodes.style('opacity', (d) => {
-        //     if (d.degree === -1){ return 0 } else { return 1}
-        // });
-
-        // data_bindings.nodes.selectAll('circle')
-        //     .attr('class', (d) => `node_degree_${d.degree}`);
-
-        // data_bindings.nodes.selectAll('circle').transition().duration(1000)
-        //     .attr('r', (d) => {
-        //         let radius = node_size_scale(d.docs);
-        //         if (d.degree === 0) { return 20} else {return radius}
-        //     })
-        //     .attr('class', (d) => `node degree_${d.degree}`)
-        //
-        //     .attr('fill', (d) => {
-        //         if(d.degree === 0 || d.degree === 1){
-        //             return data.clusters[d.cluster].color
-        //         } else {
-        //             return 'white'
-        //         }
-        //     })
-        //     .attr('stroke', (d) =>{
-        //         if(d.degree === 0 || d.degree === 1){
-        //             return 'white'
-        //         } else {
-        //             return data.clusters[d.cluster].color
-        //         }
-        //     });
-
-
-
-
-        // data_bindings.links.transition().duration(500).style('opacity', (d) =>{
-        //     if (d.degree === -1){return 0 } else {return 1}
-        // });
-
-        // update_focused_node(el, data, config, data_bindings);
-    } else if (action === "cluster_nodes") {
-        // initialize_force_sim(config, data);
-        change_clusters(config, data);
+    // TODO: re-implement Clustering
+    // } else if (action === "cluster_nodes") {
+    //     // initialize_force_sim(config, data);
+    //     change_clusters(config, data);
     } else {
         //function update_unfocus_node (el, data, config) {
         const svg = d3.select(el);

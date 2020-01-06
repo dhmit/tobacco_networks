@@ -1,11 +1,10 @@
-"""
-This file contains the code to generate networks that can then be rendered through react/D3
-"""
+from tobacco.utilities.databases import Database
 
 import json
 import pickle
 from collections import Counter
 from pathlib import Path
+import re
 
 from IPython import embed
 
@@ -19,94 +18,128 @@ from name_disambiguation.person import Person
 from name_disambiguation.clean_org_names import RAW_ORG_TO_CLEAN_ORG_DICT
 
 
+from name_disambiguation.name_preprocessing import parse_column_person
+
+DOCS_CSV_PATH = Path('..', 'data', 'documents', 'docs_1970s_all.csv')
+NETWORK_PATH = Path('..', 'data', 'network_generation', 'network_1970s.pickle')
+PEOPLE_DB_PATH = Path('..', 'data', 'network_generation', '1970s_from_csv.pickle')
 NAMES_TO_SKIP = {
-    "*. Tobacco Company",
-    "A. J. Ahrensfeld-tf",
-    "American Brands Inc",
-    "Arnold &. Porter",
-        "Cim Evaluation Team",
-    "Council For tobacco Research",
-        "Hardy & bacon Shook",
-    "Ici America",
-    "I. Hcr",
-    "Nabisco",
-    "Quality Control Div",
-    "Marketing Research Dept",
-    "Shook Hardy",
-    "Simon Fraser univ Sterling",
-    "Testing Laboratory Steele-wl",
-    "Tobacco Assoc",
-    "U. S. Tobacco",
+    'American Brands Inc',
+    'Hardy Shook',
+    'Shook Hardy',
 }
 
-
-def load_1970s_network():       # pylint: disable=R0914
+def create_db_of_1970s_docs_from_csv():
     """
-    Loads (or, if necessary, generates, the entire network for the 1970s, which is the basis
-    for generating sub-networks
+    We have this strange 1970s db from November 2019 but I don't know how it was created.
+    This script simply uses the docs_1970s_all.csv to create a people_db using the info found in
+    those documents.
+
     :return:
     """
 
-    network_path = Path('..', 'data', 'network_generation', 'network_1970s.pickle')
+    print("Generating new 1970s People DB")
+
+    df = pd.read_csv(DOCS_CSV_PATH).fillna('')  # pylint: disable=C0103
+    people_db = PeopleDatabase()
+
+    counters = {
+        'valid': Counter(),         # valid person
+        'organization_from_person': Counter(),  # valid organizations extracted from person col
+        'organization_from_org': Counter(),  # valid organizations extracted from org col
+        'organization_invalid': Counter(), # invalid organizations from org col
+        'invalid': Counter(),       # not a valid person
+        'error': Counter(),         # threw an error
+    }
+
+    for idx, doc in df.iterrows():  # iterate over all documentsf
+        if idx % 1000 == 0:
+            print(idx)
+
+        doc_authors, doc_author_orgs = parse_authors_or_recipients_of_doc('authors', doc,
+                                                                          counters, people_db)
+        doc_recipients, doc_recipient_orgs = parse_authors_or_recipients_of_doc('recipients', doc,
+                                                                                counters, people_db)
+
+        doc_author_orgs += parse_au_or_rc_organizations_of_doc('authors', doc, counters, people_db)
+        doc_recipient_orgs += parse_au_or_rc_organizations_of_doc('recipients', doc, counters,
+                                                                  people_db)
+
+        for person in doc_authors:
+            people_db.add_person_raw(name_raw=person, position=Counter(doc_author_orgs))
+        for person in doc_recipients:
+            people_db.add_person_raw(name_raw=person, position=Counter(doc_recipient_orgs))
+
+    len_before_merge = len(people_db)
+    people_db.merge_duplicates()
+    print("before", len_before_merge, ". after", len(people_db))
+
+    people_db.store_to_disk(PEOPLE_DB_PATH)
 
 
+def get_network_of_1970s_nodes_and_edges():
 
     try:
-        with open(network_path, 'rb') as infile:
+        with open(NETWORK_PATH, 'rb') as infile:
             return pickle.load(infile)
     except FileNotFoundError:
 
-        print("Precomputed network for the 1970s does not exist. Generating now...")
-
-        docs_csv_path = Path('..', 'data', 'documents', 'docs_1970s_all.csv')
-        people_db_path = Path('..', 'data', 'network_generation', 'people_db_1970s.pickle')
 
         people_db = PeopleDatabase()
-        people_db.load_from_disk(Path(people_db_path))
+        try:
+            people_db.load_from_disk(PEOPLE_DB_PATH)
+        except FileNotFoundError:
+            create_db_of_1970s_docs_from_csv()
+            people_db.load_from_disk(PEOPLE_DB_PATH)
 
-        df = pd.read_csv(docs_csv_path).fillna('')  # pylint: disable=C0103
 
-        print("Willix", people_db.get_person_from_alias('Willix-J, SSC&B'))
+        df = pd.read_csv(DOCS_CSV_PATH).fillna('')  # pylint: disable=C0103
 
         nodes = {}
         edges = {}
-        missing_nodes = Counter()
+        counters = {
+            'valid': Counter(),         # valid person
+            'organization_from_person': Counter(),  # valid organizations extracted from person col
+            'organization_from_org': Counter(),  # valid organizations extracted from org col
+            'organization_invalid': Counter(), # invalid organizations from org col
+            'invalid': Counter(),       # not a valid person
+            'error': Counter(),         # threw an error
+        }
+
+
         for idx, doc in df.iterrows():  # iterate over all documentsf
             if idx % 1000 == 0:
                 print(idx)
 
-            doc_authors = []
-            doc_recipients = []
-            for person in parse_column_person(doc['au']) + parse_column_person(doc['au_person']):
+            doc_authors, _ = parse_authors_or_recipients_of_doc('authors', doc, counters, people_db)
+            doc_recipients, _ = parse_authors_or_recipients_of_doc('recipients', doc,
+                                                                                counters, people_db)
 
-                db_person = people_db.get_person_from_alias(person)
-                if db_person:
-                    doc_authors.append(db_person)
+            d_authors = []
+            for author in doc_authors:
+                author_person = people_db.get_person_from_alias(author)
+                if author_person:
+                    d_authors.append(author_person)
                 else:
-                    if not (
-                        person.lower().replace(' ', '') in COMPANY_ABBREVIATIONS_TO_SKIP or
-                        person in RAW_ORG_TO_CLEAN_ORG_DICT
-                    ):
-                        print(f"\n\nMissing: {person}")
-                        missing_nodes[person] += 1
-                        p = Person(person)
-                        print(p)
-                        embed()
+                    print("could not find", author)
+            doc_authors = d_authors
 
-            for person in parse_column_person(doc['rc']) + parse_column_person(doc['rc_person']):
-                db_person = people_db.get_person_from_alias(person)
-                if db_person:
-                    doc_recipients.append(db_person)
+            d_recipients = []
+            for recipient in doc_recipients:
+                recipient_person = people_db.get_person_from_alias(recipient)
+                if recipient_person:
+                    d_recipients.append(recipient_person)
                 else:
-                    if not person.lower().replace(' ', '') in COMPANY_ABBREVIATIONS_TO_SKIP:
-                        print(f'Missing: {person}')
-                        missing_nodes[person] += 1
+                    print("Could not find", recipient)
+            doc_recipients = d_recipients
 
             for author in doc_authors:
+                author.docs_authored.append(doc)
                 if author in nodes:
                     nodes[author]['count_authored'] += 1
                 else:
-                    nodes[author] = {'person': author, 'count_authored': 1, 'count_received': 0}
+                    embed()
+                    nodes[author] = {'person': author, 'docs_authored': {}, 'count_received': 0}
 
             for recipient in doc_recipients:
                 if recipient in nodes:
@@ -123,11 +156,11 @@ def load_1970s_network():       # pylint: disable=R0914
                     else:
                         edges[edge] = {'edge': edge, 'count': 1}
 
-        with open(network_path, 'wb') as out:
+        with open(NETWORK_PATH, 'wb') as out:
             network = {'nodes': nodes, 'edges': edges}
             pickle.dump(network, out)
 
-        return network
+        return get_network_of_1970s_nodes_and_edges()
 
 def store_network_for_visualization(nodes, edges, center_names, network_name, file_name):
     """
@@ -151,34 +184,6 @@ def store_network_for_visualization(nodes, edges, center_names, network_name, fi
         json.dump(network, out, sort_keys=True, indent=4)
 
 
-def generate_network_of_top_n_edges(n_edges=100):
-    """
-    Generate the network consisting of the n strongest edges
-    :param n_edges:
-    :return:
-    """
-
-    network = load_1970s_network()
-    edges = network['edges']
-
-    nodes_temp = Counter()
-    edges_out = []
-    nodes_out = []
-
-    for edge in sorted(edges.values(), key=lambda x: x['count'], reverse=True)[:n_edges]:
-        edges_out.append({'node1': edge['edge'][0].full_name, 'node2': edge['edge'][1].full_name,
-                          'docs': edge['count'], 'words': 0})
-
-        nodes_temp[edge['edge'][0]] += edge['count']
-        nodes_temp[edge['edge'][1]] += edge['count']
-
-    for node in nodes_temp:
-        nodes_out.append({'name': node.full_name, 'docs': nodes_temp[node], 'words': 0,
-                          'affiliation': node.most_likely_position})
-
-    store_network_for_visualization(nodes_out, edges_out, f'top_{n_edges}_edges',
-                                    f'top_{n_edges}_edges.json')
-
 def generate_people_network(names, network_name, max_number_of_nodes=100,   # pylint: disable=R0914
                             include_2nd_degree_connections=False):
 
@@ -194,9 +199,8 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
         network_name += '_including_2nd_degree_edges'
 
     # Load people db
-    people_db_path = Path('..', 'data', 'network_generation', '1970s_from_csv.pickle')
     people_db = PeopleDatabase()
-    people_db.load_from_disk(Path(people_db_path))
+    people_db.load_from_disk(Path(PEOPLE_DB_PATH))
 
     # initialize the center group of people
     center_people = set()
@@ -212,7 +216,7 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
             raise KeyError
 
     # load the whole 1970s network
-    network = load_1970s_network()
+    network = get_network_of_1970s_nodes_and_edges()
     edges = network['edges']
 
     nodes_temp = Counter()
@@ -229,14 +233,6 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
 
         if not person1 or not person2:
             embed()
-        # person1, person2 = edge['edge']
-        #
-        # if edge['edge'][0].last.lower().find('holtzman') > -1:
-        #     print(person1)
-        #     print(edge['edge'][0])
-        #     print("roemer")
-        #     # embed()
-
         if (
             (person1 in center_people or person2 in center_people) and
             (person1.first != '' or person1.most_likely_position != 'no positions available') and
@@ -261,32 +257,9 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
     if len(c) != len(center_people):
         raise ValueError("Found 0 documents for at least one person. embed here and investigate!")
 
-
-
-    # embed()
-
-    # # select edges to include:
-    # for edge in sorted(edges_out, key=lambda x: x['docs'], reverse=True):
-    #
-    #     if len(nodes_temp) >= max_number_of_nodes:
-    #         break
-    #
-    #     p1 = people_db.get_person_from_alias(edge['node1'])
-    #     p2 = people_db.get_person_from_alias(edge['node2'])
-    #     if (
-    #             (p1.first == '' and p1.most_likely_position == 'no positions available') or
-    #             (p2.first == '' and p2.most_likely_position == 'no positions available')
-    #         ):
-    #         continue
-    #
-    #     edges_out.append(edge)
-    #     nodes_temp[p1] += edge['docs']
-    #     nodes_temp[p1] += edge['docs']
-
-    # embed()
-
+    # store all people in the network to be displayed in their own network
     new_people_db = PeopleDatabase()
-    for node, node_count in nodes_temp.most_common(200):
+    for node, node_count in nodes_temp.most_common(max_number_of_nodes):
         print("\n", node_count, "\n", node)
         node.count = node_count
         new_people_db.people.add(node)
@@ -318,41 +291,12 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
                 if edge['count'] == 0:
                     embed()
 
-    # embed()
-
-    # if include_2nd_degree_connections:
-        # network_name += '_including_2nd_degree_edges'
-
-    #
-    # # add connections between non-main nodes
-    # # we now know all the nodes, we just need to re-generate edges
-    # # TODO: this is highly inefficient--we should first figure out all of the nodes and only then
-    # # TODO: generate edges. but it works for the time being.
-    # if include_2nd_degree_connections:
-    #
-    #     network_name += '_including_2nd_degree_edges'
-    #
-    #     node_names_set = set(node['name'] for node in nodes_out)
-    #     edges_final = []
-    #     for idx, edge in enumerate(edges.values()):
-    #         if edge['count'] < 5:
-    #             continue
-    #
-    #         person1, person2 = edge['edge']
-    #         if (person1.full_name in node_names_set and
-    #                 person2.full_name in node_names_set):
-    #             edges_final.append({'node1': person1.full_name, 'node2': person2.full_name,
-    #                                 'docs': edge['count'], 'words': 0})
-    #     edges_final = sorted(edges_final, key=lambda x: x['docs'], reverse=True)
-    # else:
-    #     edges_final = edges_out
 
     store_network_for_visualization(nodes_out, edges_out,
                                     center_names=names,
                                     network_name=f'person_{network_name}',
                                     file_name=f'person_{network_name}.json')
 
-    # embed()
 
 def search_possible_matches(name, people_db=None):
     """
@@ -432,58 +376,110 @@ def generate_network_research_directors(include_2nd_degree_connections=True):# p
                             include_2nd_degree_connections=include_2nd_degree_connections)
 
 
-def generate_network_whole_industry():
-    """
-    Generate a network where the nodes are not people but companies
 
+def parse_authors_or_recipients_of_doc(side, doc, counters, people_db):
+
+    if not side in ['authors', 'recipients']:
+        raise ValueError("side has to be 'authors' or 'recipients' ")
+
+    doc_organizations = []
+    doc_people = []
+    if side == 'authors':
+        group = parse_column_person(doc['au']) + parse_column_person(doc['au_person'])
+    else:
+        group = parse_column_person(doc['rc']) + parse_column_person(doc['rc_person'])
+
+    for name in group:
+        try:
+            if name in people_db.raw_org_to_clean_org_dict:
+                doc_organizations.append(people_db.raw_org_to_clean_org_dict[name])
+                continue
+            # 4 characters is too short for a name and we have already extracted orgs
+            if len(name) < 4:
+                continue
+
+
+            person = Person(name_raw=name)
+            if person.check_if_this_person_looks_valid():
+                doc_people.append(name)
+                counters['valid'][name] += 1
+            elif check_if_name_looks_like_an_organization(name):
+                doc_organizations.append(name)
+                counters['organization_from_person'][name] += 1
+            else:
+                counters['invalid'][name] += 1
+
+        except:
+            counters['error'][name] += 1
+
+    return doc_people, doc_organizations
+
+def parse_au_or_rc_organizations_of_doc(side, doc, counters, people_db):
+
+    if not side in ['authors', 'recipients']:
+        raise ValueError("side has to be 'authors' or 'recipients' ")
+
+
+    if side == 'authors':
+        group = parse_column_person(doc['au_org'])
+        # many person/org combinations only differ in terms of spaces. unclear why
+        if (
+            doc['au_org'].replace(' ', '') == doc['au'].replace(' ', '') or
+            doc['au_org'].replace(' ', '') == doc['au_person'].replace(' ', '')
+        ):
+            return []
+    else:
+        group = parse_column_person(doc['rc_org'])
+        if (
+            doc['rc_org'].replace(' ', '') == doc['rc'].replace(' ', '') or
+            doc['rc_org'].replace(' ', '') == doc['rc_person'].replace(' ', '')
+        ):
+            return []
+
+    if len(group) == 0:
+        return []
+
+
+    organizations = []
+    for org in group:
+        if org in people_db.raw_org_to_clean_org_dict:
+            organizations.append(people_db.raw_org_to_clean_org_dict[org])
+        else:
+            if check_if_name_looks_like_an_organization(org):
+                organizations.append(org)
+                counters['organization_from_org'][org] += 1
+            else:
+                counters['organization_invalid'][org] += 1
+
+                if org == 'Hetsko, Cyril F':
+                    embed()
+
+    return organizations
+
+
+def check_if_name_looks_like_an_organization(name):
+    """
+    Returns true if the name looks like an organization
+    currently: if only alphabetical and with at least 2 spaces
+
+    >>> check_if_name_looks_like_an_organization('US HOUSE COMM ON INTERSTATE')
+    True
+    >>> check_if_name_looks_like_an_organization('US CONGRESS')
+    False
+
+    :param name:
     :return:
     """
-
-    # Load people db
-    people_db_path = Path('..', 'data', 'network_generation', 'people_db_1970s.pickle')
-    people_db = PeopleDatabase()
-    people_db.load_from_disk(Path(people_db_path))
-
-    # load the whole 1970s network
-    network = load_1970s_network()
-    edges = network['edges']
-
-    org_counter = Counter()
-    connection_counter = Counter()
+    if re.match('^[a-zA-Z]+ [a-zA-Z]+ [a-zA-Z ]+$', name):
+        return True
+    return False
 
 
-    # first identify all the primary edges including at least one person from center_people
-    for idx, edge in enumerate(edges.values()):
-        person1, person2 = edge['edge']
-        p1m = person1.most_likely_position
-        p2m = person2.most_likely_position
-        if (
-            person1 and person2 and p1m != p2m and
-            p1m != 'no positions available' and p2m != 'no positions available'
-        ):
-            org_counter[p1m] += edge['count']
-            org_counter[p2m] += edge['count']
-            connection_counter[tuple(sorted((p1m, p2m)))] += edge['count']
-
-    nodes = []
-    edges = []
-    for org, org_count in org_counter.most_common():
-        nodes.append({'name': org, 'docs': org_count, 'words': 0, 'affiliation': 'test'})
-    for edge, edge_count in connection_counter.most_common():
-        edges.append({'node1': edge[0], 'node2': edge[1], 'docs': edge_count, 'words': 0})
-
-    store_network_for_visualization(nodes, edges,
-                                    center_names=[], network_name='industry',
-                                    file_name='whole_industry.json')
 
 if __name__ == '__main__':
 
-    # for match in search_possible_matches('leake').most_common(10):
-    #     print()
-    #     print(match[0].full_name, match[1])
-    #     print(match[0].positions)
-    #     print(match[0].aliases)
+    # generate_network_of_1970s_nodes_and_edges()
+    generate_network_lawyers()
+    # generate_network_research_directors()
 
-    # generate_network_research_directors(include_2nd_degree_connections=True)
-    generate_network_lawyers(include_2nd_degree_connections=True)
-    # generate_network_whole_industry()
+

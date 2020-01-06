@@ -1,0 +1,3710 @@
+{
+    "center_names": {},
+    "links": [
+        {
+            "docs": 20635,
+            "node1": "British American Tobacco",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 4894,
+            "node1": "Lorillard",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 4471,
+            "node1": "Brown & Williamson",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 4264,
+            "node1": "@internal_organization@",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 3994,
+            "node1": "Philip Morris",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 3943,
+            "node1": "R.J. Reynolds",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 3730,
+            "node1": "Brown & Williamson",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 3157,
+            "node1": "Brown & Williamson",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 3085,
+            "node1": "Philip Morris",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 2401,
+            "node1": "Council for Tobacco Research",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 2389,
+            "node1": "Council for Tobacco Research",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 2287,
+            "node1": "British American Tobacco",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 2263,
+            "node1": "Brown & Williamson",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 2105,
+            "node1": "Philip Morris",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 2038,
+            "node1": "Lorillard",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 1967,
+            "node1": "R.J. Reynolds",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 1810,
+            "node1": "Lorillard",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 1777,
+            "node1": "Brown & Williamson",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 1773,
+            "node1": "Brown & Williamson",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 1507,
+            "node1": "Jacob & Medinger",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 1369,
+            "node1": "Brown & Williamson",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 1312,
+            "node1": "American Tobacco",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 1233,
+            "node1": "Shook, Hardy & Bacon",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 1184,
+            "node1": "American Tobacco",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 1171,
+            "node1": "Lorillard",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 1059,
+            "node1": "Council for Tobacco Research",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 1003,
+            "node1": "American Tobacco",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 953,
+            "node1": "British American Tobacco",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 902,
+            "node1": "American Tobacco",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 787,
+            "node1": "Council for Tobacco Research",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 684,
+            "node1": "Liggett & Myers",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 647,
+            "node1": "Council for Tobacco Research",
+            "node2": "Harvard University",
+            "words": 0
+        },
+        {
+            "docs": 621,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of Southern California",
+            "words": 0
+        },
+        {
+            "docs": 584,
+            "node1": "American Cancer Society",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 558,
+            "node1": "Covington & Burling",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 514,
+            "node1": "American Tobacco",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 421,
+            "node1": "British American Tobacco",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 411,
+            "node1": "Covington & Burling",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 399,
+            "node1": "Council for Tobacco Research",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 396,
+            "node1": "Jacob & Medinger",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 395,
+            "node1": "British American Tobacco",
+            "node2": "McGill University",
+            "words": 0
+        },
+        {
+            "docs": 382,
+            "node1": "Council for Tobacco Research",
+            "node2": "Creighton University",
+            "words": 0
+        },
+        {
+            "docs": 364,
+            "node1": "Jacob & Medinger",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 361,
+            "node1": "Brown & Williamson",
+            "node2": "Covington & Burling",
+            "words": 0
+        },
+        {
+            "docs": 350,
+            "node1": "Philip Morris",
+            "node2": "Rutgers University",
+            "words": 0
+        },
+        {
+            "docs": 346,
+            "node1": "Harvard University",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 341,
+            "node1": "Covington & Burling",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 340,
+            "node1": "Council for Tobacco Research",
+            "node2": "Temple University",
+            "words": 0
+        },
+        {
+            "docs": 337,
+            "node1": "Brown & Williamson",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 336,
+            "node1": "Council for Tobacco Research",
+            "node2": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "docs": 332,
+            "node1": "Harvard University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 318,
+            "node1": "Council for Tobacco Research",
+            "node2": "Georgetown University",
+            "words": 0
+        },
+        {
+            "docs": 315,
+            "node1": "British American Tobacco",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 295,
+            "node1": "American Tobacco",
+            "node2": "Chadbourne, Park, Whiteside & Wolff",
+            "words": 0
+        },
+        {
+            "docs": 287,
+            "node1": "Chadbourne, Park, Whiteside & Wolff",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 281,
+            "node1": "Council for Tobacco Research",
+            "node2": "Medical University of South Carolina",
+            "words": 0
+        },
+        {
+            "docs": 274,
+            "node1": "Council for Tobacco Research",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 271,
+            "node1": "Harvard University",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 262,
+            "node1": "American Tobacco",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 254,
+            "node1": "Council for Tobacco Research",
+            "node2": "State University of New York",
+            "words": 0
+        },
+        {
+            "docs": 253,
+            "node1": "American Tobacco",
+            "node2": "British American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 243,
+            "node1": "American Tobacco",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 235,
+            "node1": "American Tobacco",
+            "node2": "Covington & Burling",
+            "words": 0
+        },
+        {
+            "docs": 231,
+            "node1": "Covington & Burling",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 212,
+            "node1": "Columbia University",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 207,
+            "node1": "Chadbourne, Park, Whiteside & Wolff",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 201,
+            "node1": "Philip Morris",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 197,
+            "node1": "Council for Tobacco Research",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 190,
+            "node1": "Jacob & Medinger",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 185,
+            "node1": "Liggett & Myers",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 183,
+            "node1": "Columbia University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 177,
+            "node1": "Brown & Williamson",
+            "node2": "Chadbourne, Park, Whiteside & Wolff",
+            "words": 0
+        },
+        {
+            "docs": 175,
+            "node1": "Council for Tobacco Research",
+            "node2": "Yale University",
+            "words": 0
+        },
+        {
+            "docs": 174,
+            "node1": "Council for Tobacco Research",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 160,
+            "node1": "Council for Tobacco Research",
+            "node2": "New York University",
+            "words": 0
+        },
+        {
+            "docs": 157,
+            "node1": "Chadbourne, Park, Whiteside & Wolff",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 152,
+            "node1": "LS Inc",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 150,
+            "node1": "Covington & Burling",
+            "node2": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "docs": 149,
+            "node1": "Council for Tobacco Research",
+            "node2": "Johns Hopkins University",
+            "words": 0
+        },
+        {
+            "docs": 146,
+            "node1": "                                            WASHINGTON UNIVERSITY IN ST LOUIS",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 143,
+            "node1": "Council for Tobacco Research",
+            "node2": "Rockefeller University",
+            "words": 0
+        },
+        {
+            "docs": 143,
+            "node1": "Harvard University",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 138,
+            "node1": "Covington & Burling",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 131,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of San Diego",
+            "words": 0
+        },
+        {
+            "docs": 126,
+            "node1": "Harvard University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 125,
+            "node1": "Liggett & Myers",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 124,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 114,
+            "node1": "Arnold & Porter",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 112,
+            "node1": "Council for Tobacco Research",
+            "node2": "Tulane University",
+            "words": 0
+        },
+        {
+            "docs": 110,
+            "node1": "American Tobacco",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 105,
+            "node1": "Brown & Williamson",
+            "node2": "Imperial Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 102,
+            "node1": "Council for Tobacco Research",
+            "node2": "Tufts University",
+            "words": 0
+        },
+        {
+            "docs": 102,
+            "node1": "British American Tobacco",
+            "node2": "Imperial Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 100,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of Miami ",
+            "words": 0
+        },
+        {
+            "docs": 98,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of Minnesota",
+            "words": 0
+        },
+        {
+            "docs": 94,
+            "node1": "                                            MACCLOUD & GROVE",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 92,
+            "node1": "Council for Tobacco Research",
+            "node2": "Covington & Burling",
+            "words": 0
+        },
+        {
+            "docs": 89,
+            "node1": "@internal_organization@",
+            "node2": "British American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 88,
+            "node1": "Dartmouth University",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 84,
+            "node1": "Tobacco Institute",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 83,
+            "node1": "Boston University",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 75,
+            "node1": "American Cancer Society",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 75,
+            "node1": "Arnold & Porter",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 73,
+            "node1": "Council for Tobacco Research",
+            "node2": "Vanderbilt University",
+            "words": 0
+        },
+        {
+            "docs": 73,
+            "node1": "Philip Morris",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 70,
+            "node1": "Imperial Tobacco",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 70,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of Virginia",
+            "words": 0
+        },
+        {
+            "docs": 69,
+            "node1": "Council for Tobacco Research",
+            "node2": "Pennsylvania State University",
+            "words": 0
+        },
+        {
+            "docs": 68,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of Washington",
+            "words": 0
+        },
+        {
+            "docs": 68,
+            "node1": "Philip Morris",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 67,
+            "node1": "Brown & Williamson",
+            "node2": "Brown & Williamson, Counsel",
+            "words": 0
+        },
+        {
+            "docs": 65,
+            "node1": "Shook, Hardy & Bacon",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 64,
+            "node1": "Council for Tobacco Research",
+            "node2": "Wayne State University",
+            "words": 0
+        },
+        {
+            "docs": 63,
+            "node1": "Keyes & Gardner",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 62,
+            "node1": "British American Tobacco",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 61,
+            "node1": "Arnold & Porter",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 58,
+            "node1": "Chadbourne, Park, Whiteside & Wolff",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 58,
+            "node1": "American Tobacco",
+            "node2": "Arnold & Porter",
+            "words": 0
+        },
+        {
+            "docs": 56,
+            "node1": "Chadbourne, Park, Whiteside & Wolff",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 56,
+            "node1": "Council for Tobacco Research",
+            "node2": "Louisiana State University",
+            "words": 0
+        },
+        {
+            "docs": 55,
+            "node1": "Jacob & Medinger",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 55,
+            "node1": "Council for Tobacco Research",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 54,
+            "node1": "Philip Morris",
+            "node2": "Princeton University",
+            "words": 0
+        },
+        {
+            "docs": 53,
+            "node1": "Philip Morris",
+            "node2": "Yale University",
+            "words": 0
+        },
+        {
+            "docs": 52,
+            "node1": "Chadbourne, Park, Whiteside & Wolff",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 52,
+            "node1": "                                            HARDY & BACON",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 51,
+            "node1": "Liggett & Myers",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 51,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 49,
+            "node1": "American Tobacco",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 49,
+            "node1": "Council for Tobacco Research",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 49,
+            "node1": "Philip Morris",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 48,
+            "node1": "Brown & Williamson",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 47,
+            "node1": "Council for Tobacco Research",
+            "node2": "Duke University",
+            "words": 0
+        },
+        {
+            "docs": 47,
+            "node1": "                                            USA INC",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 46,
+            "node1": "British American Tobacco",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 42,
+            "node1": "Johns Hopkins University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 42,
+            "node1": "Philip Morris",
+            "node2": "Temple University",
+            "words": 0
+        },
+        {
+            "docs": 40,
+            "node1": "R.J. Reynolds",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 40,
+            "node1": "Council for Tobacco Research",
+            "node2": "SUNY Stony Brook",
+            "words": 0
+        },
+        {
+            "docs": 38,
+            "node1": "Keyes & Gardner",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 37,
+            "node1": "Philip Morris",
+            "node2": "Rockefeller University",
+            "words": 0
+        },
+        {
+            "docs": 37,
+            "node1": "Council for Tobacco Research",
+            "node2": "George Washington University",
+            "words": 0
+        },
+        {
+            "docs": 36,
+            "node1": "Imperial Tobacco",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 36,
+            "node1": "R.J. Reynolds",
+            "node2": "University of Minnesota",
+            "words": 0
+        },
+        {
+            "docs": 35,
+            "node1": "Tobacco Institute",
+            "node2": "University of Washington",
+            "words": 0
+        },
+        {
+            "docs": 35,
+            "node1": "                                            MICROANALYTICAL LABORATORY HAMBURG",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 35,
+            "node1": "                                            ZIMMER MCCLASKEY LEWIS",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 35,
+            "node1": "Brown & Williamson",
+            "node2": "McGill University",
+            "words": 0
+        },
+        {
+            "docs": 34,
+            "node1": "                                            MICROANALYTICAL LABORATORY HAMBURG",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 34,
+            "node1": "Lorillard",
+            "node2": "Tobacco Merchants Association of the U.S.",
+            "words": 0
+        },
+        {
+            "docs": 33,
+            "node1": "Brown & Williamson, Counsel",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 33,
+            "node1": "Brown & Williamson",
+            "node2": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "docs": 33,
+            "node1": "Case Western Reserve University",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 32,
+            "node1": "Council for Tobacco Research",
+            "node2": "UC San Francisco",
+            "words": 0
+        },
+        {
+            "docs": 32,
+            "node1": "Stanford University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 32,
+            "node1": "Brown & Williamson, Counsel",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 31,
+            "node1": "Harvard University",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 30,
+            "node1": "Council for Tobacco Research",
+            "node2": "Ohio State University",
+            "words": 0
+        },
+        {
+            "docs": 30,
+            "node1": "British American Tobacco",
+            "node2": "Harvard University",
+            "words": 0
+        },
+        {
+            "docs": 29,
+            "node1": "Keyes & Gardner",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 28,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of Indiana",
+            "words": 0
+        },
+        {
+            "docs": 28,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of North Carolina",
+            "words": 0
+        },
+        {
+            "docs": 27,
+            "node1": "Jacob & Medinger",
+            "node2": "Louisiana State University",
+            "words": 0
+        },
+        {
+            "docs": 27,
+            "node1": "Arnold & Porter",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 27,
+            "node1": "Philip Morris",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 26,
+            "node1": "                                            MCCLASKY & LEWIS",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 25,
+            "node1": "Shook, Hardy & Bacon",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 25,
+            "node1": "Liggett & Myers",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 25,
+            "node1": "Council for Tobacco Research",
+            "node2": "Northwestern University",
+            "words": 0
+        },
+        {
+            "docs": 24,
+            "node1": "Cornell University",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 24,
+            "node1": "Council for Tobacco Research",
+            "node2": "Tel Aviv University",
+            "words": 0
+        },
+        {
+            "docs": 24,
+            "node1": "                                            TOBACCO & FIREARMS",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 23,
+            "node1": "Jacob & Medinger",
+            "node2": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "docs": 22,
+            "node1": "Council for Tobacco Research",
+            "node2": "Michigan State University",
+            "words": 0
+        },
+        {
+            "docs": 22,
+            "node1": "British American Tobacco",
+            "node2": "New York University",
+            "words": 0
+        },
+        {
+            "docs": 21,
+            "node1": "Brown & Williamson",
+            "node2": "Harvard University",
+            "words": 0
+        },
+        {
+            "docs": 21,
+            "node1": "                                            CANADIAN TOBACCO MANUFACTURERS' COUNCIL",
+            "node2": "British American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 20,
+            "node1": "Cornell University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 20,
+            "node1": "American Cancer Society",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 20,
+            "node1": "Lorillard",
+            "node2": "University of Washington",
+            "words": 0
+        },
+        {
+            "docs": 20,
+            "node1": "                                            HARDY & BACON",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 19,
+            "node1": "Imperial Tobacco",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 19,
+            "node1": "British American Tobacco",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 19,
+            "node1": "                                            HARDY & BACON",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 18,
+            "node1": "Council for Tobacco Research",
+            "node2": "SUNY Buffalo",
+            "words": 0
+        },
+        {
+            "docs": 18,
+            "node1": "Council for Tobacco Research",
+            "node2": "Emory University",
+            "words": 0
+        },
+        {
+            "docs": 18,
+            "node1": "                                            MCCLASKY > LEWIS",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 18,
+            "node1": "Council for Tobacco Research",
+            "node2": "Mount Sinai School of Medicine",
+            "words": 0
+        },
+        {
+            "docs": 18,
+            "node1": "Council for Tobacco Research",
+            "node2": "Hebrew University",
+            "words": 0
+        },
+        {
+            "docs": 18,
+            "node1": "Arnold & Porter",
+            "node2": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "docs": 18,
+            "node1": "                                            HARDY & BACON",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 17,
+            "node1": "British American Tobacco",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 17,
+            "node1": "@internal_organization@",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 17,
+            "node1": "                                            MACCLOUD & GROVE",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 17,
+            "node1": "Harvard University",
+            "node2": "Temple University",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "R.J. Reynolds",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "                                            USE JOHNSTON, DONALD STEWART",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "                                            MACCLOUD > GROVE",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "                                            JUNIOR",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "Lorillard",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 16,
+            "node1": "                                            FIRST SECURITIES, INC",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "Chadbourne, Park, Whiteside & Wolff",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "Imperial Tobacco",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "Council for Tobacco Research",
+            "node2": "Royal Postgraduate Medical School",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "Arnold & Porter",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "Hebrew University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "                                            GIANNINOTO ASSOCIATES INC",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "British American Tobacco",
+            "node2": "Columbia University",
+            "words": 0
+        },
+        {
+            "docs": 15,
+            "node1": "British American Tobacco",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 14,
+            "node1": "Philip Morris",
+            "node2": "University of Southern California",
+            "words": 0
+        },
+        {
+            "docs": 14,
+            "node1": "Brown & Williamson, Counsel",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 14,
+            "node1": "R.J. Reynolds",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "Jacob & Medinger",
+            "node2": "Tulane University",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "                                            LRD, INC, INDUSTRY LITIGATION SUPPORT SYSTEM MANAGER",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "                                            LRD, INC, INDUSTRY LITIGATION SUPPORT SYSTEM MANAGER",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "R.J. Reynolds",
+            "node2": "University of Washington",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "American Tobacco",
+            "node2": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "American Cancer Society",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 13,
+            "node1": "                                            HARDY & BACON",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "Chadbourne, Park, Whiteside & Wolff",
+            "node2": "Covington & Burling",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "Council for Tobacco Research",
+            "node2": "University of Texas",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "Council for Tobacco Research",
+            "node2": "Imperial Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "                                            PKG CUNNINGHAM & WALSH, B&W ADVERTISING AGENCY",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "                                            POST KEYES GARDNER INC",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "R.J. Reynolds",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "R.J. Reynolds",
+            "node2": "State University of New York",
+            "words": 0
+        },
+        {
+            "docs": 12,
+            "node1": "British American Tobacco",
+            "node2": "Princeton University",
+            "words": 0
+        },
+        {
+            "docs": 11,
+            "node1": "Philip Morris",
+            "node2": "University of Washington",
+            "words": 0
+        },
+        {
+            "docs": 11,
+            "node1": "Arnold & Porter",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 11,
+            "node1": "Lorillard",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 11,
+            "node1": "Philip Morris",
+            "node2": "University of Minnesota",
+            "words": 0
+        },
+        {
+            "docs": 11,
+            "node1": "                                            AUSTRALIA",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 11,
+            "node1": "                                            E, JR",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 11,
+            "node1": "British American Tobacco",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "@internal_organization@",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "                                            LRD, INC, INDUSTRY LITIGATION SUPPORT SYSTEM MANAGER",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "                                            MCCLASKY & LEWIS",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "Lorillard",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "Jacob & Medinger",
+            "node2": "Medical University of South Carolina",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "George Washington University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "Council for Tobacco Research",
+            "node2": "Rosalind Franklin University",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "Brown & Williamson",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 10,
+            "node1": "                                            HARDY & BACON",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "                                            DAVENPORT & MOORE",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "Boston University",
+            "node2": "Harvard University",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "                                            USE CHRISTOPHER, F HUNDALL, JR",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "Council for Tobacco Research",
+            "node2": "Princeton University",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "Lorillard",
+            "node2": "Tulane University",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "Harvard University",
+            "node2": "Johns Hopkins University",
+            "words": 0
+        },
+        {
+            "docs": 9,
+            "node1": "Council for Tobacco Research",
+            "node2": "Rutgers University",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "Council for Tobacco Research",
+            "node2": "McMaster University",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "                                            WHITESIDE & WOLFF",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "Dartmouth University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "                                            USE MCCARTY, CHARLES I",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "American Tobacco",
+            "node2": "Brown & Williamson, Counsel",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "                                            BROWN VLASSIS & BAIN",
+            "node2": "                                            SHIMMEL HILL BISHOP & GRUENDER PC",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "                                            POST KEYES GARDNER INC",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "                                            JR JR>",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "                                            MCNEIL CONSULTING",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "                                            TOBACCO & FIREARMS",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "                                            HARDY & BACON",
+            "node2": "Chadbourne, Park, Whiteside & Wolff",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "Columbia University",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "R.J. Reynolds",
+            "node2": "Temple University",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "R.J. Reynolds",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 8,
+            "node1": "British American Tobacco",
+            "node2": "Royal Postgraduate Medical School",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "New York University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "American Tobacco",
+            "node2": "Imperial Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "                                            USE PIEHL, DONALD H",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 7,
+            "node1": "Brown & Williamson, Counsel",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Duke University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "British American Tobacco",
+            "node2": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "British American Tobacco",
+            "node2": "Covington & Burling",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Lorillard",
+            "node2": "New York University",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "British American Tobacco",
+            "node2": "University of Minnesota",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "                                            B&W RESEARCH AND DEVELOPMENT COORDINATOR OF PRODUCT DEVELOPMENT",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "American Cancer Society",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "Covington & Burling",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "                                            MACCLOUD > GROVE",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Johns Hopkins University",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Council for Tobacco Research",
+            "node2": "McGill University",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Council for Tobacco Research",
+            "node2": "Purdue University",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "@internal_organization@",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "                                            POST KEYES GARDNER INC",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Harvard University",
+            "node2": "Tufts University",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Brown & Williamson",
+            "node2": "University of Washington",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "British American Tobacco",
+            "node2": "Duke University",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Brown & Williamson, Counsel",
+            "node2": "Chadbourne, Park, Whiteside & Wolff",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "Arnold & Porter",
+            "node2": "Chadbourne, Park, Whiteside & Wolff",
+            "words": 0
+        },
+        {
+            "docs": 6,
+            "node1": "British American Tobacco",
+            "node2": "Pennsylvania State University",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "                                            HAAS-FP, HETSKO-CF, ROEMER-HC, STEVENS-AJ, YEAMAN A",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "American Cancer Society",
+            "node2": "Harvard University",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Harvard University",
+            "node2": "Yale University",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "@internal_organization@",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Arnold & Porter",
+            "node2": "Covington & Burling",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "                                            WHITESIDE & WOLFF",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Harvard University",
+            "node2": "University of Southern California",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Council for Tobacco Research",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Arnold & Porter",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Princeton University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Philip Morris",
+            "node2": "Tufts University",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Tobacco Institute",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "                                            HARDY & BACON",
+            "node2": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "British American Tobacco",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "British American Tobacco",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 5,
+            "node1": "Medical University of South Carolina",
+            "node2": "University of Southern California",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "University of Pennsylvania",
+            "node2": "Wayne State University",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Harvard University",
+            "node2": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Covington & Burling",
+            "node2": "University of Washington",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "                                            USE STEELE [BOLIN], RHENDA",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Johns Hopkins University",
+            "node2": "Princeton University",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "R.J. Reynolds",
+            "node2": "University of Southern California",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "University of Southern California",
+            "node2": "Yale University",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "                                            COLUMBUS",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Harvard University",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "SUNY Stony Brook",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Harvard University",
+            "node2": "New York University",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "                                            MCCLASKY > LEWIS",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Boston University",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "R.J. Reynolds",
+            "node2": "Tulane University",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "                                            SPEARS,AW",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Liggett & Myers",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "                                            SPEARS,AW",
+            "node2": "Harvard University",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "                                            CANADIAN TOBACCO MANUFACTURERS' COUNCIL",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Keyes & Gardner",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Johns Hopkins University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "Brown & Williamson",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "British American Tobacco",
+            "node2": "Cornell University",
+            "words": 0
+        },
+        {
+            "docs": 4,
+            "node1": "University of San Diego",
+            "node2": "University of Southern California",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Columbia University",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Brown & Williamson",
+            "node2": "SUNY Buffalo",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Covington & Burling",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Tobacco Institute",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Brown & Williamson, Counsel",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "                                            WHOLESALE TOBACCO DISTRIBUTORS OF NEW YORK INC",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "                                            AUTO CITY CANDY COMPANY",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Pennsylvania State University",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "University of Miami ",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Dartmouth University",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Hebrew University",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "British American Tobacco",
+            "node2": "Chadbourne, Park, Whiteside & Wolff",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Jacob & Medinger",
+            "node2": "University of San Diego",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Duke University",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Boston University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Philip Morris",
+            "node2": "Royal Postgraduate Medical School",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Philip Morris",
+            "node2": "Tobacco Merchants Association of the U.S.",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Jacob & Medinger",
+            "node2": "Michigan State University",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "                                            POST KEYES GARDNER INC",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "American Cancer Society",
+            "node2": "British American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "American Tobacco",
+            "node2": "Duke University",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "                                            CANADIAN TOBACCO MANUFACTURERS' COUNCIL",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Brown & Williamson",
+            "node2": "Columbia University",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Brown & Williamson",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Brown & Williamson",
+            "node2": "Temple University",
+            "words": 0
+        },
+        {
+            "docs": 3,
+            "node1": "Council for Tobacco Research",
+            "node2": "Dartmouth University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "American Cancer Society",
+            "node2": "Yale University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            WHITESIDE & WOLFF",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            TOBACCO INSTITUTE ADVERTISING AGENCY",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            TOBACCO INSTITUTE ADVERTISING AGENCY",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            TOBACCO INSTITUTE ADVERTISING AGENCY",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            JR, MD, PHD",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            WASHINGTON UNIVERSITY IN ST LOUIS",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            WASHINGTON UNIVERSITY IN ST LOUIS",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            GREER-J, HENSON-A, PEPPLES-E, STEVENS AJ",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            HETSKO-CF, PEPPLES-E, ROEMER-HC, STEVENS AJ",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            WHOLESALE TOBACCO DISTRIBUTORS OF NEW YORK INC",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            USE BLEVINS, RAYMOND A, JR",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "McGill University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Imperial Tobacco",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            WHITESIDE & WOLFF",
+            "node2": "Brown & Williamson, Counsel",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            WHITESIDE & WOLFF",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            JR, MD, PHD",
+            "node2": "Chadbourne, Park, Whiteside & Wolff",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "Chadbourne, Park, Whiteside & Wolff",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Brown & Williamson",
+            "node2": "Rockefeller University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Jacob & Medinger",
+            "node2": "University of Indiana",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            MANUFACTURA DE TOBACOS IMPARCIALES SAICA",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Lorillard",
+            "node2": "SUNY Buffalo",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Columbia University",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Case Western Reserve University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Creighton University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            SPEARS,AW",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Philip Morris",
+            "node2": "Tel Aviv University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            JR JR>",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Philip Morris",
+            "node2": "SUNY Stony Brook",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            WASHINGTON UNIVERSITY IN ST LOUIS",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "American Tobacco",
+            "node2": "University of Washington",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            B&W RESEARCH AND DEVELOPMENT COORDINATOR OF PRODUCT DEVELOPMENT",
+            "node2": "British American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Brown & Williamson",
+            "node2": "Tobacco Merchants Association of the U.S.",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Brown & Williamson",
+            "node2": "University of Southern California",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Brown & Williamson",
+            "node2": "Louisiana State University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            BARTON",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            JUNIOR",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            W THOMAS",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "                                            SSC&B GRAETZER-K, SSC&B KELLEHER-J, SSC&B EINHORN-P, SSC&B",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Brown & Williamson",
+            "node2": "Johns Hopkins University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Johns Hopkins University",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Columbia University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Tobacco Institute",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Temple University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Harvard University",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Columbia University",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Jacob & Medinger",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Jacob & Medinger",
+            "node2": "Temple University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Jacob & Medinger",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Columbia University",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Shook, Hardy & Bacon",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Shook, Hardy & Bacon",
+            "node2": "Temple University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Shook, Hardy & Bacon",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "McGill University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 2,
+            "node1": "Ohio State University",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Boston University",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            VARNER, INC",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            PAKISTAN",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Lorillard",
+            "node2": "Ohio State University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "American Tobacco",
+            "node2": "Columbia University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            HAAS-FP, HETSKO-CF, ROEMER-HC, STEVENS-AJ, YEAMAN A",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            HETSKO-CF, PEPPLES-E, ROEMER-HC, STEVENS AJ",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "American Tobacco",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Princeton University",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE JOHNSTON, DONALD STEWART",
+            "node2": "                                            USE MCCARTY, CHARLES I",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Louisiana State University",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            DEPARTMENT OF ENVIRONMENTAL HYGIENE",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Brown & Williamson, Counsel",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            MAX H",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Boston University",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE MCCARTY, CHARLES I",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE STOKES, COLIN H",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE COLBY, FRANK GERHARDT, PHD",
+            "node2": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE CHRISTOPHER, F HUNDALL, JR",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "Arnold & Porter",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            USE HETSKO, CYRIL F",
+            "node2": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            WHITESIDE & WOLFF",
+            "node2": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            POST KEYES GARDNER INC",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            WATERMAN STEAMSHIP CORPORATION",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            GIANNINOTO ASSOCIATES INC",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Covington & Burling",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Medical University of South Carolina",
+            "node2": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "State University of New York",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Creighton University",
+            "node2": "Yale University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            SPEARS,AW",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Stanford University",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Tobacco Institute",
+            "node2": "University of Miami ",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Lorillard",
+            "node2": "Louisiana State University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Ohio State University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            SPEARS,AW",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            CANADIAN TOBACCO MANUFACTURERS' COUNCIL",
+            "node2": "McGill University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "American Cancer Society",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Lorillard",
+            "node2": "University of North Carolina",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Lorillard",
+            "node2": "Pennsylvania State University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Lorillard",
+            "node2": "Royal Postgraduate Medical School",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Lorillard",
+            "node2": "Princeton University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "McGill University",
+            "node2": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Tobacco Institute",
+            "node2": "University of Southern California",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Louisiana State University",
+            "node2": "Philip Morris",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Brown & Williamson",
+            "node2": "Wayne State University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Jacob & Medinger",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Brown & Williamson",
+            "node2": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            HARDY & BACON",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            HARDY & BACON",
+            "node2": "British American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Covington & Burling",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            GIANNINOTO ASSOCIATES INC",
+            "node2": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            ASGMT 5",
+            "node2": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "British American Tobacco",
+            "node2": "Rockefeller University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "                                            AUSTRALIA",
+            "node2": "British American Tobacco",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Leber Katz Partners",
+            "node2": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "American Tobacco",
+            "node2": "Harvard University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "American Tobacco",
+            "node2": "Johns Hopkins University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Johns Hopkins University",
+            "node2": "Lorillard",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Columbia University",
+            "node2": "Harvard University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Harvard University",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Harvard University",
+            "node2": "Stanford University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "British American Tobacco",
+            "node2": "Temple University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Harvard University",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Liggett & Myers",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Columbia University",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "UCLA",
+            "node2": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Temple University",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Stanford University",
+            "node2": "UCLA",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "British American Tobacco",
+            "node2": "University of Washington",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "British American Tobacco",
+            "node2": "George Washington University",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "George Washington University",
+            "node2": "University of Southern California",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "Creighton University",
+            "node2": "Medical University of South Carolina",
+            "words": 0
+        },
+        {
+            "docs": 1,
+            "node1": "University of Pennsylvania",
+            "node2": "University of Southern California",
+            "words": 0
+        }
+    ],
+    "name": "industry",
+    "nodes": [
+        {
+            "affiliation": "test",
+            "docs": 41784,
+            "name": "Brown & Williamson",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 25786,
+            "name": "British American Tobacco",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 22902,
+            "name": "Philip Morris",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 22559,
+            "name": "R.J. Reynolds",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 21012,
+            "name": "Tobacco Institute",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 16433,
+            "name": "Council for Tobacco Research",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 14870,
+            "name": "Lorillard",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 13348,
+            "name": "Shook, Hardy & Bacon",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 6512,
+            "name": "American Tobacco",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 4827,
+            "name": "Keyes & Gardner",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 4391,
+            "name": "@internal_organization@",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 3264,
+            "name": "Jacob & Medinger",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 2555,
+            "name": "Covington & Burling",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 2026,
+            "name": "Harvard University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1663,
+            "name": "Liggett & Myers",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1343,
+            "name": "Chadbourne, Park, Whiteside & Wolff",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 709,
+            "name": "American Cancer Society",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 662,
+            "name": "University of Southern California",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 454,
+            "name": "Virginia Commonwealth University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 453,
+            "name": "Washington University in St. Louis",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 442,
+            "name": "McGill University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 435,
+            "name": "Columbia University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 418,
+            "name": "Temple University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 396,
+            "name": "Arnold & Porter",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 386,
+            "name": "Creighton University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 378,
+            "name": "Stanford University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 368,
+            "name": "Imperial Tobacco",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 359,
+            "name": "Rutgers University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 318,
+            "name": "Georgetown University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 298,
+            "name": "Medical University of South Carolina",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 267,
+            "name": "State University of New York",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 256,
+            "name": "UCLA",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 240,
+            "name": "Yale University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 220,
+            "name": "Johns Hopkins University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 213,
+            "name": "University of Pennsylvania",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 199,
+            "name": "New York University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 183,
+            "name": "Rockefeller University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 173,
+            "name": "Brown & Williamson, Counsel",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 160,
+            "name": "University of Washington",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 152,
+            "name": "                                            WASHINGTON UNIVERSITY IN ST LOUIS",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 152,
+            "name": "LS Inc",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 151,
+            "name": "University of Minnesota",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 147,
+            "name": "                                            HARDY & BACON",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 138,
+            "name": "Tulane University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 138,
+            "name": "University of San Diego",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 113,
+            "name": "Tufts University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 111,
+            "name": "                                            MACCLOUD & GROVE",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 104,
+            "name": "University of Miami ",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 102,
+            "name": "Dartmouth University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 101,
+            "name": "Boston University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 88,
+            "name": "Louisiana State University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 86,
+            "name": "Princeton University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 79,
+            "name": "Pennsylvania State University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 76,
+            "name": "                                            USE HETSKO, CYRIL F",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 73,
+            "name": "Vanderbilt University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 70,
+            "name": "University of Virginia",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 69,
+            "name": "                                            MICROANALYTICAL LABORATORY HAMBURG",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 69,
+            "name": "Wayne State University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 65,
+            "name": "Duke University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 49,
+            "name": "George Washington University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 48,
+            "name": "Cornell University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 47,
+            "name": "                                            USA INC",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 46,
+            "name": "SUNY Stony Brook",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 39,
+            "name": "Tobacco Merchants Association of the U.S.",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 36,
+            "name": "                                            LRD, INC, INDUSTRY LITIGATION SUPPORT SYSTEM MANAGER",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 36,
+            "name": "Hebrew University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 36,
+            "name": "                                            MCCLASKY & LEWIS",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 35,
+            "name": "Case Western Reserve University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 35,
+            "name": "                                            ZIMMER MCCLASKEY LEWIS",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 34,
+            "name": "Ohio State University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 32,
+            "name": "UC San Francisco",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 32,
+            "name": "                                            TOBACCO & FIREARMS",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 30,
+            "name": "University of Indiana",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 30,
+            "name": "                                            POST KEYES GARDNER INC",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 29,
+            "name": "University of North Carolina",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 29,
+            "name": "                                            CANADIAN TOBACCO MANUFACTURERS' COUNCIL",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 27,
+            "name": "Royal Postgraduate Medical School",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 26,
+            "name": "Tel Aviv University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 25,
+            "name": "Michigan State University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 25,
+            "name": "Northwestern University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 23,
+            "name": "SUNY Buffalo",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 22,
+            "name": "                                            MACCLOUD > GROVE",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 22,
+            "name": "                                            MCCLASKY > LEWIS",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 20,
+            "name": "                                            WHITESIDE & WOLFF",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 18,
+            "name": "Emory University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 18,
+            "name": "Mount Sinai School of Medicine",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 18,
+            "name": "                                            JUNIOR",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 17,
+            "name": "                                            USE JOHNSTON, DONALD STEWART",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 17,
+            "name": "                                            GIANNINOTO ASSOCIATES INC",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 16,
+            "name": "                                            FIRST SECURITIES, INC",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 12,
+            "name": "University of Texas",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 12,
+            "name": "                                            PKG CUNNINGHAM & WALSH, B&W ADVERTISING AGENCY",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 12,
+            "name": "                                            SPEARS,AW",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 12,
+            "name": "                                            AUSTRALIA",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 11,
+            "name": "                                            E, JR",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 10,
+            "name": "                                            USE MCCARTY, CHARLES I",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 10,
+            "name": "                                            USE CHRISTOPHER, F HUNDALL, JR",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 10,
+            "name": "                                            JR JR>",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 10,
+            "name": "Rosalind Franklin University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 9,
+            "name": "                                            DAVENPORT & MOORE",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 8,
+            "name": "McMaster University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 8,
+            "name": "                                            B&W RESEARCH AND DEVELOPMENT COORDINATOR OF PRODUCT DEVELOPMENT",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 8,
+            "name": "                                            SHIMMEL HILL BISHOP & GRUENDER PC",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 8,
+            "name": "                                            BROWN VLASSIS & BAIN",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 8,
+            "name": "                                            MCNEIL CONSULTING",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 7,
+            "name": "                                            USE PIEHL, DONALD H",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 6,
+            "name": "                                            TOBACCO INSTITUTE ADVERTISING AGENCY",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 6,
+            "name": "                                            HAAS-FP, HETSKO-CF, ROEMER-HC, STEVENS-AJ, YEAMAN A",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 6,
+            "name": "Purdue University",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 5,
+            "name": "                                            WHOLESALE TOBACCO DISTRIBUTORS OF NEW YORK INC",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 4,
+            "name": "                                            JR, MD, PHD",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 4,
+            "name": "                                            USE STEELE [BOLIN], RHENDA",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 4,
+            "name": "                                            COLUMBUS",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 3,
+            "name": "                                            HETSKO-CF, PEPPLES-E, ROEMER-HC, STEVENS AJ",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 3,
+            "name": "                                            AUTO CITY CANDY COMPANY",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 2,
+            "name": "                                            GREER-J, HENSON-A, PEPPLES-E, STEVENS AJ",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 2,
+            "name": "                                            USE BLEVINS, RAYMOND A, JR",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 2,
+            "name": "                                            MANUFACTURA DE TOBACOS IMPARCIALES SAICA",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 2,
+            "name": "                                            BARTON",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 2,
+            "name": "                                            W THOMAS",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 2,
+            "name": "                                            SSC&B GRAETZER-K, SSC&B KELLEHER-J, SSC&B EINHORN-P, SSC&B",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1,
+            "name": "                                            VARNER, INC",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1,
+            "name": "                                            PAKISTAN",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1,
+            "name": "                                            DEPARTMENT OF ENVIRONMENTAL HYGIENE",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1,
+            "name": "                                            MAX H",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1,
+            "name": "                                            USE STOKES, COLIN H",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1,
+            "name": "                                            USE COLBY, FRANK GERHARDT, PHD",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1,
+            "name": "                                            WATERMAN STEAMSHIP CORPORATION",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1,
+            "name": "                                            ASGMT 5",
+            "words": 0
+        },
+        {
+            "affiliation": "test",
+            "docs": 1,
+            "name": "Leber Katz Partners",
+            "words": 0
+        }
+    ]
+}

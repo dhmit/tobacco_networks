@@ -172,10 +172,6 @@ Viz.propTypes = {
     handle_viz_events: PropTypes.func,
 };
 
-
-
-
-
 /**
  * Info panel - data from the visualization
  */
@@ -375,17 +371,6 @@ class MainView extends React.Component {
                 {... this.state.data}, {... this.state.config});
             this.setState({data: data, config: config});
         }
-
-        // config.search_person_name = search_string;
-        // if (action === true) {
-        //     config.viz_update_func = 'focus_node';
-        //     data = update_node_degrees(data, search_string);
-        // } else {
-        //     config.viz_update_func = 'unfocus_node';
-        //     data = update_node_degrees(data);
-        // }
-        // config.searchbar_value = search_string;
-        // this.setState({config: config, data: data});
     }
 
     update_searchbar_value(search_string) {

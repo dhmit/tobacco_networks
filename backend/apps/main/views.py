@@ -26,7 +26,8 @@ def get_network_data(request):
         'sterling': 'person_sterling.json',
         'top_100_edges': 'top_100_edges.json',
 
-        'test': 'person_lawyers_including_2nd_degree_edges.json',
+        # 'test': 'person_lawyers_including_2nd_degree_edges.json',
+        'test': 'whole_industry.json',
         #'test': 'person_lawyers.json'
     }
 
@@ -86,13 +87,16 @@ def get_clusters_data(nodes):
         no_pos_available_count = affiliations['No Positions Available']
         del affiliations['No Positions Available']
 
-    most_common_affiliations = affiliations.most_common()[:8]
+    most_common_affiliations = affiliations.most_common()[:9]
+
+    for idx, aff in enumerate(affiliations.most_common(20)):
+        print(idx, aff)
 
     # if more than 8 affiliations, put the ones outside the top 8 into an "others" group
     others_group = set()
-    if len(affiliations) > 8:
+    if len(affiliations) > 9:
         others_group_count = 0
-        for affiliation, aff_count in affiliations.most_common()[8:]:
+        for affiliation, aff_count in affiliations.most_common()[9:]:
             others_group.add(affiliation)
             others_group_count += aff_count
 
@@ -105,8 +109,8 @@ def get_clusters_data(nodes):
     # Place clusters on unit circle
     clusters = {}
     current_unit_circle_pos_in_degrees = 0
-    bmap = brewer2mpl.get_map(name='Paired', map_type='Qualitative',
-                              number=len(most_common_affiliations))
+    # bmap = brewer2mpl.get_map(name='Paired', map_type='Qualitative',
+    #                           number=len(most_common_affiliations))
 
     bmap = [
         (53, 132, 187),
