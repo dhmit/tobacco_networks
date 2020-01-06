@@ -406,7 +406,8 @@ class PeopleDatabase:
                     print("new", new_p)
                     breaking = False
                     break
-                if selection == 'n':
+
+                if selection == 'n':    # pylint: disable=R1703
                     breaking = True
                 else:
                     breaking = False
@@ -432,9 +433,8 @@ class PeopleDatabase:
 
         last_names_dict[last_name].sort(key=lambda x: x.count, reverse=True)
 
-        for person1_idx, person1 in enumerate(last_names_dict[last_name]):        # pylint: disable=C0103
-            for person2_idx, person2 in enumerate(last_names_dict[last_name]):    # pylint:
-                # disable=C0103
+        for person1_idx, person1 in enumerate(last_names_dict[last_name]):
+            for person2_idx, person2 in enumerate(last_names_dict[last_name]):
 
                 # p1/2_idx indicate the index of the person. If they are the same, we are dealing
                 # with the same person and should skip.
