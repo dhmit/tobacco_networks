@@ -10,6 +10,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { getCookie } from '../common'
 import * as d3 from 'd3';
 import { create_graph, update_graph} from './graph.js'
+import {update_node_degree_and_visibility} from "./node_degree_calculation";
 import './main.css';
 
 
@@ -22,27 +23,17 @@ class Controls extends React.Component {
         super(props);
     }
 
-    validate_input_and_maybe_search() {
+    validate_searchbar_input_and_maybe_search(search_string) {
         // Check if the person we're searching for actually exists
-        const search_string = this.props.searchbar_value;
-        this.props.update_searchbar_value(search_string);
-
         const nodes = this.props.nodes;
-        let is_name = false;
         for (const node of nodes) {
             const name = node.name;
             if (search_string.toLowerCase() === name.toLowerCase()) {
-                is_name = true;
-                this.props.handle_searchbar_query(search_string, true);
-                break;
-            } else {
-                // TODO: tell the user the name isn't in the list
-
+                this.props.handle_searchbar_query(name, "search");
+                return;
             }
         }
-        if (is_name === false) {
-            this.props.handle_searchbar_query(search_string, false);
-        }
+        this.props.handle_searchbar_query(search_string, "update_searchbar_value")
     }
 
     render() {
@@ -53,7 +44,8 @@ class Controls extends React.Component {
                         type="text"
                         maxLength="20" size="20"
                         value={this.props.searchbar_value}
-                        onChange={(e) => this.props.update_searchbar_value(e.target.value)}
+                        onChange={(e) =>
+                            this.validate_searchbar_input_and_maybe_search(e.target.value)}
                         placeholder={"Type a name here"}
                     />
                 </div>
@@ -70,13 +62,12 @@ class Controls extends React.Component {
                     </div>
                     <button
                         className="button"
-                        onClick={() => this.validate_input_and_maybe_search()}
+                        onClick={() => this.validate_searchbar_input_and_maybe_search()}
                     >Search</button>
                     <button
                         className="button"
                         onClick={() => {
-                            this.props.update_searchbar_value("");
-                            this.props.handle_searchbar_query("", false);
+                            this.props.handle_searchbar_query("", "clear");
                         }}
                     >Clear</button>
                 </div>
@@ -102,10 +93,9 @@ class Controls extends React.Component {
 
 
 Controls.propTypes = {
+    searchbar_value: PropTypes.string.isRequired,
     toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
-    searchbar_value: PropTypes.string.isRequired,
-    update_searchbar_value: PropTypes.func.isRequired,
     handle_searchbar_query: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
     dataset_name: PropTypes.string.isRequired,
@@ -133,9 +123,17 @@ class Viz extends React.Component {
     }
 
     componentDidUpdate() {
+
         // D3 Code to update the chart
         if (this.props.config.viz_update_func === undefined) {
             return;
+        }
+
+        if (this.props.config.viz_update_func === 'create_graph') {
+            document.getElementById('graph_root').innerHTML = '';
+            create_graph(this._graphRoot.current, this.props.data, this.props.config,
+                this.props.handle_viz_events);
+            return
         }
 
         let update_func, action;
@@ -143,23 +141,16 @@ class Viz extends React.Component {
             update_func = update_graph;
             action = 'cluster_nodes';
         }
-        else if (this.props.config.viz_update_func === 'focus_node') {
+        else if (this.props.config.viz_update_func === 'update_focus') {
             update_func = update_graph;
-            action = 'focus';
-        }
-        else if (this.props.config.viz_update_func === 'unfocus_node') {
-            update_func = update_graph;
-            action = 'unfocus';
-        }
-        else if (this.props.config.viz_update_func === 'create_graph') {
-            document.getElementById('graph_root').innerHTML = '';
-            update_func = create_graph;
+            action = 'update_focus';
         }
 
         update_func(
-            this._graphRoot.current,
-            this.props.data,
-            this.props.config,
+            {... this._graphRoot.current},
+            {... this.props.data},
+            {... this.props.config},
+            {... this.props.data_bindings},
             action,
         );
     }
@@ -177,12 +168,9 @@ class Viz extends React.Component {
 Viz.propTypes = {
     data: PropTypes.objectOf(PropTypes.array).isRequired,
     config: PropTypes.object.isRequired,
+    data_bindings: PropTypes.object.isRequired,
     handle_viz_events: PropTypes.func,
 };
-
-
-
-
 
 /**
  * Info panel - data from the visualization
@@ -246,21 +234,26 @@ class MainView extends React.Component {
         this.state = {
             config: {
                 width: window.innerWidth,
-                height: window.innerHeight,
-                color: 'blue',
+                height: window.innerHeight - 100,
                 person_to_highlight: "",
-                searchbar_value: "",
                 dataset_name: 'test',
-                cluster_nodes: false,
+                cluster_nodes: true,
+                selection_active: false,
+                selection_name: undefined,
+                mouseover_active: false,
+                show_info_panel: false,
+                searchbar_value: 'test',
+                selected_viz_degree: 2
             },  // initial configuration for the viz
             data: null,  // data for the viz
+            data_bindings: {}, // data bindings for d3
             mouseover: false,  // info panel state (based on callbacks from viz)
 
             person: "",
             docs: 0,
             words: 0,
             affiliation: "",
-            show_info_panel: false,
+            //show_info_panel: false,
         };
         this.csrftoken = getCookie('csrftoken');
     }
@@ -278,18 +271,68 @@ class MainView extends React.Component {
      * @param data: Object
      */
     handle_viz_events(event_name, data) { // eslint-disable-line no-unused-vars
-        if (event_name === "mouseover") {
-            this.setState({mouseover: true});
-        } else if (event_name === "mouseout") {
-            this.setState({mouseover: false});
-        } else if (event_name === "click") {
-            this.setState({person: data.name});
-            this.setState({docs: data.docs});
-            this.setState({words: data.words});
-            this.setState({affiliation: data.affiliation});
-            if (this.state.show_info_panel === false) {
-                this.setState({show_info_panel: true});
+
+        console.log("viz event", event_name);
+
+        if (event_name === 'update_data_bindings'){
+            if (!data === null) {
+                console.log(data.clusters === this.state.data_bindings.clusters);
             }
+            this.setState({data_bindings: data});
+            return
+        }
+
+        // all other viz events use the data from a node -> rename
+        let config = {... this.state.config};
+        let node = data;
+        if (event_name === "mouseover") {
+            // if a selection is already active, don't change to mouseover target
+            if (!config.selection_active){
+                config.viz_update_func = 'update_focus';
+                const data = update_node_degree_and_visibility(
+                    {... this.state.data}, {... this.state.config}, node.name);
+                this.setState({data: data, config: config});
+            }
+
+        } else if (event_name === "mouseout") {
+            if (!config.selection_active){
+                config.viz_update_func = 'update_focus';
+                const data = update_node_degree_and_visibility(
+                    {... this.state.data}, {... this.state.config});
+                this.setState({data: data, config: config});
+            }
+        } else if (event_name === "click") {
+            let data;
+
+            // select new person
+            if (!config.selection_active || node.name !== this.state.config.selection_name){
+
+                // update center names to selected node
+                data = {... this.state.data};
+                // turning the next two lines into a one-liner gives an error. unclear why.
+                data.center_names = {};
+                data.center_names[node.name] = true;
+                this.setState({data: data});
+
+                config.selection_active = true;
+                config.selection_name = node.name;
+                config.show_info_panel = true;
+                config.searchbar_value = node.name;
+                data = update_node_degree_and_visibility(
+                    {... this.state.data}, {... this.state.config}, node.name);
+            } else {
+
+                data = {... this.state.data};
+                data.center_names = data.center_names_backup;
+                this.setState({data: data});
+
+                config.selection_active = false;
+                config.selection_name = undefined;
+                config.show_info_panel = false;
+                data = update_node_degree_and_visibility(
+                    {... this.state.data}, {... this.state.config});
+            }
+            this.setState({data: data, config: config});
         }
     }
 
@@ -299,44 +342,64 @@ class MainView extends React.Component {
         config.cluster_nodes = !this.state.config.cluster_nodes;
         config.viz_update_func = 'cluster_nodes';
         this.setState({config: config});
-
     }
 
     /**
      * Handles search bar update
      *
-     * @param event_name: String
+     * @param search_string: String
+     * @param action: String
      */
     handle_searchbar_query(search_string, action) {
-        const config = {... this.state.config};
-        config.search_person_name = search_string;
-        if (action === true) {
-            config.viz_update_func = 'focus_node';
-        } else {
-            config.viz_update_func = 'unfocus_node';
-        }
+        let config = {... this.state.config};
         config.searchbar_value = search_string;
-        this.setState({config: config});
 
+        // update the searchbar but don't search because the name is not in our dataset
+        if (action === 'update_searchbar_value'){
+            this.setState({config: config})
+        } else if (action === 'search') {
+            config.selection_active = true;
+            config.selection_name = search_string;
+            config.show_info_panel = true;
+            const data = update_node_degree_and_visibility(
+                {... this.state.data}, {... this.state.config}, search_string);
+            this.setState({data: data, config: config});
+        } else if (action === 'clear') {
+            config.selection_active = false;
+            config.selection_name = undefined;
+            const data = update_node_degree_and_visibility(
+                {... this.state.data}, {... this.state.config});
+            this.setState({data: data, config: config});
+        }
     }
 
     update_searchbar_value(search_string) {
+        console.log("update bar val", search_string);
         const config = {...this.state.config};
+        console.log(config.searchbar_value);
         config.searchbar_value = search_string;
         this.setState({config: config});
+        console.log(this.state.config.searchbar_value);
+        console.log("update", this.state.config.searchbar_value);
     }
 
     submitFormHandler = event => {
         event.preventDefault();
-    }
+    };
 
     update_dataset(dataset_name) {
-        console.log(dataset_name);
-        const config = {...this.state.config};
+        this.setState({data: null});
+        let config = {...this.state.config};
         config.dataset_name = dataset_name;
         config.viz_update_func = 'create_graph';
-        this.load_dataset(config.dataset_name);
         this.setState({config: config});
+        this.load_dataset(config.dataset_name);
+
+        //setting update to undefined after loading to prevent infinite loop of
+        // update -> setting data bindings -> update
+        config = {... this.state.config};
+        config.viz_update_func = undefined;
+        this.setState({config: config})
     }
 
     async load_dataset(dataset_name) {
@@ -347,10 +410,14 @@ class MainView extends React.Component {
                     .json()
                     .then((data) => {
                         console.log("new data", data);
+                        // create a copy of the center names so we can restore them on unfocus.
+                        data.center_names_backup = {... data.center_names};
                         this.setState({data:data});
+                        return true
                     })
             }).catch(() => {
                 console.log("error");
+                return false
             });
     }
 
@@ -360,7 +427,9 @@ class MainView extends React.Component {
      * hidden and hides table when visible.
      */
     toggle_show_table() {
-        this.setState({show_info_panel: !this.state.show_info_panel});
+        let config = {...this.state.config};
+        config.show_info_panel = !config.show_info_panel;
+        this.setState({config: config});
     }
 
     /**
@@ -370,6 +439,7 @@ class MainView extends React.Component {
      */
     render() {
         if (this.state.data) {
+            console.log("fin", this.state.config.searchbar_value);
             return (
                 <div className="container-fluid">
                     <Controls  // this is its own row
@@ -378,10 +448,7 @@ class MainView extends React.Component {
                             (search_string, action) => this.handle_searchbar_query(search_string,
                                 action)
                         }
-                        update_searchbar_value={
-                            (search_string) => this.update_searchbar_value(search_string)
-                        }
-                        toggle_checkbox={() => this.toggle_checkbox()}
+                        toggle_checkbox={() => this.toggle_checkbox()}f
                         toggle_show_table={() => this.toggle_show_table()}
                         cluster_nodes={this.state.config.cluster_nodes}
                         nodes={this.state.data.nodes}
@@ -394,12 +461,14 @@ class MainView extends React.Component {
 
                     <div className="row">
                         <Viz
+                            key={this.state.config.dataset_name}
                             data={this.state.data}
                             config={this.state.config}
+                            data_bindings={this.state.data_bindings}
                             handle_viz_events={(event_name, data) =>
                                 this.handle_viz_events(event_name, data )}
                         />
-                        {this.state.show_info_panel &&
+                        {this.state.config.show_info_panel &&
                             <Info
                                 mouseover={this.state.mouseover}
                                 currentColor={this.state.config.color}

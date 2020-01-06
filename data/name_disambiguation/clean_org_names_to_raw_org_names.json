@@ -5,17 +5,23 @@
         "R&D"
     ],
     "@skip@": [
-        "UNK",
-        "INFERRED",
-        "E-MAIL",
-        "MEMORANDUM",
-        "INC",
-        "HANDWRITTEN NOTES",
-        "HANDWRITTEN NOTE",
-        "LETTER",
-        "HANDWRITTEN NOTES OF COUNSEL",
+        "@skip@",
+        "AS TO MARGINALIA",
         "CONTRACTOR",
-        "DRAFT LETTER"
+        "DRAFT LETTER",
+        "E-MAIL",
+        "ESQ",
+        "HANDWRITTEN NOTE",
+        "HANDWRITTEN NOTES",
+        "HANDWRITTEN NOTES OF COUNSEL",
+        "II",
+        "III",
+        "INC",
+        "INFERRED",
+        "LETTER",
+        "MEMORANDUM",
+        "PHD",
+        "UNK"
     ],
     "Affinity Management Group": [
         "AFFINITY MANAGEMENT GROUP"
@@ -38,6 +44,9 @@
     ],
     "Associated Press": [
         "ASSOCIATED PRESS"
+    ],
+    "BBD&O": [
+        "BBD&O"
     ],
     "Boston University": [
         "BOSTON UNIV SCHOOL MEDICINE",
@@ -108,7 +117,9 @@
         "CORNELL UNIV"
     ],
     "Council for Tobacco Research": [
-        "CTR"
+        "CTR",
+        "COUNCIL FOR TOBACCO RESEARCH",
+        "CTR, COUNCIL FOR TOBACCO RESEARCH"
     ],
     "Covington & Burling": [
         "COVINGTON BURLING",
@@ -210,6 +221,10 @@
     "Leo Burnett Agency": [
         "LEO, LEO BURNETT AGENCY"
     ],
+    "Liggett & Myers": [
+        "L&M",
+        "Liggett & Myers Tobacco Company"
+    ],
     "Long Haymes Carr Advertising": [
         "LONG HAYMES"
     ],
@@ -237,6 +252,12 @@
         "MT SINAI SCHOOL MEDICINE",
         "MT SINAI SCHOOL OF MEDICINE",
         "MOUNT SINAI SCHOOL MEDICINE"
+    ],
+    "National Cancer Institute": [
+        "NCI"
+    ],
+    "National Institutes of Health": [
+        "NIH"
     ],
     "New York University": [
         "NY UNIV MEDICAL CENTER",
@@ -313,6 +334,9 @@
         "SHOOK, HARDY & BACON, INDUSTRY OUTSIDE COUNSEL",
         "SHOOK, HARDY & BACON, B&W OUTSIDE COUNSEL"
     ],
+    "SSC&B": [
+        "SSC&B"
+    ],
     "Stanford University": [
         "STANFORD UNIV",
         "STANFORD UNIV SCHOOL MEDICINE",
@@ -365,6 +389,13 @@
     "UCLA": [
         "UNIV CA LOS ANGELES SCHOOL MEDICINE",
         "UNIV CA LOS ANGELES SCHOOL OF MEDICINE"
+    ],
+    "United States Congress": [
+        "US CONGRESS"
+    ],
+
+    "University of Georgia": [
+        "UNIV GA"
     ],
     "University of Indiana": [
         "IN UNIV"

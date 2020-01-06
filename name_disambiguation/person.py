@@ -18,7 +18,6 @@ CONSTANTS.titles.remove(*CONSTANTS.titles)
 class Person:
     """A Person object represents information of a person (possibly parsed from raw strings,
     or merged from different strings)
-
     Attributes:
         last (str): official parsed last name
         first (str): official parsed first name
@@ -29,8 +28,9 @@ class Person:
         aliases (Counter of str): counter of raw names that correspond to the person
         count (int): number of times the person appeared in the data
     """
-    def __init__(self, name_raw=None, last='', first='', middle='',       # pylint: disable=R0913
-                 positions=None, aliases=None, count=1):
+    def __init__(self, name_raw=None, last='', first='',    # pylint: disable=R0912,R0913,W0212
+                 middle='',
+                 positions=None, aliases=None, count=1, docs_authored=None, docs_received=None):
         """
         Returns a person object
         :param name_raw: raw string for the name (str)
@@ -98,6 +98,18 @@ class Person:
             for i in aliases:
                 self.aliases[i.upper()] += count
 
+        if docs_authored:
+            if isinstance(docs_authored, set):
+                self.docs_authored = docs_authored
+            else:
+                raise ValueError("docs_authored for Person object has to be a set.")
+
+        if docs_received:
+            if isinstance(docs_received, set):
+                self.docs_received = docs_received
+            else:
+                raise ValueError("docs_received for Person object has to be a set.")
+
         self.count = count
 
     def __repr__(self):
@@ -106,7 +118,7 @@ class Person:
         and all aliases
         :return: str of first, middle, last, positions, aliases
         """
-        str_name = f'{self.first} {self.middle} {self.last}'
+        str_name = self.full_name + f'   F:{self.first} M:{self.middle} L:{self.last}'
         str_name = str_name + ", Position: " + str(self.positions) + ", Aliases: " + \
             str(self.aliases.most_common()) + ", count: " + str(self.count)
         return str_name
@@ -167,7 +179,7 @@ class Person:
                 components.append(self.first.capitalize())
 
         if self.middle:
-            if len(self.first) == 1:
+            if len(self.middle) == 1:
                 components.append(self.middle + '.')
             else:
                 components.append(self.middle.capitalize())
@@ -183,24 +195,64 @@ class Person:
         Calculates and sets most_likely_org as the organization with the highest number of count
         If official_org=True, returns official name of most common organization that is in
         RAW_ORG_TO_CLEAN_ORG_DICT (if none of the raw orgs are in the dict, return the most common)
+
+
         :param official_org: if consider only orgs in RAW_ORG_TO_CLEAN_ORG_DICT
         :return: None
         """
-        if len(self.positions) == 0:
-            return 'no positions available'
-        else:
-            likely_position = self.positions.most_common(1)[0][0]
-            if official_org:
-                for name in self.positions.most_common():
-                    if name[0] in RAW_ORG_TO_CLEAN_ORG_DICT and name[0] != '@skip@':
-                        likely_position = RAW_ORG_TO_CLEAN_ORG_DICT[name[0]]
-                        break
-            if likely_position == "@skip@":
-                likely_position = 'no positions available'
-                if len(self.positions) > 1:
-                    print(self.positions)
 
-            return likely_position
+        if not official_org:
+            print("WARNING! most_likely_position should always be run with official_org=True, even"
+                  "just to correct spelling mistakes. Keeping around for compatibility and "
+                  "possibly to see what organizations our offical list misses.")
+
+        for position, position_count in self.positions.most_common():
+            # a single mention of an affiliation is not enough to count. need at least 2
+            if position_count == 1:
+                return 'no positions available'
+
+            # if we use the official orgs only and the position is in the official dict, then
+            # we update the position to the corrected version.
+            # otherwise, skip this position. w/o official position, just use the raw position.
+            if official_org:
+                if (position in RAW_ORG_TO_CLEAN_ORG_DICT and
+                        RAW_ORG_TO_CLEAN_ORG_DICT[position] != "@skip@"):
+                    return RAW_ORG_TO_CLEAN_ORG_DICT[position]
+                else:
+                    continue
+            else:
+                return position
+
+        # if nothing found, return nothing found
+        if len(self.positions) > 0:
+            for position, _ in self.positions.most_common():
+                if (
+                        position in RAW_ORG_TO_CLEAN_ORG_DICT and
+                        RAW_ORG_TO_CLEAN_ORG_DICT[position] == '@skip@'
+                ):
+                    continue
+                if len(position) < 5:
+                    continue
+
+                return f'                                            {position.upper()}'
+
+
+        return 'no positions available'
+
+
+
+            # likely_position = self.positions.most_common(1)[0][0]
+            # if official_org:
+            #     for name in self.positions.most_common():
+            #         if name[0] in RAW_ORG_TO_CLEAN_ORG_DICT and name[0] != '@skip@':
+            #             likely_position = RAW_ORG_TO_CLEAN_ORG_DICT[name[0]]
+            #             break
+            # if likely_position == "@skip@":
+            #     likely_position = 'no positions available'
+            #     if len(self.positions) > 1:
+            #         print(self.positions)
+            #
+            # return likely_position
 
     @staticmethod
     def remove_privlog_info(name_raw):
@@ -218,16 +270,50 @@ class Person:
             return name_raw
 
     @staticmethod
-    def parse_raw_name(name_raw: str, count: int) -> (str, str, str, Counter):
+    def remove_jr_sr_iii(name_raw):
+        """
+        Remove Jr, Sr, and III from names if they follow the pattern Chumney-RD-Jr or
+        Chumney-R-III
+
+        >>> Person.remove_jr_sr_iii('Chumney-RD-Jr, oeuo')
+        'Chumney-RD, oeuo'
+
+        >>> Person.remove_jr_sr_iii('Chumney-R-III, oeuo')
+        'Chumney-R, oeuo'
+
+        >>> Person.remove_jr_sr_iii('Chumney-r-III, oeuo')
+        'Chumney-r-III, oeuo'
+
+        :param name_raw:
+        :return:
+        """
+
+        # I don't know why it matches the whole group instead of just -Jr or -Sr
+        match = re.search(r'^[A-Z][a-z]+-[A-Z]{1,2}(-Jr|-Sr|-III)', name_raw)
+        if match:
+            name_raw = name_raw.replace(match.group(1), '')
+        return name_raw
+
+
+    @staticmethod
+    def parse_raw_name(name_raw: str, count: int, extract_orgs=True) -> (str, str, str, Counter):
         """
         Parses a (usually messy) raw name and returns
         first, middle, last names and a Counter of extracted positions
 
+        extract_orgs tries to extract organizations from name. defaults to True. only set to False
+        to be able to check if a name is valid (it prevents an infinite loop because by default,
+        extracting organizations is part of the initialization of a person
+
         :param name_raw: str
         :param count: int
+        :param extract_orgs: bool
         :return: str, str, str, Counter (first name, middle name, last name, positions Counter)
         """
         name_raw = Person.remove_privlog_info(name_raw)
+        # remove JR, SR, or III if it follows this pattern: 'Chumney-RD-Jr'
+        name_raw = Person.remove_jr_sr_iii(name_raw)
+
         # position is often attached with a dash,
         # e.g. 'BAKER, T E - NATIONAL ASSOCIATION OF ATTORNEYS'
         if name_raw.find(" - ") > -1 and len(name_raw.split(' - ')) == 2:
@@ -243,8 +329,9 @@ class Person:
             name_raw = name_raw.replace(position, '')
 
         # Search for known raw_org strings in name_raw, extract them as positions if necessary
-        name_raw, new_positions = Person.extract_raw_org_names_from_name(name_raw)
-        extracted_positions += new_positions
+        if extract_orgs:
+            name_raw, new_positions = Person.extract_raw_org_names_from_name(name_raw)
+            extracted_positions += new_positions
 
         # delete any leftover hashtags
         name_raw = name_raw.strip(' #')
@@ -271,7 +358,7 @@ class Person:
             name.middle = name.middle[0]
 
         # If first name is length 2 (Teague, CE), the two letters are most likely initials.
-        if len(name.first) == 2:
+        if len(name.middle) == 0 and len(name.first) == 2:
             name.middle = name.first[1].upper()
             name.first = name.first[0].upper()
 
@@ -322,7 +409,9 @@ class Person:
         Finds raw org names like "B&W" in a name string, standarizes them (e.g. to
         "Brown & Williamson," and returns the name without that raw org name + extracted positions
 
+
         :param name_raw: str
+        :param extract_orgs: bool
         :return: str (name_raw without the raw org name), list of str (extracted clean
         organization names)
         """
@@ -367,7 +456,84 @@ class Person:
                     name_raw = name_raw_test
 
         name_raw = name_raw.strip(', ')
+
+        # more adventurous: try to extract organizations we don't have in the dictionary
+        # do this only if a) the name is currently not valid (i.e. it has strange characters like
+        # commas in the last name) and b) extracting an org makes it valid,
+        # e.g. 'HOLMAN RT, DEUEL CONFERENCE ON LIPIDS'
+
+
+        if len(name_raw) > 0:
+            first, middle, last, _ = Person.parse_raw_name(name_raw, 0, extract_orgs=False)
+
+            if not Person(last=last, middle=middle, first=first).check_if_this_person_looks_valid():
+                search_hit = re.search(',.+$', name_raw)
+                if search_hit:
+                    extracted_position = name_raw[search_hit.start():].strip(', ')
+                    name_raw_without_org = name_raw[0:search_hit.start()] + name_raw[
+                        search_hit.end():]
+
+                    # if raw name becomes valid after extracting the org, then we add it to the orgs
+                    # otherwise, we skip it
+                    first, middle, last, _ = Person.parse_raw_name(name_raw_without_org,
+                                                                   0, extract_orgs=False)
+                    if Person(last=last, middle=middle,
+                              first=first).check_if_this_person_looks_valid():
+                        extracted_positions.append(extracted_position)
+                        name_raw = name_raw_without_org
+
+
+
+
+        name_raw = name_raw.strip(', ')
         return name_raw, extracted_positions
+
+    def check_if_this_person_looks_valid(self):         # pylint: disable=C0103
+        """
+        Checks if the initialized person looks valid, i.e. it has a first name or first initial,
+        the last name doesn't have strange
+        """
+
+        status = True
+
+        if (
+                not re.match('^[a-zA-Z]+$', self.last) or
+                not re.match('^[a-zA-Z]+$', self.first) or
+                (len(self.middle) > 0 and not re.match('^[a-zA-Z]+$', self.middle))
+        ):
+            status = False
+
+        return status
+
+
+
+class TestNameChecker(unittest.TestCase):
+    """
+    Tests the check_if_this_person_looks_valid test
+    """
+    def test_check_if_this_person_looks_valid(self):        # pylint: disable=C0103
+        """
+        ibid.
+
+        :return:
+        """
+        outcomes_and_names = [
+            (True, Person(last='PEPPLES', first='E')),
+
+            # no special characters in last or first name
+            (False, Person(last='PEPPLES', first='Erest, B&W')),
+            (False, Person(last='PEPPLES B&W', first='E')),
+
+            # has to have a first name
+            (False, Person(last='PEPPLES', first='')),
+
+            # organizations should return False
+            (False, Person(name_raw='US HOUSE COMM ON INTERSTATE AND FOREIGN COMMERCE'))
+        ]
+
+        for outcome, person in outcomes_and_names:
+            print(person.check_if_this_person_looks_valid(), outcome, person)
+            self.assertEqual(outcome, person.check_if_this_person_looks_valid())
 
 
 class TestNameParser(unittest.TestCase):
@@ -390,7 +556,7 @@ class TestNameParser(unittest.TestCase):
         checks to see that a raw name is parsed correctly
         """
         # Also test Person constructor: use list as positions
-        self.assertEqual(Person(last="Teague", first="C", middle="E", positions=["JR"],
+        self.assertEqual(Person(last="Teague", first="C", middle="E", positions=Counter({'JR': 1}),
                                 aliases=Counter(["TEAGUE CE JR"])),
                          Person(name_raw="TEAGUE CE JR"))
 
