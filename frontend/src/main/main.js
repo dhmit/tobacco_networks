@@ -5,9 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Autocomplete } from '@material-ui/lab';
-// eslint-disable-next-line no-unused-vars
-import TextField from '@material-ui/core/TextField';
-
+import { TextField } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -60,6 +58,7 @@ class Controls extends React.Component {
                         value={this.props.searchbar_value}
                         onChange={(e) =>
                             this.validate_searchbar_input_and_maybe_search(e.target.value)}
+
 
 
                     />
@@ -258,7 +257,7 @@ class MainView extends React.Component {
                 selection_name: undefined,
                 mouseover_active: false,
                 show_info_panel: false,
-                searchbar_value: 'test',
+                searchbar_value: '',
                 selected_viz_degree: 2
             },  // initial configuration for the viz
             data: null,  // data for the viz
