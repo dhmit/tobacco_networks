@@ -4,6 +4,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Autocomplete } from '@material-ui/lab';
+// eslint-disable-next-line no-unused-vars
+import TextField from '@material-ui/core/TextField';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,7 +16,6 @@ import * as d3 from 'd3';
 import { create_graph, update_graph} from './graph.js'
 import {update_node_degree_and_visibility} from "./node_degree_calculation";
 import './main.css';
-
 
 /***************************************************************************************************
  * Controls
@@ -40,13 +43,25 @@ class Controls extends React.Component {
         return (
             <div className="row">
                 <div className="col-4">
-                    <input className="form-control"
-                        type="text"
-                        maxLength="20" size="20"
+                    <Autocomplete
+                        id="free-solo-demo"
+                        freeSolo
+                        options={this.props.data_names.map(option => option.name)}
+                        renderInput={params => (
+                            // eslint-disable-next-line max-len
+                            <TextField {...params}
+                                placeholder="Type a name here"
+                                maxLength="20" size="20"
+
+                                margin="normal"
+
+                                variant="outlined" fullWidth />
+                        )}
                         value={this.props.searchbar_value}
                         onChange={(e) =>
                             this.validate_searchbar_input_and_maybe_search(e.target.value)}
-                        placeholder={"Type a name here"}
+
+
                     />
                 </div>
                 <div className="col-6">
@@ -99,7 +114,8 @@ Controls.propTypes = {
     handle_searchbar_query: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
     dataset_name: PropTypes.string.isRequired,
-    update_dataset: PropTypes.func.isRequired
+    update_dataset: PropTypes.func.isRequired,
+    data_names: PropTypes.array
 };
 
 /***************************************************************************************************
@@ -256,12 +272,14 @@ class MainView extends React.Component {
             //show_info_panel: false,
         };
         this.csrftoken = getCookie('csrftoken');
+
     }
     /**
      * Runs when the MainView item is connected to the DOM.
      */
     componentDidMount() {
         this.load_dataset(this.state.config.dataset_name);
+
     }
 
     /**
@@ -419,6 +437,7 @@ class MainView extends React.Component {
                 console.log("error");
                 return false
             });
+
     }
 
 
@@ -440,6 +459,8 @@ class MainView extends React.Component {
     render() {
         if (this.state.data) {
             console.log("fin", this.state.config.searchbar_value);
+            console.log(this.state.data);
+
             return (
                 <div className="container-fluid">
                     <Controls  // this is its own row
@@ -457,6 +478,8 @@ class MainView extends React.Component {
                         update_dataset={
                             (dataset_name) => this.update_dataset(dataset_name)
                         }
+                        data_names={this.state.data.nodes}
+
                     />
 
                     <div className="row">
@@ -483,6 +506,7 @@ class MainView extends React.Component {
                     </div>
                 </div>
             );
+
         } else {
             return (
                 <div>Loading!</div>
