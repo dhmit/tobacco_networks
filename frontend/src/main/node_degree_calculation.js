@@ -4,13 +4,10 @@ export function update_node_degree_and_visibility(data, config, center_node_name
         data
     }
 
-    console.log("Update degree. Center node:", center_node_name);
-    console.log(data);
 
     data = update_node_degree(data, center_node_name);
     data = update_node_visibility(data, config.selected_viz_degree, center_node_name);
 
-    console.log("data after updated degree", data);
 
     return data
 
@@ -19,7 +16,6 @@ export function update_node_degree_and_visibility(data, config, center_node_name
 
 
 function update_node_degree(data, center_node_name){
-    console.log("updating node degree", center_node_name);
 
     let center_names = {... data.center_names};
     if (center_node_name !== undefined){
@@ -71,7 +67,6 @@ function update_node_degree(data, center_node_name){
 
 function update_node_visibility(data, viz_degree, center_node_name){
 
-    console.log(center_node_name);
 
     data.nodes.forEach((d) => {
 
@@ -89,10 +84,8 @@ function update_node_visibility(data, viz_degree, center_node_name){
         }
 
         if (d.source.name === center_node_name || d.target.name === center_node_name){
-            console.log({...d.source});
             d.source.visibility = 'visible';
             d.target.visibility = 'visible';
-            console.log({...d.source});
         }
     });
 

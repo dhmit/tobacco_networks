@@ -53,14 +53,12 @@ class Controls extends React.Component {
 
                                 margin="normal"
 
+
                                 variant="outlined" fullWidth />
                         )}
-                        value={this.props.searchbar_value}
                         onChange={(e) =>
                             this.validate_searchbar_input_and_maybe_search(e.target.value)}
-
-
-
+                        value={this.props.searchbar_value}
                     />
                 </div>
                 <div className="col-6">
@@ -257,7 +255,7 @@ class MainView extends React.Component {
                 selection_name: undefined,
                 mouseover_active: false,
                 show_info_panel: false,
-                searchbar_value: '',
+                searchbar_value: "",
                 selected_viz_degree: 2
             },  // initial configuration for the viz
             data: null,  // data for the viz
@@ -289,7 +287,6 @@ class MainView extends React.Component {
      */
     handle_viz_events(event_name, data) { // eslint-disable-line no-unused-vars
 
-        console.log("viz event", event_name);
 
         if (event_name === 'update_data_bindings'){
             if (!data === null) {
@@ -391,13 +388,9 @@ class MainView extends React.Component {
     }
 
     update_searchbar_value(search_string) {
-        console.log("update bar val", search_string);
         const config = {...this.state.config};
-        console.log(config.searchbar_value);
         config.searchbar_value = search_string;
         this.setState({config: config});
-        console.log(this.state.config.searchbar_value);
-        console.log("update", this.state.config.searchbar_value);
     }
 
     submitFormHandler = event => {
@@ -457,8 +450,6 @@ class MainView extends React.Component {
      */
     render() {
         if (this.state.data) {
-            console.log("fin", this.state.config.searchbar_value);
-            console.log(this.state.data);
 
             return (
                 <div className="container-fluid">

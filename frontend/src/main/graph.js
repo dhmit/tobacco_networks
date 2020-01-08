@@ -21,7 +21,6 @@ import {update_node_degree_and_visibility} from "./node_degree_calculation";
  */
 export function create_graph(el, data, config, handle_viz_events) {
 
-    console.log(data);
 
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
@@ -544,7 +543,6 @@ export function get_information(data, name){
 export function update_graph(el, data, config, data_bindings, action) {
     if (action === 'update_focus') {
 
-        console.log("update focus");
 
         const link_width_scale_degree_1 = d3.scaleLinear()
             .domain([0, d3.max(data['links'], function(d) { return d.docs})])
