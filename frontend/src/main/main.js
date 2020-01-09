@@ -22,7 +22,6 @@ import './main.css';
 class Controls extends React.Component {
     constructor(props) {
         super(props);
-        this.searchbar_ref = React.createRef();
     }
 
     validate_searchbar_input_and_maybe_search(search_string) {
@@ -33,7 +32,7 @@ class Controls extends React.Component {
             const name = node.name;
 
             if (search_string.toLowerCase() === name.toLowerCase()) {
-                this.props.handle_searchbar_query(name, "search");
+                this.props.handle_searchbar_search(name);
                 return;
             }
         }
@@ -55,7 +54,6 @@ class Controls extends React.Component {
                                 variant="outlined" fullWidth
                                 value={this.props.searchbar_value}
                                 onChange={(e) => this.props.update_searchbar_value(e.target.value)}
-                                ref={this.searchbar_ref}
                             />
 
                         )}
@@ -85,7 +83,7 @@ class Controls extends React.Component {
                     <button
                         className="button"
                         onClick={() => {
-                            this.props.handle_searchbar_query("", "clear");
+                            this.props.handle_searchbar_clear();
                         }}
                     >Clear</button>
                 </div>
@@ -116,6 +114,8 @@ Controls.propTypes = {
     toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
     handle_searchbar_query: PropTypes.func.isRequired,
+    handle_searchbar_search: PropTypes.func.isRequired,
+    handle_searchbar_clear: PropTypes.func.isRequired,
     update_searchbar_value: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
     dataset_name: PropTypes.string.isRequired,
@@ -367,31 +367,36 @@ class MainView extends React.Component {
     }
 
     /**
-     * Handles search bar update
-     *
-     * @param search_string: String
-     * @param action: String
+     * Searches the graph for the person's name
+     * @param search_string String containing the name to search for
      */
-    handle_searchbar_query(search_string, action) {
-        // eslint-disable-next-line max-len
-        console.log("Handling searchbar query on search: " + search_string + " and action: " + action)
+    handle_searchbar_search(search_string) {
         let config = {... this.state.config};
         config.searchbar_value = search_string;
 
-        if (action === 'search') {
-            config.selection_active = true;
-            config.selection_name = search_string;
-            config.show_info_panel = true;
-            const data = update_node_degree_and_visibility(
-                {... this.state.data}, {... this.state.config}, search_string);
-            this.setState({data: data, config: config});
-        } else if (action === 'clear') {
-            config.selection_active = false;
-            config.selection_name = undefined;
-            const data = update_node_degree_and_visibility(
-                {... this.state.data}, {... this.state.config});
-            this.setState({data: data, config: config});
-        }
+        config.selection_active = true;
+        config.selection_name = search_string;
+        config.show_info_panel = true;
+        const data = update_node_degree_and_visibility(
+            {... this.state.data}, {... this.state.config}, search_string);
+        this.setState({data: data, config: config});
+        console.log("Searched")
+    }
+
+    /**
+     * Clears the searchbar
+     * TODO: Make the clear actually clear the text of the searchbar, propbably will be done in
+     * Content
+     */
+    handle_searchbar_clear() {
+        let config = {... this.state.config};
+        config.searchbar_value = "";
+        config.selection_active = false;
+        config.selection_name = undefined;
+        const data = update_node_degree_and_visibility(
+            {... this.state.data}, {... this.state.config});
+        this.setState({data: data, config: config});
+        console.log("Cleared")
     }
 
     update_searchbar_value(search_string) {
@@ -467,8 +472,11 @@ class MainView extends React.Component {
                             (search_string, action) => this.handle_searchbar_query(search_string,
                                 action)
                         }
+                        handle_searchbar_search={(search_string) =>
+                            this.handle_searchbar_search(search_string)}
+                        handle_searchbar_clear={() => this.handle_searchbar_clear()}
                         update_searchbar_value={(e) => this.update_searchbar_value(e)}
-                        toggle_checkbox={() => this.toggle_checkbox()}f
+                        toggle_checkbox={() => this.toggle_checkbox()}
                         toggle_show_table={() => this.toggle_show_table()}
                         cluster_nodes={this.state.config.cluster_nodes}
                         nodes={this.state.data.nodes}
