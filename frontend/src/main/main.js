@@ -22,19 +22,21 @@ import './main.css';
 class Controls extends React.Component {
     constructor(props) {
         super(props);
+        this.searchbar_ref = React.createRef();
     }
 
     validate_searchbar_input_and_maybe_search(search_string) {
         // Check if the person we're searching for actually exists
+        console.log("Searching: " + search_string);
         const nodes = this.props.nodes;
         for (const node of nodes) {
             const name = node.name;
+
             if (search_string.toLowerCase() === name.toLowerCase()) {
                 this.props.handle_searchbar_query(name, "search");
                 return;
             }
         }
-        this.props.handle_searchbar_query(search_string, "update_searchbar_value")
     }
 
     render() {
@@ -46,19 +48,18 @@ class Controls extends React.Component {
                         freeSolo
                         options={this.props.data_names.map(option => option.name)}
                         renderInput={params => (
-                            // eslint-disable-next-line max-len
                             <TextField {...params}
                                 placeholder="Type a name here"
-                                maxLength="20" size="20"
-
+                                //maxLength="20" size="20"
                                 margin="normal"
+                                variant="outlined" fullWidth
+                                value={this.props.searchbar_value}
+                                onChange={(e) => this.props.update_searchbar_value(e.target.value)}
+                                ref={this.searchbar_ref}
+                            />
 
-
-                                variant="outlined" fullWidth />
                         )}
-                        onChange={(e) =>
-                            this.validate_searchbar_input_and_maybe_search(e.target.value)}
-                        value={this.props.searchbar_value}
+                        onChange={(_event, value) => this.props.update_searchbar_value(value)}
                     />
                 </div>
                 <div className="col-6">
@@ -72,10 +73,15 @@ class Controls extends React.Component {
                             <FontAwesomeIcon icon={faInfoCircle} />
                         </a>
                     </div>
+
                     <button
                         className="button"
-                        onClick={() => this.validate_searchbar_input_and_maybe_search()}
-                    >Search</button>
+                        onClick={() =>
+                            // eslint-disable-next-line max-len
+                            this.validate_searchbar_input_and_maybe_search(this.props.searchbar_value)}
+                    >Search
+                    </button>
+
                     <button
                         className="button"
                         onClick={() => {
@@ -83,6 +89,7 @@ class Controls extends React.Component {
                         }}
                     >Clear</button>
                 </div>
+
                 <div className="col-4">
                     <div className="form-group">
                         <label htmlFor="exampleFormControlSelect1">Dataset</label>
@@ -109,6 +116,7 @@ Controls.propTypes = {
     toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
     handle_searchbar_query: PropTypes.func.isRequired,
+    update_searchbar_value: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
     dataset_name: PropTypes.string.isRequired,
     update_dataset: PropTypes.func.isRequired,
@@ -365,13 +373,12 @@ class MainView extends React.Component {
      * @param action: String
      */
     handle_searchbar_query(search_string, action) {
+        // eslint-disable-next-line max-len
+        console.log("Handling searchbar query on search: " + search_string + " and action: " + action)
         let config = {... this.state.config};
         config.searchbar_value = search_string;
 
-        // update the searchbar but don't search because the name is not in our dataset
-        if (action === 'update_searchbar_value'){
-            this.setState({config: config})
-        } else if (action === 'search') {
+        if (action === 'search') {
             config.selection_active = true;
             config.selection_name = search_string;
             config.show_info_panel = true;
@@ -391,6 +398,7 @@ class MainView extends React.Component {
         const config = {...this.state.config};
         config.searchbar_value = search_string;
         this.setState({config: config});
+        console.log(this.state.config.searchbar_value)
     }
 
     submitFormHandler = event => {
@@ -459,6 +467,7 @@ class MainView extends React.Component {
                             (search_string, action) => this.handle_searchbar_query(search_string,
                                 action)
                         }
+                        update_searchbar_value={(e) => this.update_searchbar_value(e)}
                         toggle_checkbox={() => this.toggle_checkbox()}f
                         toggle_show_table={() => this.toggle_show_table()}
                         cluster_nodes={this.state.config.cluster_nodes}
