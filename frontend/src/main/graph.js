@@ -429,7 +429,7 @@ function initialize_force_sim(config, data, data_bindings) {
                         .y(force_y_pos)
                         .strength(cluster_strength))
 
-        .force("center", d3.forceCenter().x(config.width / 2).y(config.height / 2))
+        //.force("center", d3.forceCenter().x(config.width / 2).y(config.height / 2))
 
         .force('x_center', d3.forceX()
                         .x(config.width/2)
@@ -541,9 +541,9 @@ export function get_information(data, name){
  * @param action: the update action, e.g. "focus" or "cluster_nodes"
  */
 export function update_graph(el, data, config, data_bindings, action) {
+
+
     if (action === 'update_focus') {
-
-
         const link_width_scale_degree_1 = d3.scaleLinear()
             .domain([0, d3.max(data['links'], function(d) { return d.docs})])
             .range([2, 3]);

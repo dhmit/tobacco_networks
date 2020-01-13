@@ -38,13 +38,23 @@ class Controls extends React.Component {
         }
     }
 
+    autocomplete_change(value, reason) {
+        console.log(value + ": In the change function because of: " + reason);
+        if (reason === "clear") {
+            this.props.handle_searchbar_clear();
+        } else {
+            this.validate_searchbar_input_and_maybe_search(value);
+            this.props.update_searchbar_value(value);
+        }
+    }
+
     render() {
         return (
             <div className="row">
                 <div className="col-4">
                     <Autocomplete
                         id="free-solo-demo"
-                        freeSolo
+                        freeSolo={true}
                         options={this.props.data_names.map(option => option.name)}
                         renderInput={params => (
                             <TextField {...params}
@@ -55,9 +65,13 @@ class Controls extends React.Component {
                                 value={this.props.searchbar_value}
                                 onChange={(e) => this.props.update_searchbar_value(e.target.value)}
                             />
-
+                            //TODO Clear X trtigger clear function; search when automcomplete
                         )}
+                        autoComplete={true}
+                        forcePopupIcon={false}
                         onChange={(_event, value) => this.props.update_searchbar_value(value)}
+                        onInputChange={(_event, value, reason) =>
+                            this.autocomplete_change(value, reason)}
                     />
                 </div>
                 <div className="col-6">
@@ -373,7 +387,7 @@ class MainView extends React.Component {
     handle_searchbar_search(search_string) {
         let config = {... this.state.config};
         config.searchbar_value = search_string;
-
+        config.viz_update_func = 'update_focus';
         config.selection_active = true;
         config.selection_name = search_string;
         config.show_info_panel = true;

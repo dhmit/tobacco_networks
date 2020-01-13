@@ -1,5 +1,5 @@
 export function update_node_degree_and_visibility(data, config, center_node_name) {
-
+    console.log(center_node_name)
     if (center_node_name === undefined){
         data
     }
@@ -18,6 +18,7 @@ export function update_node_degree_and_visibility(data, config, center_node_name
 function update_node_degree(data, center_node_name){
 
     let center_names = {... data.center_names};
+    console.log(center_names)
     if (center_node_name !== undefined){
         center_names[center_node_name] = true
     }

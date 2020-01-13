@@ -34,3 +34,9 @@
   margin: 3px 1px;
   cursor: pointer;
 }
+
+.MuiAutocomplete-clearIndicator {
+    visibility: visible !important;
+
+}
+
