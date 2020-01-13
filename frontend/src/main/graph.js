@@ -332,6 +332,8 @@ function get_gravity_center(d, config, data){
 // eslint-disable-next-line no-unused-vars
 function render_simulation(config, data, data_bindings) {
 
+    console.log('rendergin');
+
     // Update node positions
     data_bindings.nodes.attr("transform", (d) => {
         d.x = Math.max(d.circle_radius, Math.min(config.width - d.circle_radius, d.x));
@@ -544,6 +546,7 @@ export function update_graph(el, data, config, data_bindings, action) {
 
 
     if (action === 'update_focus') {
+
         const link_width_scale_degree_1 = d3.scaleLinear()
             .domain([0, d3.max(data['links'], function(d) { return d.docs})])
             .range([2, 3]);
@@ -574,6 +577,7 @@ export function update_graph(el, data, config, data_bindings, action) {
         svg.selectAll(".graph_node").style("opacity", 1);
         svg.selectAll(".graph_link").style("opacity", 1);
     }
+    render_simulation(config, data, data_bindings);
 }
 
 

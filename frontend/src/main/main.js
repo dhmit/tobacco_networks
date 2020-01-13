@@ -26,7 +26,6 @@ class Controls extends React.Component {
 
     validate_searchbar_input_and_maybe_search(search_string) {
         // Check if the person we're searching for actually exists
-        console.log("Searching: " + search_string);
         const nodes = this.props.nodes;
         for (const node of nodes) {
             const name = node.name;
@@ -39,12 +38,12 @@ class Controls extends React.Component {
     }
 
     autocomplete_change(value, reason) {
-        console.log(value + ": In the change function because of: " + reason);
         if (reason === "clear") {
             this.props.handle_searchbar_clear();
         } else {
             this.validate_searchbar_input_and_maybe_search(value);
             this.props.update_searchbar_value(value);
+            //this.props.handle_viz_events("click")
         }
     }
 
@@ -85,21 +84,6 @@ class Controls extends React.Component {
                             <FontAwesomeIcon icon={faInfoCircle} />
                         </a>
                     </div>
-
-                    <button
-                        className="button"
-                        onClick={() =>
-                            // eslint-disable-next-line max-len
-                            this.validate_searchbar_input_and_maybe_search(this.props.searchbar_value)}
-                    >Search
-                    </button>
-
-                    <button
-                        className="button"
-                        onClick={() => {
-                            this.props.handle_searchbar_clear();
-                        }}
-                    >Clear</button>
                 </div>
 
                 <div className="col-4">
@@ -131,6 +115,7 @@ Controls.propTypes = {
     handle_searchbar_search: PropTypes.func.isRequired,
     handle_searchbar_clear: PropTypes.func.isRequired,
     update_searchbar_value: PropTypes.func.isRequired,
+    handle_viz_events: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
     dataset_name: PropTypes.string.isRequired,
     update_dataset: PropTypes.func.isRequired,
@@ -158,6 +143,8 @@ class Viz extends React.Component {
     }
 
     componentDidUpdate() {
+
+        console.log('viz', this.props.config);
 
         // D3 Code to update the chart
         if (this.props.config.viz_update_func === undefined) {
@@ -301,13 +288,34 @@ class MainView extends React.Component {
 
     }
 
+    focus_graph(person_to_focus) {
+        let data = {... this.state.data};
+        const config = {... this.state.config};
+        // update center names to selected node
+        console.log(person_to_focus);
+        // turning the next two lines into a one-liner gives an error. unclear why.
+        data.center_names = {};
+        data.center_names[person_to_focus] = true;
+
+        config.selection_active = true;
+        config.selection_name = person_to_focus;
+        config.show_info_panel = true;
+        config.searchbar_value = person_to_focus;
+        config.viz_update_func = 'update_focus';
+
+        data = update_node_degree_and_visibility(data, config, person_to_focus);
+
+        this.setState({data: data, config: config});
+    }
+
+
     /**
      * Handles a visualization event
      *
      * @param event_name: String
      * @param data: Object
      */
-    handle_viz_events(event_name, data) { // eslint-disable-line no-unused-vars
+    handle_viz_events(event_name, data) {
 
 
         if (event_name === 'update_data_bindings'){
@@ -331,6 +339,7 @@ class MainView extends React.Component {
             }
 
         } else if (event_name === "mouseout") {
+
             if (!config.selection_active){
                 config.viz_update_func = 'update_focus';
                 const data = update_node_degree_and_visibility(
@@ -339,23 +348,10 @@ class MainView extends React.Component {
             }
         } else if (event_name === "click") {
             let data;
-
+            console.log("In the click handler")
             // select new person
             if (!config.selection_active || node.name !== this.state.config.selection_name){
-
-                // update center names to selected node
-                data = {... this.state.data};
-                // turning the next two lines into a one-liner gives an error. unclear why.
-                data.center_names = {};
-                data.center_names[node.name] = true;
-                this.setState({data: data});
-
-                config.selection_active = true;
-                config.selection_name = node.name;
-                config.show_info_panel = true;
-                config.searchbar_value = node.name;
-                data = update_node_degree_and_visibility(
-                    {... this.state.data}, {... this.state.config}, node.name);
+                this.focus_graph(node.name);
             } else {
 
                 data = {... this.state.data};
@@ -365,10 +361,15 @@ class MainView extends React.Component {
                 config.selection_active = false;
                 config.selection_name = undefined;
                 config.show_info_panel = false;
+
                 data = update_node_degree_and_visibility(
                     {... this.state.data}, {... this.state.config});
+                this.setState({data: data, config: config}, function () {
+                    console.log("This code ran")
+                });
             }
-            this.setState({data: data, config: config});
+
+            console.log("Stopping place")
         }
     }
 
@@ -385,21 +386,12 @@ class MainView extends React.Component {
      * @param search_string String containing the name to search for
      */
     handle_searchbar_search(search_string) {
-        let config = {... this.state.config};
-        config.searchbar_value = search_string;
-        config.viz_update_func = 'update_focus';
-        config.selection_active = true;
-        config.selection_name = search_string;
-        config.show_info_panel = true;
-        const data = update_node_degree_and_visibility(
-            {... this.state.data}, {... this.state.config}, search_string);
-        this.setState({data: data, config: config});
+        this.focus_graph(search_string);
         console.log("Searched")
     }
 
     /**
      * Clears the searchbar
-     * TODO: Make the clear actually clear the text of the searchbar, propbably will be done in
      * Content
      */
     handle_searchbar_clear() {
@@ -417,7 +409,6 @@ class MainView extends React.Component {
         const config = {...this.state.config};
         config.searchbar_value = search_string;
         this.setState({config: config});
-        console.log(this.state.config.searchbar_value)
     }
 
     submitFormHandler = event => {
@@ -489,6 +480,8 @@ class MainView extends React.Component {
                         handle_searchbar_search={(search_string) =>
                             this.handle_searchbar_search(search_string)}
                         handle_searchbar_clear={() => this.handle_searchbar_clear()}
+                        handle_viz_events={(event_name, data) =>
+                            this.handle_viz_events(event_name, data )}
                         update_searchbar_value={(e) => this.update_searchbar_value(e)}
                         toggle_checkbox={() => this.toggle_checkbox()}
                         toggle_show_table={() => this.toggle_show_table()}
