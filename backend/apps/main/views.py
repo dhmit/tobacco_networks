@@ -22,8 +22,8 @@ def get_network_data(request):
         'sterling': 'person_sterling_including_2nd_degree_edges.json',
         'top_100_edges': 'top_100_edges.json',
 
-        # 'test': 'person_lawyers_including_2nd_degree_edges.json',
-        'test': 'whole_industry.json',
+        'test': 'person_lawyers_including_2nd_degree_edges.json',
+        # 'test': 'whole_industry.json',
         #'test': 'person_lawyers.json'
     }
 
@@ -83,13 +83,15 @@ def get_clusters_data(nodes): # pylint: disable=R0914
         no_pos_available_count = affiliations['No Positions Available']
         del affiliations['No Positions Available']
 
-    most_common_affiliations = affiliations.most_common()[:9]
+    max_number_of_companies = 15
+
+    most_common_affiliations = affiliations.most_common()[:max_number_of_companies]
 
     # if more than 9 affiliations, put the ones outside the top 9 into an "others" group
     others_group = set()
-    if len(affiliations) > 9:
+    if len(affiliations) > max_number_of_companies:
         others_group_count = 0
-        for affiliation, aff_count in affiliations.most_common()[9:]:
+        for affiliation, aff_count in affiliations.most_common()[max_number_of_companies:]:
             others_group.add(affiliation)
             others_group_count += aff_count
 
@@ -102,16 +104,26 @@ def get_clusters_data(nodes): # pylint: disable=R0914
 
     # colormap
     bmap = [
-        (53, 132, 187),
-        (255, 140, 38),
-        (65, 169, 65),
-        (218, 61, 61),
-        (158, 118, 195),
-        (151, 103, 93),
-        (229, 132, 200),
-        (140, 140, 140),
-        (194, 195, 56),
-        (46, 196, 211)
+                (53, 132, 187),
+                (255, 140, 38),
+                (65, 169, 65),
+                (218, 61, 61),
+                (158, 118, 195),
+                (151, 103, 93),
+                (229, 132, 200),
+                # (140, 140, 140),
+                (194, 195, 56),
+                (46, 196, 211),
+                (53, 132, 187),
+                (255, 140, 38),
+                (65, 169, 65),
+                (218, 61, 61),
+                (158, 118, 195),
+                (151, 103, 93),
+                (229, 132, 200),
+                (140, 140, 140),
+                (194, 195, 56),
+                (46, 196, 211)
     ][:len(most_common_affiliations)]
 
 

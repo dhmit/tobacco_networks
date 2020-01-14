@@ -396,9 +396,10 @@ class PeopleDatabase:
                 print(f'\n\nMerge candidate: {person1.full_name} <-> {person2.full_name}')
                 print("\n", person1)
                 print("\n", person2)
+                print(f'\nMerge candidate: {person1.full_name} <-> {person2.full_name}')
 
-                selection = input("Should these 2 people get merged? (y/n):   ")
-                # selection = 'y'
+                # selection = input("Should these 2 people get merged? (y/n):   ")
+                selection = 'y'
                 if selection == 'y':
                     new_p = self.merge_two_persons(person1, person2)
                     print("new", new_p)

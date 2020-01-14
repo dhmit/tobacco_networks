@@ -29,4 +29,9 @@
     stroke-width: 3px;
 }
 
+.cluster_label{
+    text-anchor: middle;
+    opacity: 0.7;
+}
+
 

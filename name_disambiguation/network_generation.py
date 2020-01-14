@@ -1,5 +1,8 @@
 """
 This file contains the code to generate networks that can then be rendered through react/D3
+
+TODO: this should really be done through a network class where each network has nodes, edges, and
+TODO: documents and the ability to output the resulting network to json
 """
 
 import json
@@ -7,6 +10,7 @@ import pickle
 import re
 from collections import Counter
 from pathlib import Path
+import random
 
 import pandas as pd
 from IPython import embed
@@ -84,7 +88,7 @@ def get_network_of_1970s_nodes_and_edges():             # pylint: disable=C0103,
             return pickle.load(infile)
     except FileNotFoundError:
 
-
+        print("no 1970s network found. generating now...")
         people_db = PeopleDatabase()
         try:
             people_db.load_from_disk(PEOPLE_DB_PATH)
@@ -134,14 +138,14 @@ def get_network_of_1970s_nodes_and_edges():             # pylint: disable=C0103,
             doc_recipients = d_recipients
 
             for author in doc_authors:
-                author.docs_authored.append(doc)
+                author.docs_authored.add(doc.tid)
                 if author in nodes:
                     nodes[author]['count_authored'] += 1
                 else:
-                    embed()
-                    nodes[author] = {'person': author, 'docs_authored': {}, 'count_received': 0}
+                    nodes[author] = {'person': author, 'count_authored': 0, 'count_received': 0}
 
             for recipient in doc_recipients:
+                recipient.docs_received.add(doc.tid)
                 if recipient in nodes:
                     nodes[recipient]['count_received'] += 1
                 else:
@@ -152,9 +156,11 @@ def get_network_of_1970s_nodes_and_edges():             # pylint: disable=C0103,
                 for recipient in doc_recipients:
                     edge = tuple(sorted([author, recipient]))
                     if edge in edges:
-                        edges[edge]['count'] += 1
+                        edges[edge]['docs'].add(doc.tid)
                     else:
-                        edges[edge] = {'edge': edge, 'count': 1}
+                        edges[edge] = {'edge': edge, 'docs': {doc.tid} }
+
+        embed()
 
         with open(NETWORK_PATH, 'wb') as out:
             network = {'nodes': nodes, 'edges': edges}
@@ -232,7 +238,10 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
         person1 = people_db.get_person_from_alias(edge['edge'][0].aliases.most_common(1)[0][0])
         person2 = people_db.get_person_from_alias(edge['edge'][1].aliases.most_common(1)[0][0])
 
+        embed()
+
         if not person1 or not person2:
+            print("could not find person1 or 2. embedding...")
             embed()
         if (
                 (person1 in center_people or person2 in center_people) and     # pylint: disable=R0916
@@ -243,8 +252,8 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
                 (person1.full_name not in NAMES_TO_SKIP) and
                 (person2.full_name not in NAMES_TO_SKIP)
         ):
-            nodes_temp[person1] += edge['count']
-            nodes_temp[person2] += edge['count']
+            nodes_temp[person1] += len(edge['docs'])
+            nodes_temp[person2] += len(edge['docs'])
 
             if person1 in center_people:
                 center_person_doc_counter[person1] += 1
@@ -267,9 +276,12 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
     new_people_db.generate_alias_to_person_dict()
     new_people_db.merge_duplicates(manual_merge=True)
 
+    documents_out = set()
     for node in sorted(new_people_db.people, key=lambda x: x.count)[::-1]:
-        nodes_out.append({'name': node.full_name, 'docs': nodes_temp[node], 'words': 0,
-                          'affiliation': node.most_likely_position})
+        embed()
+        nodes_out.append({'name': node.full_name, 'docs': nodes_temp[node],
+                          'affiliation': node.most_likely_position,
+                          'sample_docs_authored': 0})
 
     edges_out = []
     for edge in edges.values():
@@ -284,14 +296,18 @@ def generate_people_network(names, network_name, max_number_of_nodes=100,   # py
                     person2 in center_people or
                     (
                         include_2nd_degree_connections and
-                        edge['count'] > 5
+                        len(edge['docs']) > 5
                     )
             ):
-                edges_out.append({'node1': person1.full_name, 'node2': person2.full_name,
-                                  'docs': edge['count'], 'words': 0})
-                if edge['count'] == 0:
+                if len(edge['docs']) == 0:
                     raise ValueError("count of edge should not be zero.")
 
+                for tid in edge['docs']:
+                    documents_out.add(tid)
+                edges_out.append({'node1': person1.full_name, 'node2': person2.full_name,
+                                  'docs': len(edge['docs'])})
+
+    embed()
 
     store_network_for_visualization(nodes_out, edges_out,
                                     center_names=names,
@@ -527,9 +543,8 @@ def generate_network_whole_industry():
     """
 
     # Load people db
-    people_db_path = Path('..', 'data', 'network_generation', 'people_db_1970s.pickle')
     people_db = PeopleDatabase()
-    people_db.load_from_disk(Path(people_db_path))
+    people_db.load_from_disk(Path(PEOPLE_DB_PATH))
 
     # load the whole 1970s network
     network = get_network_of_1970s_nodes_and_edges()
@@ -538,12 +553,10 @@ def generate_network_whole_industry():
     org_counter = Counter()
     connection_counter = Counter()
 
-
-    # first identify all the primary edges including at least one person from center_people
     for edge in edges.values():
         person1, person2 = edge['edge']
-        p1m = person1.most_likely_position
-        p2m = person2.most_likely_position
+        p1m = person1.most_likely_position.strip()
+        p2m = person2.most_likely_position.strip()
         if (
                 person1 and person2 and p1m != p2m and
                 p1m != 'no positions available' and p2m != 'no positions available'
@@ -552,12 +565,18 @@ def generate_network_whole_industry():
             org_counter[p2m] += edge['count']
             connection_counter[tuple(sorted((p1m, p2m)))] += edge['count']
 
-    nodes = []
+    nodes = {}
     edges = []
-    for org, org_count in org_counter.most_common():
-        nodes.append({'name': org, 'docs': org_count, 'words': 0, 'affiliation': 'test'})
+
+    for org, org_count in org_counter.most_common(200):
+        nodes[org] = {'name': org, 'docs': org_counter[org], 'words': 0, 'affiliation': 'test'}
+
     for edge, edge_count in connection_counter.most_common():
-        edges.append({'node1': edge[0], 'node2': edge[1], 'docs': edge_count, 'words': 0})
+        org1, org2 = edge
+        if org1 in nodes and org2 in nodes:
+            edges.append({'node1': org1, 'node2': org2, 'docs': edge_count, 'words': 0})
+
+    nodes = sorted(nodes.values(), key=lambda x: x['docs'], reverse=True)
 
     store_network_for_visualization(nodes, edges,
                                     center_names=[], network_name='industry',
@@ -565,13 +584,15 @@ def generate_network_whole_industry():
 
 if __name__ == '__main__':
 
-    for match in search_possible_matches('KHAN').most_common(100):
-        print()
-        print(match[0].full_name, match[1])
-        print(match[0].positions)
-        print(match[0].aliases)
+    # for match in search_possible_matches('KHAN').most_common(100):
+    #     print()
+    #     print(match[0].full_name, match[1])
+    #     print(match[0].positions)
+    #     print(match[0].aliases)
 
     # generate_network_of_1970s_nodes_and_edges()
-    # generate_network_lawyers()
+    generate_network_lawyers()
     # generate_network_research_directors()
     # generate_network_thedore_sterling()
+    # generate_network_whole_industry()
+    # get_network_of_1970s_nodes_and_edges()

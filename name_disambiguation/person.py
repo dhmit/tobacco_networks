@@ -98,12 +98,14 @@ class Person:
             for i in aliases:
                 self.aliases[i.upper()] += count
 
+        self.docs_authored = set()
         if docs_authored:
             if isinstance(docs_authored, set):
                 self.docs_authored = docs_authored
             else:
                 raise ValueError("docs_authored for Person object has to be a set.")
 
+        self.docs_received = set()
         if docs_received:
             if isinstance(docs_received, set):
                 self.docs_received = docs_received
@@ -145,6 +147,9 @@ class Person:
                       positions=copy.deepcopy(self.positions),
                       aliases=copy.deepcopy(self.aliases), count=self.count)
 
+    # TODO: positions and aliases should not be hashed as they often change with new info
+    # TODO: better: if two people have the same first/middle/last name, they should be
+    # TODO: distinguished through an index.
     def __hash__(self):
         """
         Hashes the person

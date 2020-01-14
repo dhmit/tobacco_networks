@@ -89,10 +89,8 @@ function update_node_visibility(data, viz_degree, center_node_name){
         }
 
         if (d.source.name === center_node_name || d.target.name === center_node_name){
-            console.log({...d.source});
             d.source.visibility = 'visible';
             d.target.visibility = 'visible';
-            console.log({...d.source});
         }
     });
 

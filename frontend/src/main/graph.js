@@ -43,16 +43,7 @@ export function create_graph(el, data, config, handle_viz_events) {
         .enter()
             .append("line");
 
-    // clusters are the affiliation groups, e.g. Philip Morris
-    // each consists of a group with one text element.
-    const clusters = svg
-        .append("g")
-            .attr("id", "graph_clusters")
-        .selectAll("g")
-            .data(Object.values(data.clusters))
-        .enter()
-            .append("g")
-                .attr("id", (d) => `cluster_${d.name}`);
+
 
     // node is an SVG g -- will contain circle + label (a group with a rect and a text element)
     const nodes = svg
@@ -64,6 +55,17 @@ export function create_graph(el, data, config, handle_viz_events) {
             .append("g")
             .attr("class", "graph_node")
             .attr('id', (d) => d.name);  // TODO: replace this with a fixed key rather than name
+
+    // clusters are the affiliation groups, e.g. Philip Morris
+    // each consists of a group with one text element.
+    const clusters = svg
+        .append("g")
+            .attr("id", "graph_clusters")
+        .selectAll("g")
+            .data(Object.values(data.clusters))
+        .enter()
+            .append("g")
+                .attr("id", (d) => `cluster_${d.name}`);
 
     // store data bindings and initialize force simulation
     let data_bindings = {
@@ -201,12 +203,18 @@ export function create_graph(el, data, config, handle_viz_events) {
     nodes.selectAll('.node_label_rect_background')
         .attr('stroke', (d) => data.clusters[d.cluster].color);
 
-
+    console.log("clus", data.clusters);
+    const cluster_font_scale = d3.scaleLinear()
+        .domain([0, d3.max(Object.values(data.clusters), function(d) {
+            console.log("h", d);
+            return d.count})])
+        .range([10, 40]);
     clusters.append('text')
         .text((d) => d.name)
         .style('fill', (d) => d.color)
-        .style('font-size', (config.width - 50) * config.height / 50000 )
-        .attr("text-anchor", "middle")
+        .attr('class', 'cluster_label')
+        .style('font-size', ((d) => cluster_font_scale(d.count)))
+        // .attr("text-anchor", "middle")
         .attr("x", (d) => (d.x_pos + 0.2) * config.width / 3 * 2)
         .attr("y", (d) => (d.y_pos + 0.2) * config.height / 3 * 2);
 
