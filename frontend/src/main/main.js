@@ -15,6 +15,14 @@ import { create_graph, update_graph} from './graph.js'
 import {update_node_degree_and_visibility} from "./node_degree_calculation";
 import './main.css';
 
+
+//TODO Take out check to cluster
+//TODO Delete dataset and move bar upward
+//TODO Keep only the 3 important datasets
+//TODO Fix objects
+//TODO delete words
+//TODO Default loaded dataset should be Research directors
+
 /***************************************************************************************************
  * Controls
  * The top row of the webapp, with search bar, display controls, etc.
@@ -220,10 +228,6 @@ class Info extends React.Component {
                             <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Words</th>
-                            <td>{this.props.words > 0 ? this.props.words : 0}</td>
-                        </tr>
-                        <tr>
                             <th scope="row">Affiliation</th>
                             <td>{this.props.affiliation.length > 0 ? this.props.affiliation :
                                 ""}</td>
@@ -240,7 +244,6 @@ Info.propTypes ={
     currentColor: PropTypes.string,
     name: PropTypes.string,
     docs: PropTypes.number,
-    words: PropTypes.number,
     affiliation: PropTypes.string,
     toggle_show_table: PropTypes.func,
 };
@@ -270,12 +273,9 @@ class MainView extends React.Component {
             data: null,  // data for the viz
             data_bindings: {}, // data bindings for d3
             mouseover: false,  // info panel state (based on callbacks from viz)
-
-            people: [{}],
             name: "",
             affiliation: "",
             docs: 0,
-            words: 0,
         };
         this.csrftoken = getCookie('csrftoken');
 
@@ -294,7 +294,7 @@ class MainView extends React.Component {
      * @returns an object that contains the required data to display
      */
     get_person_data(person_to_focus) {
-        const people = this.state.people;
+        const people = this.state.data.nodes;
         for (let i = 0; i < people.length; i++) {
             if (people[i].name === person_to_focus) {
                 return people[i];
@@ -312,6 +312,7 @@ class MainView extends React.Component {
     handle_searchbar_search_and_focus_grpah(person_to_focus) {
         let data = this.state.data;
         const config = this.state.config;
+        console.log(config);
         // update center names to selected node
         // turning the next two lines into a one-liner gives an error. unclear why.
         data.center_names = {};
@@ -324,9 +325,11 @@ class MainView extends React.Component {
         config.viz_update_func = 'update_focus';
         const person = this.get_person_data(person_to_focus);
         data = update_node_degree_and_visibility(data, config, person_to_focus);
-        console.log(data.nodes.name)
         this.setState({data: data, config: config, name: person.name, docs: person.docs,
-            words: person.words, affiliation: person.affiliation});
+            affiliation: person.affiliation},
+        function() {
+            console.log(this.state);
+        });
     }
 
     /**
@@ -335,6 +338,7 @@ class MainView extends React.Component {
      * state.
      */
     handle_searchbar_clear_and_unfocus_graph() {
+
         const config = this.state.config;
         let data = this.state.data;
         data.center_names = data.center_names_backup;
@@ -345,8 +349,10 @@ class MainView extends React.Component {
         config.viz_update_func = 'update_focus';
         data = update_node_degree_and_visibility(
             data, config);
-        this.setState({data: data, config: config, name: "", docs: 0,
-            words: 0, affiliation: ""});
+        this.setState({data: data, config: config, name: "", docs: 0, affiliation: ""},
+            function() {
+                console.log(this.state);
+            });
     }
 
 
@@ -444,15 +450,8 @@ class MainView extends React.Component {
                 response
                     .json()
                     .then((data) => {
-                        console.log("new data", data);
                         // create a copy of the center names so we can restore them on unfocus.
                         data.center_names_backup = {... data.center_names};
-                        let people = this.state.people;
-                        for (let i = 0; i < data.nodes.length; i++) {
-                            people.push({name: data.nodes[i].name, docs: data.nodes[i].docs,
-                                affiliation: data.nodes[i].affiliation,
-                                words: data.nodes[i].words});
-                        }
                         this.setState({data:data});
                         return true
                     })
@@ -521,7 +520,6 @@ class MainView extends React.Component {
                                 currentColor={this.state.config.color}
                                 name={this.state.name}
                                 docs={this.state.docs}
-                                words={this.state.words}
                                 affiliation={this.state.affiliation}
                                 show_info_panel={this.state.show_info_panel}
                                 toggle_show_table={() => this.toggle_show_table()}
