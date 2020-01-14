@@ -15,12 +15,6 @@ import { create_graph, update_graph} from './graph.js'
 import {update_node_degree_and_visibility} from "./node_degree_calculation";
 import './main.css';
 
-
-//TODO Take out check to cluster
-//TODO Delete dataset and move bar upward
-//TODO Keep only the 3 important datasets
-//TODO Default loaded dataset should be Research directors
-
 /***************************************************************************************************
  * Controls
  * The top row of the webapp, with search bar, display controls, etc.
@@ -84,32 +78,25 @@ class Controls extends React.Component {
                             this.autocomplete_change(value, reason)}
                     />
                 </div>
-                <div className="col-6">
-                    <div className="form-check float-right">
-                        <input type="checkbox" className="form-check-input"
-                            onChange={this.props.toggle_checkbox}/>
-                        <label>Check to cluster</label>
-                    </div>
-                    <div id="info_button">
-                        <a onClick={this.props.toggle_show_table}>
-                            <FontAwesomeIcon icon={faInfoCircle} />
-                        </a>
-                    </div>
-                </div>
 
-                <div className="col-4">
+                <div id="middle_controls" className="col-4">
                     <div className="form-group">
-                        <label htmlFor="exampleFormControlSelect1">Dataset</label>
-                        <select className="form-control"
+                        <select className="form-control float-left"
                             value={this.props.dataset_name}
                             onChange={(e) => this.props.update_dataset(e.target.value)}
                         >
                             <option value="lawyers">Lawyers</option>
                             <option value="research_directors">Research Directors</option>
                             <option value="sterling">Theodore Sterling</option>
-                            <option value="top_100_edges">100 Strongest Edges</option>
-                            <option value="test">Test Dataset</option>
                         </select>
+                    </div>
+                </div>
+
+                <div className="col-4">
+                    <div id="info_button">
+                        <a onClick={this.props.toggle_show_table}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                        </a>
                     </div>
                 </div>
             </div>
@@ -120,7 +107,6 @@ class Controls extends React.Component {
 
 Controls.propTypes = {
     searchbar_value: PropTypes.string.isRequired,
-    toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
     handle_searchbar_search_and_focus_grpah: PropTypes.func.isRequired,
     handle_searchbar_clear_and_unfocus_graph: PropTypes.func.isRequired,
@@ -259,7 +245,7 @@ class MainView extends React.Component {
                 width: window.innerWidth,
                 height: window.innerHeight - 100,
                 person_to_highlight: "",
-                dataset_name: 'test',
+                dataset_name: "research_directors",
                 cluster_nodes: true,
                 selection_active: false,
                 selection_name: undefined,
@@ -490,7 +476,6 @@ class MainView extends React.Component {
                         handle_viz_events={(event_name, data) =>
                             this.handle_viz_events(event_name, data )}
                         update_searchbar_value={(e) => this.update_searchbar_value(e)}
-                        toggle_checkbox={() => this.toggle_checkbox()}
                         toggle_show_table={() => this.toggle_show_table()}
                         cluster_nodes={this.state.config.cluster_nodes}
                         nodes={this.state.data.nodes}
