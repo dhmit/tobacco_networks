@@ -19,8 +19,6 @@ import './main.css';
 //TODO Take out check to cluster
 //TODO Delete dataset and move bar upward
 //TODO Keep only the 3 important datasets
-//TODO Fix objects
-//TODO delete words
 //TODO Default loaded dataset should be Research directors
 
 /***************************************************************************************************
