@@ -21,7 +21,6 @@ import {update_node_degree_and_visibility} from "./node_degree_calculation";
  */
 export function create_graph(el, data, config, handle_viz_events) {
 
-    console.log(data);
 
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)
@@ -332,7 +331,6 @@ function get_gravity_center(d, config, data){
 // This function is called whenever the simulation updates
 // eslint-disable-next-line no-unused-vars
 function render_simulation(config, data, data_bindings) {
-
     // Update node positions
     data_bindings.nodes.attr("transform", (d) => {
         d.x = Math.max(d.circle_radius, Math.min(config.width - d.circle_radius, d.x));
@@ -430,7 +428,7 @@ function initialize_force_sim(config, data, data_bindings) {
                         .y(force_y_pos)
                         .strength(cluster_strength))
 
-        .force("center", d3.forceCenter().x(config.width / 2).y(config.height / 2))
+        //.force("center", d3.forceCenter().x(config.width / 2).y(config.height / 2))
 
         .force('x_center', d3.forceX()
                         .x(config.width/2)
@@ -542,9 +540,9 @@ export function get_information(data, name){
  * @param action: the update action, e.g. "focus" or "cluster_nodes"
  */
 export function update_graph(el, data, config, data_bindings, action) {
-    if (action === 'update_focus') {
 
-        console.log("update focus");
+
+    if (action === 'update_focus') {
 
         const link_width_scale_degree_1 = d3.scaleLinear()
             .domain([0, d3.max(data['links'], function(d) { return d.docs})])
@@ -576,6 +574,7 @@ export function update_graph(el, data, config, data_bindings, action) {
         svg.selectAll(".graph_node").style("opacity", 1);
         svg.selectAll(".graph_link").style("opacity", 1);
     }
+    render_simulation(config, data, data_bindings);
 }
 
 
