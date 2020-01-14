@@ -289,8 +289,8 @@ class MainView extends React.Component {
     }
 
     focus_graph(person_to_focus) {
-        let data = {... this.state.data};
-        const config = {... this.state.config};
+        let data = this.state.data;
+        const config = this.state.config;
         // update center names to selected node
         console.log(person_to_focus);
         // turning the next two lines into a one-liner gives an error. unclear why.
@@ -395,12 +395,16 @@ class MainView extends React.Component {
      * Content
      */
     handle_searchbar_clear() {
-        let config = {... this.state.config};
+        const config = this.state.config;
+        let data = this.state.data;
+        data.center_names = data.center_names_backup;
         config.searchbar_value = "";
         config.selection_active = false;
         config.selection_name = undefined;
-        const data = update_node_degree_and_visibility(
-            {... this.state.data}, {... this.state.config});
+        config.show_info_panel = false;
+        config.viz_update_func = 'update_focus';
+        data = update_node_degree_and_visibility(
+            data, config);
         this.setState({data: data, config: config});
         console.log("Cleared")
     }
