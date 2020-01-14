@@ -331,9 +331,6 @@ function get_gravity_center(d, config, data){
 // This function is called whenever the simulation updates
 // eslint-disable-next-line no-unused-vars
 function render_simulation(config, data, data_bindings) {
-
-    console.log('rendergin');
-
     // Update node positions
     data_bindings.nodes.attr("transform", (d) => {
         d.x = Math.max(d.circle_radius, Math.min(config.width - d.circle_radius, d.x));

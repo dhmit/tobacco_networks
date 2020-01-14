@@ -31,7 +31,7 @@ class Controls extends React.Component {
             const name = node.name;
 
             if (search_string.toLowerCase() === name.toLowerCase()) {
-                this.props.handle_searchbar_search(name);
+                this.props.handle_searchbar_search_and_focus_grpah(name);
                 return;
             }
         }
@@ -39,11 +39,16 @@ class Controls extends React.Component {
 
     autocomplete_change(value, reason) {
         if (reason === "clear") {
-            this.props.handle_searchbar_clear();
+            this.props.handle_searchbar_clear_and_unfocus_graph();
         } else {
-            this.validate_searchbar_input_and_maybe_search(value);
-            this.props.update_searchbar_value(value);
-            //this.props.handle_viz_events("click")
+
+            if (value !== null) {
+                this.validate_searchbar_input_and_maybe_search(value);
+                this.props.update_searchbar_value(value);
+            } else {
+                this.validate_searchbar_input_and_maybe_search("");
+                this.props.update_searchbar_value("");
+            }
         }
     }
 
@@ -111,9 +116,8 @@ Controls.propTypes = {
     searchbar_value: PropTypes.string.isRequired,
     toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
-    handle_searchbar_query: PropTypes.func.isRequired,
-    handle_searchbar_search: PropTypes.func.isRequired,
-    handle_searchbar_clear: PropTypes.func.isRequired,
+    handle_searchbar_search_and_focus_grpah: PropTypes.func.isRequired,
+    handle_searchbar_clear_and_unfocus_graph: PropTypes.func.isRequired,
     update_searchbar_value: PropTypes.func.isRequired,
     handle_viz_events: PropTypes.func.isRequired,
     nodes: PropTypes.array.isRequired,
@@ -143,9 +147,6 @@ class Viz extends React.Component {
     }
 
     componentDidUpdate() {
-
-        console.log('viz', this.props.config);
-
         // D3 Code to update the chart
         if (this.props.config.viz_update_func === undefined) {
             return;
@@ -185,10 +186,9 @@ class Viz extends React.Component {
         )
     }
 }
-// data: PropTypes.arrayOf(PropTypes.object).isRequired,
 
 Viz.propTypes = {
-    data: PropTypes.objectOf(PropTypes.array).isRequired,
+    data: PropTypes.object.isRequired, //Ask Stefan about interior contents (objs or arrays)
     config: PropTypes.object.isRequired,
     data_bindings: PropTypes.object.isRequired,
     handle_viz_events: PropTypes.func,
@@ -275,7 +275,6 @@ class MainView extends React.Component {
             docs: 0,
             words: 0,
             affiliation: "",
-            //show_info_panel: false,
         };
         this.csrftoken = getCookie('csrftoken');
 
@@ -288,11 +287,16 @@ class MainView extends React.Component {
 
     }
 
-    focus_graph(person_to_focus) {
+    /**
+     * Takes the searchbar value and updates the graph to focus on that person
+     * The person to focus on has already been validated that they are in the
+     * graph by the validation function in Controls.
+     * @param person_to_focus The person we want the graph to focus on
+     */
+    handle_searchbar_search_and_focus_grpah(person_to_focus) {
         let data = this.state.data;
         const config = this.state.config;
         // update center names to selected node
-        console.log(person_to_focus);
         // turning the next two lines into a one-liner gives an error. unclear why.
         data.center_names = {};
         data.center_names[person_to_focus] = true;
@@ -305,6 +309,25 @@ class MainView extends React.Component {
 
         data = update_node_degree_and_visibility(data, config, person_to_focus);
 
+        this.setState({data: data, config: config});
+    }
+
+    /**
+     * Handles clearing the searchbar when the "clear (x) button is clicked
+     * while also unfocuses the graph such that it returns to its original
+     * state.
+     */
+    handle_searchbar_clear_and_unfocus_graph() {
+        const config = this.state.config;
+        let data = this.state.data;
+        data.center_names = data.center_names_backup;
+        config.searchbar_value = "";
+        config.selection_active = false;
+        config.selection_name = undefined;
+        config.show_info_panel = false;
+        config.viz_update_func = 'update_focus';
+        data = update_node_degree_and_visibility(
+            data, config);
         this.setState({data: data, config: config});
     }
 
@@ -346,72 +369,32 @@ class MainView extends React.Component {
                     {... this.state.data}, {... this.state.config});
                 this.setState({data: data, config: config});
             }
+
         } else if (event_name === "click") {
-            let data;
-            console.log("In the click handler")
             // select new person
             if (!config.selection_active || node.name !== this.state.config.selection_name){
-                this.focus_graph(node.name);
+                this.handle_searchbar_search_and_focus_grpah(node.name);
             } else {
-
-                data = {... this.state.data};
-                data.center_names = data.center_names_backup;
-                this.setState({data: data});
-
-                config.selection_active = false;
-                config.selection_name = undefined;
-                config.show_info_panel = false;
-
-                data = update_node_degree_and_visibility(
-                    {... this.state.data}, {... this.state.config});
-                this.setState({data: data, config: config}, function () {
-                    console.log("This code ran")
-                });
+                this.handle_searchbar_clear_and_unfocus_graph();
             }
-
-            console.log("Stopping place")
         }
     }
 
     toggle_checkbox() {
-        // this.setState({cluster_nodes: !this.state.config.cluster_nodes});
         let config = {... this.state.config};
         config.cluster_nodes = !this.state.config.cluster_nodes;
         config.viz_update_func = 'cluster_nodes';
         this.setState({config: config});
     }
 
-    /**
-     * Searches the graph for the person's name
-     * @param search_string String containing the name to search for
-     */
-    handle_searchbar_search(search_string) {
-        this.focus_graph(search_string);
-        console.log("Searched")
-    }
-
-    /**
-     * Clears the searchbar
-     * Content
-     */
-    handle_searchbar_clear() {
-        const config = this.state.config;
-        let data = this.state.data;
-        data.center_names = data.center_names_backup;
-        config.searchbar_value = "";
-        config.selection_active = false;
-        config.selection_name = undefined;
-        config.show_info_panel = false;
-        config.viz_update_func = 'update_focus';
-        data = update_node_degree_and_visibility(
-            data, config);
-        this.setState({data: data, config: config});
-        console.log("Cleared")
-    }
-
     update_searchbar_value(search_string) {
         const config = {...this.state.config};
-        config.searchbar_value = search_string;
+        if (search_string !== null) {
+            config.searchbar_value = search_string;
+        } else {
+            config.searchbar_value = "";
+        }
+
         this.setState({config: config});
     }
 
@@ -477,13 +460,10 @@ class MainView extends React.Component {
                 <div className="container-fluid">
                     <Controls  // this is its own row
                         person_to_highlight={this.state.config.person_to_highlight}
-                        handle_searchbar_query={
-                            (search_string, action) => this.handle_searchbar_query(search_string,
-                                action)
-                        }
-                        handle_searchbar_search={(search_string) =>
-                            this.handle_searchbar_search(search_string)}
-                        handle_searchbar_clear={() => this.handle_searchbar_clear()}
+                        handle_searchbar_search_and_focus_grpah={(search_string) =>
+                            this.handle_searchbar_search_and_focus_grpah(search_string)}
+                        handle_searchbar_clear_and_unfocus_graph={() =>
+                            this.handle_searchbar_clear_and_unfocus_graph()}
                         handle_viz_events={(event_name, data) =>
                             this.handle_viz_events(event_name, data )}
                         update_searchbar_value={(e) => this.update_searchbar_value(e)}
