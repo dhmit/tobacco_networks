@@ -29,6 +29,11 @@ urlpatterns = [
     # temporary json endpoint for network data
     url('get_network_data', main_views.get_network_data),
 
+    url('explore_networks', render_react_view, {'component_name': 'NetworkExplorationView'}),
+
+    url('sterling', render_react_view, {'component_name': 'SterlingEssayView'}),
+    url('research_directors', render_react_view, {'component_name': 'ResearchDirectorsEssayView'}),
+
     # React views
     url('', render_react_view, {'component_name': 'MainView'}),
 ]
