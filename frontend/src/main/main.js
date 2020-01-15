@@ -15,6 +15,12 @@ import { create_graph, update_graph} from './graph.js'
 import {update_node_degree_and_visibility} from "./node_degree_calculation";
 import './main.css';
 
+
+//TODO Take out check to cluster
+//TODO Delete dataset and move bar upward
+//TODO Keep only the 3 important datasets
+//TODO Default loaded dataset should be Research directors
+
 /***************************************************************************************************
  * Controls
  * The top row of the webapp, with search bar, display controls, etc.
@@ -69,8 +75,8 @@ class Controls extends React.Component {
                                 value={this.props.searchbar_value}
                                 onChange={(e) => this.props.update_searchbar_value(e.target.value)}
                             />
-                            //TODO Clear X trtigger clear function; search when automcomplete
                         )}
+                        inputValue = {this.props.searchbar_value}
                         autoComplete={true}
                         forcePopupIcon={false}
                         onChange={(_event, value) => this.props.update_searchbar_value(value)}
@@ -188,7 +194,7 @@ class Viz extends React.Component {
 }
 
 Viz.propTypes = {
-    data: PropTypes.object.isRequired, //Ask Stefan about interior contents (objs or arrays)
+    data: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     data_bindings: PropTypes.object.isRequired,
     handle_viz_events: PropTypes.func,
@@ -213,15 +219,11 @@ class Info extends React.Component {
                     <tbody>
                         <tr>
                             <th scope="row">Name:</th>
-                            <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
+                            <td>{this.props.name.length > 0 ? this.props.name : ""}</td>
                         </tr>
                         <tr>
                             <th scope="row">Docs</th>
                             <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Words</th>
-                            <td>{this.props.words > 0 ? this.props.words : 0}</td>
                         </tr>
                         <tr>
                             <th scope="row">Affiliation</th>
@@ -238,9 +240,8 @@ class Info extends React.Component {
 Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
-    person: PropTypes.string,
+    name: PropTypes.string,
     docs: PropTypes.number,
-    words: PropTypes.number,
     affiliation: PropTypes.string,
     toggle_show_table: PropTypes.func,
 };
@@ -270,22 +271,35 @@ class MainView extends React.Component {
             data: null,  // data for the viz
             data_bindings: {}, // data bindings for d3
             mouseover: false,  // info panel state (based on callbacks from viz)
-
-            person: "",
-            docs: 0,
-            words: 0,
+            name: "",
             affiliation: "",
+            docs: 0,
         };
         this.csrftoken = getCookie('csrftoken');
 
     }
+
     /**
      * Runs when the MainView item is connected to the DOM.
      */
     componentDidMount() {
         this.load_dataset(this.state.config.dataset_name);
-
     }
+
+    /**
+     * Gets the data of the person that we are searching for
+     * @param person_to_focus The name of the person to look for
+     * @returns an object that contains the required data to display
+     */
+    get_person_data(person_to_focus) {
+        const people = this.state.data.nodes;
+        for (let i = 0; i < people.length; i++) {
+            if (people[i].name === person_to_focus) {
+                return people[i];
+            }
+        }
+    }
+
 
     /**
      * Takes the searchbar value and updates the graph to focus on that person
@@ -296,6 +310,7 @@ class MainView extends React.Component {
     handle_searchbar_search_and_focus_grpah(person_to_focus) {
         let data = this.state.data;
         const config = this.state.config;
+        console.log(config);
         // update center names to selected node
         // turning the next two lines into a one-liner gives an error. unclear why.
         data.center_names = {};
@@ -306,10 +321,13 @@ class MainView extends React.Component {
         config.show_info_panel = true;
         config.searchbar_value = person_to_focus;
         config.viz_update_func = 'update_focus';
-
+        const person = this.get_person_data(person_to_focus);
         data = update_node_degree_and_visibility(data, config, person_to_focus);
-
-        this.setState({data: data, config: config});
+        this.setState({data: data, config: config, name: person.name, docs: person.docs,
+            affiliation: person.affiliation},
+        function() {
+            console.log(this.state);
+        });
     }
 
     /**
@@ -318,6 +336,7 @@ class MainView extends React.Component {
      * state.
      */
     handle_searchbar_clear_and_unfocus_graph() {
+
         const config = this.state.config;
         let data = this.state.data;
         data.center_names = data.center_names_backup;
@@ -328,7 +347,10 @@ class MainView extends React.Component {
         config.viz_update_func = 'update_focus';
         data = update_node_degree_and_visibility(
             data, config);
-        this.setState({data: data, config: config});
+        this.setState({data: data, config: config, name: "", docs: 0, affiliation: ""},
+            function() {
+                console.log(this.state);
+            });
     }
 
 
@@ -374,6 +396,7 @@ class MainView extends React.Component {
             // select new person
             if (!config.selection_active || node.name !== this.state.config.selection_name){
                 this.handle_searchbar_search_and_focus_grpah(node.name);
+
             } else {
                 this.handle_searchbar_clear_and_unfocus_graph();
             }
@@ -403,18 +426,19 @@ class MainView extends React.Component {
     };
 
     update_dataset(dataset_name) {
-        this.setState({data: null});
-        let config = {...this.state.config};
+        const config = this.state.config;
         config.dataset_name = dataset_name;
         config.viz_update_func = 'create_graph';
-        this.setState({config: config});
         this.load_dataset(config.dataset_name);
-
+        config.searchbar_value = "";
+        config.selection_active = false;
+        config.selection_name = undefined;
+        config.show_info_panel = false;
         //setting update to undefined after loading to prevent infinite loop of
         // update -> setting data bindings -> update
-        config = {... this.state.config};
         config.viz_update_func = undefined;
-        this.setState({config: config})
+        this.setState({data: null, config: config, name: "", docs: 0, words: 0,
+            affiliation: ""});
     }
 
     async load_dataset(dataset_name) {
@@ -424,7 +448,6 @@ class MainView extends React.Component {
                 response
                     .json()
                     .then((data) => {
-                        console.log("new data", data);
                         // create a copy of the center names so we can restore them on unfocus.
                         data.center_names_backup = {... data.center_names};
                         this.setState({data:data});
@@ -493,9 +516,8 @@ class MainView extends React.Component {
                             <Info
                                 mouseover={this.state.mouseover}
                                 currentColor={this.state.config.color}
-                                person={this.state.person}
+                                name={this.state.name}
                                 docs={this.state.docs}
-                                words={this.state.words}
                                 affiliation={this.state.affiliation}
                                 show_info_panel={this.state.show_info_panel}
                                 toggle_show_table={() => this.toggle_show_table()}
