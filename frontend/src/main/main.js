@@ -68,7 +68,7 @@ class Controls extends React.Component {
                             <option value="sterling">Theodore Sterling</option>
                         </select>
                     </div>
-                </div>
+                </div>;
         }
 
         return (
@@ -502,7 +502,7 @@ class MainView extends React.Component {
                             (dataset_name) => this.update_dataset(dataset_name)
                         }
                         data_names={this.state.data.nodes}
-                        show_dataset_selector={this.state.show_dataset_selector}
+                        show_dataset_selector={this.state.config.show_dataset_selector}
 
                     />
 
