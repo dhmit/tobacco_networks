@@ -21,6 +21,12 @@ import {update_node_degree_and_visibility} from "./node_degree_calculation";
  */
 export function create_graph(el, data, config, handle_viz_events) {
 
+    // set width and height based on the element that we use for sizing
+    // that element needs to have been rendered by the time we get here.
+    config.height = d3.min([document.getElementById(config.element_for_graph_sizing).clientHeight,
+        800]);
+    config.width = document.getElementById(config.element_for_graph_sizing).clientWidth;
+
 
     // Setup the SVG that we're going to draw the graph into
     const svg = d3.select(el)

@@ -53,6 +53,24 @@ class Controls extends React.Component {
     }
 
     render() {
+
+        let dataset_selector = null;
+        if (this.props.show_dataset_selector){
+            dataset_selector =
+                <div id="middle_controls" className="col-4">
+                    <div className="form-group">
+                        <select className="form-control float-left"
+                            value={this.props.dataset_name}
+                            onChange={(e) => this.props.update_dataset(e.target.value)}
+                        >
+                            <option value="lawyers">Lawyers</option>
+                            <option value="research_directors">Research Directors</option>
+                            <option value="sterling">Theodore Sterling</option>
+                        </select>
+                    </div>
+                </div>
+        }
+
         return (
             <div className="row">
                 <div className="col-4">
@@ -79,18 +97,7 @@ class Controls extends React.Component {
                     />
                 </div>
 
-                <div id="middle_controls" className="col-4">
-                    <div className="form-group">
-                        <select className="form-control float-left"
-                            value={this.props.dataset_name}
-                            onChange={(e) => this.props.update_dataset(e.target.value)}
-                        >
-                            <option value="lawyers">Lawyers</option>
-                            <option value="research_directors">Research Directors</option>
-                            <option value="sterling">Theodore Sterling</option>
-                        </select>
-                    </div>
-                </div>
+                {dataset_selector}
 
                 <div className="col-4">
                     <div id="info_button">
@@ -115,7 +122,8 @@ Controls.propTypes = {
     nodes: PropTypes.array.isRequired,
     dataset_name: PropTypes.string.isRequired,
     update_dataset: PropTypes.func.isRequired,
-    data_names: PropTypes.array
+    data_names: PropTypes.array,
+    show_dataset_selector: PropTypes.bool
 };
 
 /***************************************************************************************************
@@ -241,10 +249,13 @@ class MainView extends React.Component {
 
         this.state = {
             config: {
-                width: window.innerWidth,
-                height: window.innerHeight - 100,
+                // width: window.innerWidth,
+                // height: window.innerHeight - 100,
+                // width: 1000,
+                // height: 600,
+                element_for_graph_sizing: this.props.element_for_graph_sizing,
                 person_to_highlight: "",
-                dataset_name: "research_directors",
+                dataset_name: this.props.dataset_name,
                 cluster_nodes: true,
                 selection_active: false,
                 selection_name: undefined,
@@ -253,6 +264,7 @@ class MainView extends React.Component {
                 searchbar_value: "",
                 selected_viz_degree: 2,
                 person_to_display_info: {name: "", affiliation: "", docs: 0},
+                show_dataset_selector: this.props.show_dataset_selector
             },  // initial configuration for the viz
             data: null,  // data for the viz
             data_bindings: {}, // data bindings for d3
@@ -267,7 +279,26 @@ class MainView extends React.Component {
      * Runs when the MainView item is connected to the DOM.
      */
     componentDidMount() {
-        this.load_dataset(this.state.config.dataset_name);
+        // let config = {... this.state.config};
+        // let dataset_name = this.state.config.dataset_name;
+        // if (this.props.dataset_name) {
+        //     config.dataset_name = this.props.dataset_name;
+        //     dataset_name = this.props.dataset_name;
+        // }
+        // if (this.props.show_dataset_selector){
+        //     config.show_dataset_selector = this.props.show_dataset_selector;
+        // }
+
+        let config = {... this.state.config};
+        if (!this.props.dataset_name){
+            config.dataset_name = 'research_directors';
+        }
+        if (!this.props.show_dataset_selector){
+            config.show_dataset_selector = true;
+        }
+        this.setState({config}, () => {
+            this.load_dataset(this.state.config.dataset_name);
+        });
     }
 
     /**
@@ -471,6 +502,7 @@ class MainView extends React.Component {
                             (dataset_name) => this.update_dataset(dataset_name)
                         }
                         data_names={this.state.data.nodes}
+                        show_dataset_selector={this.state.show_dataset_selector}
 
                     />
 
@@ -503,6 +535,12 @@ class MainView extends React.Component {
         }
     }
 }
+MainView.propTypes ={
+    dataset_name: PropTypes.string,
+    show_dataset_selector: PropTypes.bool,
+    element_for_graph_sizing: PropTypes.string.isRequired
+};
+
 
 // when importing Main what do we get?
 export default MainView;
