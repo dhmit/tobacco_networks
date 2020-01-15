@@ -44,3 +44,7 @@
 #graph_root{
     width: 100%;
 }
+
+#main_body {
+    padding-top: 15px;
+}

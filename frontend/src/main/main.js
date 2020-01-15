@@ -68,7 +68,7 @@ class Controls extends React.Component {
                             <option value="sterling">Theodore Sterling</option>
                         </select>
                     </div>
-                </div>
+                </div>;
         }
 
         return (
@@ -293,7 +293,7 @@ class MainView extends React.Component {
         if (!this.props.dataset_name){
             config.dataset_name = 'research_directors';
         }
-        if (!this.props.show_dataset_selector){
+        if (this.props.show_dataset_selector===null){
             config.show_dataset_selector = true;
         }
         this.setState({config}, () => {
@@ -502,7 +502,7 @@ class MainView extends React.Component {
                             (dataset_name) => this.update_dataset(dataset_name)
                         }
                         data_names={this.state.data.nodes}
-                        show_dataset_selector={this.state.show_dataset_selector}
+                        show_dataset_selector={this.state.config.show_dataset_selector}
 
                     />
 
@@ -537,7 +537,7 @@ class MainView extends React.Component {
 }
 MainView.propTypes ={
     dataset_name: PropTypes.string,
-    show_dataset_selector: PropTypes.bool,
+    show_dataset_selector: PropTypes.bool.isRequired,
     element_for_graph_sizing: PropTypes.string.isRequired
 };
 
