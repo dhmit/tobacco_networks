@@ -1,7 +1,6 @@
 import React from 'react';
 import MainLayout from "./main_layout";
 import MainView from "./main";
-//import PropTypes from 'prop-types';
 
 
 export class NetworkExplorationView extends React.Component{
@@ -32,10 +31,5 @@ export class NetworkExplorationView extends React.Component{
         )
     }
 }
-
-// NetworkExplorationView.propTypes={
-//     dataset_name: PropTypes.string.isRequired,
-// }
-
 export default NetworkExplorationView;
 

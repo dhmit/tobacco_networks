@@ -9,6 +9,7 @@ import MainView from './main/main';
 import NetworkExplorationView from "./main/network_exploration";
 import SterlingEssayView from "./main/essay_sterling";
 import ResearchDirectorsEssayView from "./main/essay_research_directors";
+import TeamView from "./main/team";
 
 window.app_modules = {
     React,  // Make React accessible from the base template
@@ -20,5 +21,6 @@ window.app_modules = {
 
     SterlingEssayView,
     ResearchDirectorsEssayView,
+    TeamView,
     MainView,
 };
