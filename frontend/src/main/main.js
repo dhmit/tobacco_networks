@@ -69,8 +69,8 @@ class Controls extends React.Component {
                                 value={this.props.searchbar_value}
                                 onChange={(e) => this.props.update_searchbar_value(e.target.value)}
                             />
-                            //TODO Clear X trtigger clear function; search when automcomplete
                         )}
+                        inputValue = {this.props.searchbar_value}
                         autoComplete={true}
                         forcePopupIcon={false}
                         onChange={(_event, value) => this.props.update_searchbar_value(value)}
@@ -78,32 +78,25 @@ class Controls extends React.Component {
                             this.autocomplete_change(value, reason)}
                     />
                 </div>
-                <div className="col-6">
-                    <div className="form-check float-right">
-                        <input type="checkbox" className="form-check-input"
-                            onChange={this.props.toggle_checkbox}/>
-                        <label>Check to cluster</label>
-                    </div>
-                    <div id="info_button">
-                        <a onClick={this.props.toggle_show_table}>
-                            <FontAwesomeIcon icon={faInfoCircle} />
-                        </a>
-                    </div>
-                </div>
 
-                <div className="col-4">
+                <div id="middle_controls" className="col-4">
                     <div className="form-group">
-                        <label htmlFor="exampleFormControlSelect1">Dataset</label>
-                        <select className="form-control"
+                        <select className="form-control float-left"
                             value={this.props.dataset_name}
                             onChange={(e) => this.props.update_dataset(e.target.value)}
                         >
                             <option value="lawyers">Lawyers</option>
                             <option value="research_directors">Research Directors</option>
                             <option value="sterling">Theodore Sterling</option>
-                            <option value="top_100_edges">100 Strongest Edges</option>
-                            <option value="test">Test Dataset</option>
                         </select>
+                    </div>
+                </div>
+
+                <div className="col-4">
+                    <div id="info_button">
+                        <a onClick={this.props.toggle_show_table}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                        </a>
                     </div>
                 </div>
             </div>
@@ -114,7 +107,6 @@ class Controls extends React.Component {
 
 Controls.propTypes = {
     searchbar_value: PropTypes.string.isRequired,
-    toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
     handle_searchbar_search_and_focus_grpah: PropTypes.func.isRequired,
     handle_searchbar_clear_and_unfocus_graph: PropTypes.func.isRequired,
@@ -188,7 +180,7 @@ class Viz extends React.Component {
 }
 
 Viz.propTypes = {
-    data: PropTypes.object.isRequired, //Ask Stefan about interior contents (objs or arrays)
+    data: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     data_bindings: PropTypes.object.isRequired,
     handle_viz_events: PropTypes.func,
@@ -213,20 +205,17 @@ class Info extends React.Component {
                     <tbody>
                         <tr>
                             <th scope="row">Name:</th>
-                            <td>{this.props.person.length > 0 ? this.props.person : ""}</td>
+                            <td>{this.props.person.name.length > 0 ?
+                                this.props.person.name : ""}</td>
                         </tr>
                         <tr>
                             <th scope="row">Docs</th>
-                            <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Words</th>
-                            <td>{this.props.words > 0 ? this.props.words : 0}</td>
+                            <td>{this.props.person.docs > 0 ? this.props.person.docs : 0}</td>
                         </tr>
                         <tr>
                             <th scope="row">Affiliation</th>
-                            <td>{this.props.affiliation.length > 0 ? this.props.affiliation :
-                                ""}</td>
+                            <td>{this.props.person.affiliation.length > 0 ?
+                                this.props.person.affiliation : ""}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -238,10 +227,7 @@ class Info extends React.Component {
 Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
-    person: PropTypes.string,
-    docs: PropTypes.number,
-    words: PropTypes.number,
-    affiliation: PropTypes.string,
+    person: PropTypes.object,
     toggle_show_table: PropTypes.func,
 };
 
@@ -258,34 +244,46 @@ class MainView extends React.Component {
                 width: window.innerWidth,
                 height: window.innerHeight - 100,
                 person_to_highlight: "",
-                dataset_name: 'test',
+                dataset_name: "research_directors",
                 cluster_nodes: true,
                 selection_active: false,
                 selection_name: undefined,
                 mouseover_active: false,
                 show_info_panel: false,
                 searchbar_value: "",
-                selected_viz_degree: 2
+                selected_viz_degree: 2,
+                person_to_display_info: {name: "", affiliation: "", docs: 0},
             },  // initial configuration for the viz
             data: null,  // data for the viz
             data_bindings: {}, // data bindings for d3
             mouseover: false,  // info panel state (based on callbacks from viz)
 
-            person: "",
-            docs: 0,
-            words: 0,
-            affiliation: "",
         };
         this.csrftoken = getCookie('csrftoken');
 
     }
+
     /**
      * Runs when the MainView item is connected to the DOM.
      */
     componentDidMount() {
         this.load_dataset(this.state.config.dataset_name);
-
     }
+
+    /**
+     * Gets the data of the person that we are searching for
+     * @param person_to_focus The name of the person to look for
+     * @returns an object that contains the required data to display
+     */
+    get_person_data(person_to_focus) {
+        const people = this.state.data.nodes;
+        for (let i = 0; i < people.length; i++) {
+            if (people[i].name === person_to_focus) {
+                return people[i];
+            }
+        }
+    }
+
 
     /**
      * Takes the searchbar value and updates the graph to focus on that person
@@ -306,9 +304,9 @@ class MainView extends React.Component {
         config.show_info_panel = true;
         config.searchbar_value = person_to_focus;
         config.viz_update_func = 'update_focus';
-
+        const person = this.get_person_data(person_to_focus);
+        config.person_to_display_info = person;
         data = update_node_degree_and_visibility(data, config, person_to_focus);
-
         this.setState({data: data, config: config});
     }
 
@@ -318,6 +316,7 @@ class MainView extends React.Component {
      * state.
      */
     handle_searchbar_clear_and_unfocus_graph() {
+
         const config = this.state.config;
         let data = this.state.data;
         data.center_names = data.center_names_backup;
@@ -328,6 +327,7 @@ class MainView extends React.Component {
         config.viz_update_func = 'update_focus';
         data = update_node_degree_and_visibility(
             data, config);
+        config.person_to_display_info = {name: "", affiliation: "", docs: 0};
         this.setState({data: data, config: config});
     }
 
@@ -374,17 +374,11 @@ class MainView extends React.Component {
             // select new person
             if (!config.selection_active || node.name !== this.state.config.selection_name){
                 this.handle_searchbar_search_and_focus_grpah(node.name);
+
             } else {
                 this.handle_searchbar_clear_and_unfocus_graph();
             }
         }
-    }
-
-    toggle_checkbox() {
-        let config = {... this.state.config};
-        config.cluster_nodes = !this.state.config.cluster_nodes;
-        config.viz_update_func = 'cluster_nodes';
-        this.setState({config: config});
     }
 
     update_searchbar_value(search_string) {
@@ -403,18 +397,20 @@ class MainView extends React.Component {
     };
 
     update_dataset(dataset_name) {
-        this.setState({data: null});
-        let config = {...this.state.config};
+        const config = this.state.config;
         config.dataset_name = dataset_name;
         config.viz_update_func = 'create_graph';
-        this.setState({config: config});
+        config.person_to_display_info = {name: "", affiliation: "", docs: 0};
         this.load_dataset(config.dataset_name);
-
+        config.searchbar_value = "";
+        config.selection_active = false;
+        config.selection_name = undefined;
+        config.show_info_panel = false;
         //setting update to undefined after loading to prevent infinite loop of
         // update -> setting data bindings -> update
-        config = {... this.state.config};
         config.viz_update_func = undefined;
-        this.setState({config: config})
+
+        this.setState({data: null, config: config});
     }
 
     async load_dataset(dataset_name) {
@@ -424,7 +420,6 @@ class MainView extends React.Component {
                 response
                     .json()
                     .then((data) => {
-                        console.log("new data", data);
                         // create a copy of the center names so we can restore them on unfocus.
                         data.center_names_backup = {... data.center_names};
                         this.setState({data:data});
@@ -467,7 +462,6 @@ class MainView extends React.Component {
                         handle_viz_events={(event_name, data) =>
                             this.handle_viz_events(event_name, data )}
                         update_searchbar_value={(e) => this.update_searchbar_value(e)}
-                        toggle_checkbox={() => this.toggle_checkbox()}
                         toggle_show_table={() => this.toggle_show_table()}
                         cluster_nodes={this.state.config.cluster_nodes}
                         nodes={this.state.data.nodes}
@@ -493,10 +487,7 @@ class MainView extends React.Component {
                             <Info
                                 mouseover={this.state.mouseover}
                                 currentColor={this.state.config.color}
-                                person={this.state.person}
-                                docs={this.state.docs}
-                                words={this.state.words}
-                                affiliation={this.state.affiliation}
+                                person={this.state.config.person_to_display_info}
                                 show_info_panel={this.state.show_info_panel}
                                 toggle_show_table={() => this.toggle_show_table()}
                             />

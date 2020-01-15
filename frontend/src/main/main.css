@@ -10,10 +10,6 @@
     right: 0;
 }
 
-.form-check {
-    padding-right: 10px;
-}
-
 #info_panel {
     position: fixed;
     right: 0;
@@ -40,3 +36,7 @@
 
 }
 
+#middle_controls {
+    padding-top: 15px;
+    line-height: 1.5;
+}
