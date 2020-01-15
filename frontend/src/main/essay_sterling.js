@@ -340,6 +340,18 @@ class SterlingEssayView extends React.Component {
                         with the lawyers shows another way that he was an intermediary and
                         connection between industry and academia.
                     </p>
+                    <p>
+
+                        Through his work, Ted Sterling established a veritable fortune by promoting
+                        a pro-smoking agenda through his company’s research, legal work, and even
+                        by sending experts to speak at conferences and Congressional inquiries. In
+                        fact, in the early 90s, Sterling’s business was privately granted a sum of
+                        one million dollars for their projects by the Council for Tobacco Research.
+                        Each paper published by TDS tended to arrive at conclusions in line with
+                        the tobacco industry’s will. In the end, he helped cloud public perception
+                        on the dangers of smoking and was generously rewarded for his “research”
+                        by the tobacco industry.
+                    </p>
                 </section>
             </>;
 
