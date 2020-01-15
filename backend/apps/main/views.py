@@ -20,11 +20,6 @@ def get_network_data(request):
         'lawyers': 'person_lawyers_including_2nd_degree_edges.json',
         'research_directors': 'person_research_directors_including_2nd_degree_edges.json',
         'sterling': 'person_sterling_including_2nd_degree_edges.json',
-        'top_100_edges': 'top_100_edges.json',
-
-        # 'test': 'person_lawyers_including_2nd_degree_edges.json',
-        'test': 'whole_industry.json',
-        #'test': 'person_lawyers.json'
     }
 
     if request.GET and 'dataset' in request.GET:

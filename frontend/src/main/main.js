@@ -15,12 +15,6 @@ import { create_graph, update_graph} from './graph.js'
 import {update_node_degree_and_visibility} from "./node_degree_calculation";
 import './main.css';
 
-
-//TODO Take out check to cluster
-//TODO Delete dataset and move bar upward
-//TODO Keep only the 3 important datasets
-//TODO Default loaded dataset should be Research directors
-
 /***************************************************************************************************
  * Controls
  * The top row of the webapp, with search bar, display controls, etc.
@@ -84,32 +78,25 @@ class Controls extends React.Component {
                             this.autocomplete_change(value, reason)}
                     />
                 </div>
-                <div className="col-6">
-                    <div className="form-check float-right">
-                        <input type="checkbox" className="form-check-input"
-                            onChange={this.props.toggle_checkbox}/>
-                        <label>Check to cluster</label>
-                    </div>
-                    <div id="info_button">
-                        <a onClick={this.props.toggle_show_table}>
-                            <FontAwesomeIcon icon={faInfoCircle} />
-                        </a>
-                    </div>
-                </div>
 
-                <div className="col-4">
+                <div id="middle_controls" className="col-4">
                     <div className="form-group">
-                        <label htmlFor="exampleFormControlSelect1">Dataset</label>
-                        <select className="form-control"
+                        <select className="form-control float-left"
                             value={this.props.dataset_name}
                             onChange={(e) => this.props.update_dataset(e.target.value)}
                         >
                             <option value="lawyers">Lawyers</option>
                             <option value="research_directors">Research Directors</option>
                             <option value="sterling">Theodore Sterling</option>
-                            <option value="top_100_edges">100 Strongest Edges</option>
-                            <option value="test">Test Dataset</option>
                         </select>
+                    </div>
+                </div>
+
+                <div className="col-4">
+                    <div id="info_button">
+                        <a onClick={this.props.toggle_show_table}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                        </a>
                     </div>
                 </div>
             </div>
@@ -120,7 +107,6 @@ class Controls extends React.Component {
 
 Controls.propTypes = {
     searchbar_value: PropTypes.string.isRequired,
-    toggle_checkbox: PropTypes.func,
     toggle_show_table: PropTypes.func,
     handle_searchbar_search_and_focus_grpah: PropTypes.func.isRequired,
     handle_searchbar_clear_and_unfocus_graph: PropTypes.func.isRequired,
@@ -219,16 +205,17 @@ class Info extends React.Component {
                     <tbody>
                         <tr>
                             <th scope="row">Name:</th>
-                            <td>{this.props.name.length > 0 ? this.props.name : ""}</td>
+                            <td>{this.props.person.name.length > 0 ?
+                                this.props.person.name : ""}</td>
                         </tr>
                         <tr>
                             <th scope="row">Docs</th>
-                            <td>{this.props.docs > 0 ? this.props.docs : 0}</td>
+                            <td>{this.props.person.docs > 0 ? this.props.person.docs : 0}</td>
                         </tr>
                         <tr>
                             <th scope="row">Affiliation</th>
-                            <td>{this.props.affiliation.length > 0 ? this.props.affiliation :
-                                ""}</td>
+                            <td>{this.props.person.affiliation.length > 0 ?
+                                this.props.person.affiliation : ""}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -240,9 +227,7 @@ class Info extends React.Component {
 Info.propTypes ={
     mouseover: PropTypes.bool,
     currentColor: PropTypes.string,
-    name: PropTypes.string,
-    docs: PropTypes.number,
-    affiliation: PropTypes.string,
+    person: PropTypes.object,
     toggle_show_table: PropTypes.func,
 };
 
@@ -259,21 +244,20 @@ class MainView extends React.Component {
                 width: window.innerWidth,
                 height: window.innerHeight - 100,
                 person_to_highlight: "",
-                dataset_name: 'test',
+                dataset_name: "research_directors",
                 cluster_nodes: true,
                 selection_active: false,
                 selection_name: undefined,
                 mouseover_active: false,
                 show_info_panel: false,
                 searchbar_value: "",
-                selected_viz_degree: 2
+                selected_viz_degree: 2,
+                person_to_display_info: {name: "", affiliation: "", docs: 0},
             },  // initial configuration for the viz
             data: null,  // data for the viz
             data_bindings: {}, // data bindings for d3
             mouseover: false,  // info panel state (based on callbacks from viz)
-            name: "",
-            affiliation: "",
-            docs: 0,
+
         };
         this.csrftoken = getCookie('csrftoken');
 
@@ -310,7 +294,6 @@ class MainView extends React.Component {
     handle_searchbar_search_and_focus_grpah(person_to_focus) {
         let data = this.state.data;
         const config = this.state.config;
-        console.log(config);
         // update center names to selected node
         // turning the next two lines into a one-liner gives an error. unclear why.
         data.center_names = {};
@@ -322,12 +305,9 @@ class MainView extends React.Component {
         config.searchbar_value = person_to_focus;
         config.viz_update_func = 'update_focus';
         const person = this.get_person_data(person_to_focus);
+        config.person_to_display_info = person;
         data = update_node_degree_and_visibility(data, config, person_to_focus);
-        this.setState({data: data, config: config, name: person.name, docs: person.docs,
-            affiliation: person.affiliation},
-        function() {
-            console.log(this.state);
-        });
+        this.setState({data: data, config: config});
     }
 
     /**
@@ -347,10 +327,8 @@ class MainView extends React.Component {
         config.viz_update_func = 'update_focus';
         data = update_node_degree_and_visibility(
             data, config);
-        this.setState({data: data, config: config, name: "", docs: 0, affiliation: ""},
-            function() {
-                console.log(this.state);
-            });
+        config.person_to_display_info = {name: "", affiliation: "", docs: 0};
+        this.setState({data: data, config: config});
     }
 
 
@@ -403,13 +381,6 @@ class MainView extends React.Component {
         }
     }
 
-    toggle_checkbox() {
-        let config = {... this.state.config};
-        config.cluster_nodes = !this.state.config.cluster_nodes;
-        config.viz_update_func = 'cluster_nodes';
-        this.setState({config: config});
-    }
-
     update_searchbar_value(search_string) {
         const config = {...this.state.config};
         if (search_string !== null) {
@@ -429,6 +400,7 @@ class MainView extends React.Component {
         const config = this.state.config;
         config.dataset_name = dataset_name;
         config.viz_update_func = 'create_graph';
+        config.person_to_display_info = {name: "", affiliation: "", docs: 0};
         this.load_dataset(config.dataset_name);
         config.searchbar_value = "";
         config.selection_active = false;
@@ -437,8 +409,8 @@ class MainView extends React.Component {
         //setting update to undefined after loading to prevent infinite loop of
         // update -> setting data bindings -> update
         config.viz_update_func = undefined;
-        this.setState({data: null, config: config, name: "", docs: 0, words: 0,
-            affiliation: ""});
+
+        this.setState({data: null, config: config});
     }
 
     async load_dataset(dataset_name) {
@@ -490,7 +462,6 @@ class MainView extends React.Component {
                         handle_viz_events={(event_name, data) =>
                             this.handle_viz_events(event_name, data )}
                         update_searchbar_value={(e) => this.update_searchbar_value(e)}
-                        toggle_checkbox={() => this.toggle_checkbox()}
                         toggle_show_table={() => this.toggle_show_table()}
                         cluster_nodes={this.state.config.cluster_nodes}
                         nodes={this.state.data.nodes}
@@ -516,9 +487,7 @@ class MainView extends React.Component {
                             <Info
                                 mouseover={this.state.mouseover}
                                 currentColor={this.state.config.color}
-                                name={this.state.name}
-                                docs={this.state.docs}
-                                affiliation={this.state.affiliation}
+                                person={this.state.config.person_to_display_info}
                                 show_info_panel={this.state.show_info_panel}
                                 toggle_show_table={() => this.toggle_show_table()}
                             />
