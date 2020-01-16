@@ -1,8 +1,7 @@
 import React from 'react';
 //import PropTypes from 'prop-types';
-import EssayView from "./essay";
+import {EssayView, EssaySideNote} from "./essay";
 import MainLayout from "./main_layout"
-import EssaySideNote from "./essay_note"
 
 
 class SterlingEssayView extends React.Component {

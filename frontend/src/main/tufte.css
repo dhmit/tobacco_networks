@@ -273,7 +273,7 @@ label.margin-toggle:not(.sidenote-number) { display: none; }
                             figure { max-width: 90%; }
                             figcaption, figure.fullwidth figcaption { margin-right: 0%;
                                                                       max-width: none; }
-                            blockquote { margin-left: 1.5em;
+                            blockquote { margin-left: 1.5em !important;
                                          margin-right: 0em; }
                             blockquote p, blockquote footer { width: 100%; }
                             label.margin-toggle:not(.sidenote-number) { display: inline; }
