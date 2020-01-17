@@ -1,7 +1,7 @@
 #!/bin/bash
 
-NAME="rereading"                                            # Name of the application
-DJANGODIR=/home/ubuntu/rereading/backend                    # Django project directory
+NAME="tobacco_networks"                                     # Name of the application
+DJANGODIR=/home/ubuntu/tobacco_networks/backend             # Django project directory
 SOCKFILE=/home/ubuntu/run/gunicorn.sock 	                # we will communicate using this unix socket
 LOGFILE=/home/ubuntu/run/logs/gunicorn_supervisor.log
 NUM_WORKERS=4                                               # how many worker processes should Gunicorn spawn
@@ -11,7 +11,7 @@ echo "Starting $NAME as `whoami`"
 
 # Activate the virtual environment
 cd $DJANGODIR
-source /home/ubuntu/rereading/venv/bin/activate
+source /home/ubuntu/venv/bin/activate
 export DJANGO_SETTINGS_MODULE='config.settings.production'
 
 # Create the run directory if it doesn't exist
