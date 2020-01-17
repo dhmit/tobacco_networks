@@ -23,6 +23,8 @@ class NavigationBar extends React.Component {
                             Research Directors</a>
                         <a className="nav-item nav-link active" href="/sterling/">
                             Theodor Sterling</a>
+                        <a className="nav-item nav-link active" href="/about/">
+                            About</a>
                     </div>
                 </div>
             </nav>

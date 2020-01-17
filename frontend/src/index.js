@@ -6,9 +6,11 @@ import 'bootstrap';  // JS import -- just for collapse
 
 import MainView from './main/main';
 
+import LandingView from "./main/landing_page";
 import NetworkExplorationView from "./main/network_exploration";
 import SterlingEssayView from "./main/essay_sterling";
 import ResearchDirectorsEssayView from "./main/essay_research_directors";
+import AboutView from "./main/team";
 
 window.app_modules = {
     React,  // Make React accessible from the base template
@@ -16,9 +18,11 @@ window.app_modules = {
 
     // Add all frontend views here
 
+    LandingView,
     NetworkExplorationView,
 
     SterlingEssayView,
     ResearchDirectorsEssayView,
+    AboutView,
     MainView,
 };
