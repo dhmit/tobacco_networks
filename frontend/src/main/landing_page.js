@@ -31,25 +31,6 @@ NavSelector.propTypes = {
     description: PropTypes.string.isRequired
 };
 
-//
-// <li>
-//     <a href="/case/ctr">
-//         <img className="team_member_image"
-//              src="{{ url_for('static', filename='images/case_study_ctr_thumbnail.jpg') }}">
-//             <div className="case_studies_title">
-//                 <h4>Manufacturing Doubt</h4>
-//                 <h5>Distraction and Subversion Research at the Council for Tobacco Research</h5>
-//             </div>
-//
-//          <p> The Council for Tobacco Research (CTR) was at the center of the industry's efforts
-//                 to produce
-//                 doubts about smoking's health harms. This essay explores how the CTR pursued this
-//                 goal by drawing on more than 10,000
-//                 CTR grant applications and 140 Special Projects.
-//             </p>
-//     </a>
-// </li>
-
 export class LandingView extends React.Component {
     constructor(props){
         super(props);
@@ -62,6 +43,26 @@ export class LandingView extends React.Component {
                     <div className="col-12">
                         <h1>Tobacco Networks</h1>
                         <h2>The  industry’s correspondence networks at a glance</h2>
+                        <p>
+                            During the 20th century the tobacco industry wasn’t just another
+                            industry--it was a kraken, reaching into every aspect of the lives of
+                            Americans. Lobbyists argued against smoking bans by framing smoking as
+                            a free and personal choice. Marketers figured out ever new ways of
+                            selling cigarettes to children. Scientists, secretly in the industry’s
+                            employ went on TV and in front of congress to claim that there are
+                            still doubts about smoking’s health harms. Lawyers deployed
+                            scorched-earth tactics against anyone trying to sue them. Meanwhile,
+                            celebrity spokespeople hawked ever new cigarette brands in magazines
+                            and on billboards.
+                        </p>
+                        <p>
+                            How did cigarette makers coordinate this network of executives,
+                            researchers, and marketers? How did Philip Morris, R.J. Reynolds, and
+                            the other major American tobacco companies synchronize their legal
+                            strategies? To explore these questions, we have taken the 1.4 million
+                            tobacco industry documents from the 1970s and turned them into a
+                            network graph.
+                        </p>
 
 
                         <ul className="nav nav-pills" role="tablist" id="nav_selectors_list">
@@ -71,6 +72,13 @@ export class LandingView extends React.Component {
                                 title='Network Exploration'
                                 description='Explore the social networks of industry research
                                 directors and lawyers'
+                            />
+                            <NavSelector
+                                url="/research_directors/"
+                                img_url='/static/img/nav/research_directors.png'
+                                title='Research Directors'
+                                description="Learn how the industry's research directors
+                                collaborated to deceive the public about smoking's health harms"
                             />
                         </ul>
 
