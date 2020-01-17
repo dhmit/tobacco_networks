@@ -2,7 +2,7 @@ import React from 'react';
 import MainLayout from "./main_layout";
 //import MainLayout from "./main_layout";
 
-export class TeamView extends React.Component {
+export class AboutView extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -54,9 +54,7 @@ export class TeamView extends React.Component {
                     <div className="row">
                         <div className="col-12">
                             <h1>About this Project</h1>
-                            <p>Crista description:</p> {//TODO remove this line after
-                            // checking the description
-                            }
+
                             <p>
                                 How do you sift through several decades-worth of documents from
                                 the Tobacco industry to paint a cohesive picture of how its
@@ -92,54 +90,57 @@ export class TeamView extends React.Component {
                             </div>
                             <div className="row">
                                 {render_staff("Michael Scott Cuthbert",
-                                    "img/team/Cuthbert_Michael.jpg",
+                                    "/static/img/team/Cuthbert_Michael.jpg",
                                     "Faculty Director & Associate Professor")}
 
                                 {render_staff("Ryaan Ahmed",
-                                    "img/team/Ahmed_Ryaan.jpg",
+                                    "/static/img/team/Ahmed_Ryaan.jpg",
                                     "Technical Director Senior Research Engineer")}
                             </div>
                             <div className="row">
                                 {render_staff_lower("Stephan Risi",
-                                    "img/team/Risi_Stephan.jpg",
+                                    "/static/img/team/Risi_Stephan.jpg",
                                     "Postdoctoral Associate")}
 
                                 {render_staff_lower("Erica Zimmer",
-                                    "img/team/Zimmer_Erica.jpg",
+                                    "/static/img/team/Zimmer_Erica.jpg",
                                     "Postdoctoral Associate")}
 
                                 {render_staff_lower("Nicole Fountain",
-                                    "img/team/Fountain_Nicole.jpg",
+                                    "/static/img/team/Fountain_Nicole.jpg",
                                     "Administrative Assistant")}
                             </div>
 
                             <div className="row">
                                 {render_team_member("Kidist Adamu",
-                                    "img/team/Adamu_Kidist.jpg")}
+                                    "/static/img/team/Adamu_Kidist.jpg")}
 
                                 {render_team_member("Ife Ademolu-Odeneye",
-                                    "img/team/Ademolu-Odeneye_Ife.jpg")}
+                                    "/static/img/team/Ademolu-Odeneye_Ife.jpg")}
 
                                 {render_team_member("Angelica Castillejos",
-                                    "img/team/Castillejos_Angelica.jpg")}
+                                    "/static/img/team/Castillejos_Angelica.jpg")}
 
                                 {render_team_member('Crista Falk',
-                                    "img/team/Falk_Crista.jpg")}
+                                    "/static/img/team/Falk_Crista.jpg")}
 
                                 {render_team_member('Raquel Garcia',
-                                    "img/team/Garcia_Raquel.jpg")}
+                                    "/static/img/team/Garcia_Raquel.jpg")}
 
                                 {render_team_member('Christina Wang',
-                                    "img/team/Wang_Mingye.jpg")}
+                                    "/static/img/team/Wang_Mingye.jpg")}
 
                                 {render_team_member('Jordan Wilke',
-                                    "img/team/Wilke_Jordan.jpg")}
+                                    "/static/img/team/Wilke_Jordan.jpg")}
 
                                 {render_team_member('Jessica Wu',
-                                    "img/team/Wu_Jessica.jpg")}
+                                    "/static/img/team/Wu_Jessica.jpg")}
 
-                                {render_team_member('Funing Yang',
-                                    "img/team/Yang_Funing.jpg")}
+                                {render_team_member('Angel Yang',
+                                    "/static/img/team/Yang_Angel.jpg")}
+
+                                {render_team_member('Sirena Yu',
+                                    "/static/img/team/Yu_Sirena.jpg")}
                             </div>
                         </div>
                     </section>
@@ -155,4 +156,4 @@ export class TeamView extends React.Component {
     }
 }
 
-export default TeamView;
+export default AboutView;
