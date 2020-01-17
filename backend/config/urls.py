@@ -28,6 +28,7 @@ urlpatterns = [
 
     # temporary json endpoint for network data
     url('get_network_data', main_views.get_network_data),
+    url('landing', render_react_view, {"component_name": "LandingView"}),
     url('about', render_react_view, {"component_name": "AboutView"}),
 
     url('explore_networks', render_react_view, {'component_name': 'NetworkExplorationView'}),
@@ -36,5 +37,6 @@ urlpatterns = [
     url('research_directors', render_react_view, {'component_name': 'ResearchDirectorsEssayView'}),
 
     # React views
-    url('', render_react_view, {'component_name': 'MainView'}),
+    url('', render_react_view, {'component_name': 'LandingView'}),
+    # url('', render_react_view, {'component_name': 'MainView'}),
 ]

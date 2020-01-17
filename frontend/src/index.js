@@ -6,6 +6,7 @@ import 'bootstrap';  // JS import -- just for collapse
 
 import MainView from './main/main';
 
+import LandingView from "./main/landing_page";
 import NetworkExplorationView from "./main/network_exploration";
 import SterlingEssayView from "./main/essay_sterling";
 import ResearchDirectorsEssayView from "./main/essay_research_directors";
@@ -17,6 +18,7 @@ window.app_modules = {
 
     // Add all frontend views here
 
+    LandingView,
     NetworkExplorationView,
 
     SterlingEssayView,
