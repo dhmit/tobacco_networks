@@ -74,22 +74,23 @@ export class LandingView extends React.Component {
                                 url="/explore_networks/"
                                 img_url='/static/img/nav/explore_networks.png'
                                 title='Network Exploration'
-                                description='Explore the social networks of industry research
-                                directors and lawyers'
+                                description='Explore the social networks of industry scientists and
+                                 lawyers'
                             />
                             <NavSelector
-                                url="/explore_networks/"
+                                url="/research_directors/"
                                 img_url='/static/img/nav/explore_networks.png'
-                                title='Network Exploration'
-                                description='Explore the social networks of industry research
-                                directors and lawyers'
+                                title='Research Directors'
+                                description='How did the research directors of cigarette
+                                makers deceive the American public about the health harms of
+                                smoking?'
                             />
                             <NavSelector
-                                url="/explore_networks/"
+                                url="/sterling/"
                                 img_url='/static/img/nav/explore_networks.png'
-                                title='Network Exploration'
-                                description='Explore the social networks of industry research
-                                directors and lawyers'
+                                title='Theodor Sterling: The Industry’s Most Reliable Ally'
+                                description='Learn more about the computer scientist who received
+                                more than $5 millions for his service to the industry.'
                             />
                         </ul>
 
