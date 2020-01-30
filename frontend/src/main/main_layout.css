@@ -1,0 +1,9 @@
+.nav-item {
+    transition: 300ms;
+    border-bottom: 1px solid transparent;
+}
+
+.nav-item:hover{
+    border-color: white;
+    text-shadow: 0 0 5px white;
+}

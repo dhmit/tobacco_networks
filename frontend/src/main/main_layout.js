@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import './main_layout.css'
+
 
 
 class NavigationBar extends React.Component {
@@ -18,7 +20,10 @@ class NavigationBar extends React.Component {
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div className='navbar-nav'>
                         <a className="nav-item nav-link active" href="/explore_networks/">
-                            Explore Industry Networks</a>
+                            <p className='nav_test'>
+                                Explore Industry Networks
+                            </p>
+                        </a>
                         <a className="nav-item nav-link active" href="/research_directors/">
                             Research Directors</a>
                         <a className="nav-item nav-link active" href="/sterling/">
