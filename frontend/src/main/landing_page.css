@@ -1,80 +1,66 @@
-#case_studies_container{
-    padding-left: 50px;
-    padding-top: 50px;
+
+.title{
+    text-align: center;
 }
 
-#nav_selectors_list li{
-
-    margin-top: 20px;
-
-    float: inherit !important;
-    width: 100%;
-    height: 204px;
-    border-radius: 10px;
-    border: 2px solid #949494;
+.subtitle{
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-top: 0;
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
-#nav_selectors_list li:hover{
+p{
+    font-size: 1.2rem;
+    /*font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua",*/
+    /*Georgia, serif;*/
+}
+
+#nav_selectors_list{
+    list-style-type: none;
+    padding-inline-start: 0;
+}
+
+.nav_selector{
+    border: 1px solid white;
+
+    border-radius: 2rem;
+    transition: 300ms;
+
+}
+
+.nav_selector:hover{
     background: #f7f7f7;
-}
+    border: 1px solid #c1c0c0;
 
-#nav_selectors_list img{
-    max-height: 200px;
-    float: left;
-    border-top: solid 10px white;
-    border-bottom: solid 10px white;
-    border-left: solid 10px white;
-
-    border-bottom-left-radius: 10px;
-    border-top-left-radius: 10px;
-
-    margin-right: 30px;
-}
-
-#nav_selectors_list a{
-    height: inherit;
-    display: block;
-    text-decoration: none;
-}
-
-
-#nav_selectors_list p{
-    color: black;
-    font-size: 16px;
-}
-
-#nav_selectors_list h4{
-    color: black;
-    font-size: 22px;
-    font-weight: 600;
-}
-
-#nav_selectors_list h5{
-    color: black;
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.nav_selector_title{
-    padding-top: 10px;
-    padding-bottom: 20px;
-    padding-right: 5px;
 }
 
 
 .nav_selector_link{
-    padding: 10px 0px !important;
-    height: inherit;
+    /*padding: 10px 0px !important;*/
+    /*height: inherit;*/
+    width: 100%;
+    display: inline-block;
+    padding: 1rem 1rem 1rem 0;
+
 }
-.nav_selector_link img{
+
+.nav_selector_link:hover{
+    text-decoration: none;
+}
+
+.nav_selector_img{
     max-height: 175px;
     float: left;
-    border-radius: 10px;
-    margin-right: 20px;
+    border-radius: 2rem;
 
+    margin-right: 1rem;
+    padding-left: 1rem;
 }
 
 .nav_selector_link p{
     color: black;
-    padding-top: 40px;
+    /*padding-top: 40px;*/
 }

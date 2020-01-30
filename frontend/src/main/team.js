@@ -1,6 +1,6 @@
 import React from 'react';
 import MainLayout from "./main_layout";
-//import MainLayout from "./main_layout";
+import './team.css'
 
 export class AboutView extends React.Component {
     constructor(props) {
@@ -23,7 +23,7 @@ export class AboutView extends React.Component {
         const render_staff = (name, img_src, position) => {
             return (
                 <div className="col-sm-6 text-center">
-                    <div className="team-member team-member-lg">
+                    <div className="team-member-lg">
                         <img className="mx-auto rounded-circle"
                             src={img_src}
                             alt={name} />
@@ -37,7 +37,7 @@ export class AboutView extends React.Component {
         const render_staff_lower = (name, img_src, position) => {
             return (
                 <div className="col-sm-4 text-center">
-                    <div className="team-member team-member-lg">
+                    <div className="team-member-lg">
                         <img className="mx-auto rounded-circle"
                             src={img_src}
                             alt={name} />
@@ -53,7 +53,7 @@ export class AboutView extends React.Component {
                 <div>
                     <div className="row">
                         <div className="col-12">
-                            <h1>About this Project</h1>
+                            <h1 className="display-4">About this Project</h1>
 
                             <p>
                                 How do you sift through several decades-worth of documents from
@@ -78,13 +78,20 @@ export class AboutView extends React.Component {
                                 tobacco companies throughout history to persuade consumers and
                                 mask the addictive effects of the drug.
                             </p>
+                            <p>You can find the code for this project on <a className="about_link"
+                                href="https://github.com/dhmit/tobacco_networks">Github.</a></p>
+                            <p>The documents themselves are available UCSF’s <a
+                                className="about_link"
+                                href="https://www.industrydocuments.ucsf.edu/tobacco/">
+                                Truth Tobacco Industry Documents Archive.
+                            </a></p>
                         </div>
                     </div>
                     <section id="lab">
                         <div className="container">
                             <div className="row">
                                 <div className="col-lg-12 text-center">
-                                    <h1 className="section-subheading text-muted">Staff and
+                                    <h1 className="display-4">Staff and
                                         Members</h1>
                                 </div>
                             </div>
