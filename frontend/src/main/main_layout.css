@@ -1,3 +1,7 @@
+.navbar-brand{
+    font-size: 1.5rem;
+}
+
 .nav-item {
     transition: 300ms;
     border-bottom: 1px solid transparent;
@@ -5,5 +9,23 @@
 
 .nav-item:hover{
     border-color: white;
-    text-shadow: 0 0 5px white;
+    /*text-shadow: 0 0 5px white;*/
+}
+
+#main_content_container{
+    margin-bottom: 5rem;
+}
+
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-img {
+     height: 80px;
+     max-height: 10vh;
+     max-width: 20vw;
+     object-fit: contain;
 }

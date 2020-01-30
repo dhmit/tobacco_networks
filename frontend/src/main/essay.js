@@ -57,7 +57,7 @@ export class EssayView extends React.Component {
                                 />
                                 {this.props.essay_content}
                             </article>
-                        </div>;
+                        </div>
                     </div>
                 </div>
             </>
