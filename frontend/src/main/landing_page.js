@@ -72,22 +72,22 @@ export class LandingView extends React.Component {
                         <ul role="tablist" id="nav_selectors_list">
                             <NavSelector
                                 url="/explore_networks/"
-                                img_url='/static/img/nav/explore_networks.png'
+                                img_url='/static/img/nav/networks.jpg'
                                 title='Network Exploration'
                                 description='Explore the social networks of industry scientists and
                                  lawyers'
                             />
                             <NavSelector
                                 url="/research_directors/"
-                                img_url='/static/img/nav/explore_networks.png'
+                                img_url='/static/img/nav/research_directors.jpg'
                                 title='Research Directors'
-                                description='How did the research directors of cigarette
-                                makers deceive the American public about the health harms of
+                                description='How did the industry’s research directors
+                                 deceive the American public about the health harms of
                                 smoking?'
                             />
                             <NavSelector
                                 url="/sterling/"
-                                img_url='/static/img/nav/explore_networks.png'
+                                img_url='/static/img/nav/sterling.jpg'
                                 title='Theodor Sterling: The Industry’s Most Reliable Ally'
                                 description='Learn more about the computer scientist who received
                                 more than $5 millions for his service to the industry.'
