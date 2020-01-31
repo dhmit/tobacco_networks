@@ -1,0 +1,34 @@
+.display-4{
+    text-align: center;
+}
+
+#lab img{
+    border: solid #f5f4f4 0.3rem;
+}
+
+.about_link{
+    color: #007bff !important;
+}
+
+.team-member-lg img{
+    width: 200px;
+    height: 200px;
+}
+
+.team-member-lg h4, .team-member h4{
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+.team-member, .team-member-lg{
+    text-align: center;
+    margin: 2rem 0 2rem 0;
+}
+
+.team-member p, .team-member-lg p{
+    margin: 0;
+}
+
+.team-member{
+    font-size: 1.2rem;
+}
