@@ -147,9 +147,9 @@ frontend/node_modules
 /coverage
 
 # production
-/build
-/static
-/assets/bundles
+build/
+static/
+assets/bundles
 
 # misc
 .DS_Store
