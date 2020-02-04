@@ -8,7 +8,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
 develop-eggs/
 dist/
 downloads/
@@ -147,9 +146,7 @@ frontend/node_modules
 /coverage
 
 # production
-build/
-static/
-assets/bundles
+/static/
 
 # misc
 .DS_Store
