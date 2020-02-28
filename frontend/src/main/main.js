@@ -65,7 +65,7 @@ class Controls extends React.Component {
                         >
                             <option value="lawyers">Lawyers</option>
                             <option value="research_directors">Research Directors</option>
-                            <option value="sterling">Theodore Sterling</option>
+                            <option value="sterling">Theodor Sterling</option>
                         </select>
                     </div>
                 </div>;

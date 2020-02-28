@@ -34,20 +34,6 @@ export class AboutView extends React.Component {
             )
         };
 
-        const render_staff_lower = (name, img_src, position) => {
-            return (
-                <div className="col-sm-4 text-center">
-                    <div className="team-member-lg">
-                        <img className="mx-auto rounded-circle"
-                            src={img_src}
-                            alt={name} />
-                        <h4>{name}</h4>
-                        <p className="text-muted">{position}</p>
-                    </div>
-                </div>
-            )
-        };
-
         const content = (
             <>
                 <div>
@@ -62,19 +48,39 @@ export class AboutView extends React.Component {
                                 dangers of smoking?
                             </p>
                             <p>
-                                Led by MIT postdoctoral associate Stephan Risi, the Tobacco
-                                Networks project’s goal was to produce a general network
-                                visualization of roughly 11 million documents of data related to
-                                Tobacco researchers, lawyers, and marketing experts in a way
-                                that visually elucidates the connections between significant
-                                people and corporations in the industry. In this way, links
+                                The goal of the Tobacco Networks project is to produce a network
+                                visualization of roughly 1.4 million tobacco industry documents from
+                                the 1970s and highlight the correspondence network of industry
+                                researchers, lawyers, and marketing experts. In this way, links
                                 which highlight the sinister and overwhelming efforts to
                                 propagate pro-cigarette platforms, often backed by false
-                                research put out by major institutions, could be clearly formed.
+                                research put out by major institutions, can be clearly explored.
                             </p>
+
+                            <div>
+                                <img className="rounded-circle mr-5 stephan_image"
+                                    src={'/static/img/team/Risi_Stephan.jpg'}
+                                    alt="Stephan Risi"/>
+
+                                <p className="mt-0">Tobacco Networks was led by Stephan Risi, a
+                                    postdoctoral associate
+                                    in <a className="about_link"
+                                    href="https://digitalhumanities.mit.edu/">
+                                        MIT&apos;s Digital Humanities Lab.</a> Stephan has studied
+                                    the tobacco industry&apos;s secret documents for years and is
+                                    the creator of the <a className="about_link"
+                                    href="http://tobacco-analytics.org">
+                                    Tobacco Analytics</a> platform, which provides many other
+                                    tools to visualize and summarize this immense corpus. For
+                                    this project, he was joined by ten amazing undergraduate
+                                    researchers as well as the staff of the DH Lab.
+                                </p>
+
+                            </div>
+
                             <p>
-                                The anticipated scope of the Tobacco Networks project is to
-                                provide a resource for those studying the strategies employed by
+                                We hope that this project provides
+                                 a resource for those studying the strategies employed by
                                 tobacco companies throughout history to persuade consumers and
                                 mask the addictive effects of the drug.
                             </p>
@@ -85,7 +91,10 @@ export class AboutView extends React.Component {
                                 href="https://www.industrydocuments.ucsf.edu/tobacco/">
                                 Truth Tobacco Industry Documents Archive.
                             </a></p>
+
                         </div>
+
+
                     </div>
                     <section id="lab">
                         <div className="container">
@@ -105,15 +114,11 @@ export class AboutView extends React.Component {
                                     "Technical Director Senior Research Engineer")}
                             </div>
                             <div className="row">
-                                {render_staff_lower("Stephan Risi",
-                                    "/static/img/team/Risi_Stephan.jpg",
-                                    "Postdoctoral Associate")}
-
-                                {render_staff_lower("Erica Zimmer",
+                                {render_staff("Erica Zimmer",
                                     "/static/img/team/Zimmer_Erica.jpg",
                                     "Postdoctoral Associate")}
 
-                                {render_staff_lower("Nicole Fountain",
+                                {render_staff("Nicole Fountain",
                                     "/static/img/team/Fountain_Nicole.jpg",
                                     "Administrative Assistant")}
                             </div>
