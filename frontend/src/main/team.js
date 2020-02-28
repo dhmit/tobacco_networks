@@ -86,7 +86,7 @@ export class AboutView extends React.Component {
                             </p>
                             <p>You can find the code for this project on <a className="about_link"
                                 href="https://github.com/dhmit/tobacco_networks">Github.</a></p>
-                            <p>The documents themselves are available UCSF’s <a
+                            <p>The documents themselves are available at the UCSF’s <a
                                 className="about_link"
                                 href="https://www.industrydocuments.ucsf.edu/tobacco/">
                                 Truth Tobacco Industry Documents Archive.
