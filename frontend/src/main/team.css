@@ -10,6 +10,12 @@
     color: #007bff !important;
 }
 
+.stephan_image{
+    width: 175px;
+    height: 175px;
+    float: left;
+}
+
 .team-member-lg img{
     width: 200px;
     height: 200px;
