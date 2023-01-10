@@ -21,6 +21,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'tobacconetworks.dhmit.xyz',
+    'tobacconetworks.dhlab.mit.edu',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
